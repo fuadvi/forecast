@@ -1,0 +1,241 @@
+date,rank,product,category,mean
+2025-01-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,995.0
+2025-01-01,2,kursi auditorium ll 526 tb,Auditorium Series,500.0
+2025-01-01,3,kursi kerja dp 301 tb,Stacking Series,494.80222222222227
+2025-01-01,4,kursi auditorium ll 184,Auditorium Series,451.0
+2025-01-01,5,kursi siswa ll 507 tc,Kursi Siswa,303.0
+2025-01-01,6,meja siswa ll 507 tc,Meja Siswa,303.0
+2025-01-01,7,kursi stool st 02,Stacking Series,173.0
+2025-01-01,8,meja komputer cd 06,Meja Komputer ,167.0
+2025-01-01,9,kursi kerja dp 308,Stacking Series,163.66999999999996
+2025-01-01,10,meja siswa ll 508 tc,Meja Siswa,150.0
+2025-02-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1044.75
+2025-02-01,2,kursi auditorium ll 526 tb,Auditorium Series,525.0
+2025-02-01,3,kursi kerja dp 301 tb,Stacking Series,519.5423333333334
+2025-02-01,4,kursi auditorium ll 184,Auditorium Series,473.55
+2025-02-01,5,kursi siswa ll 507 tc,Kursi Siswa,318.15000000000003
+2025-02-01,6,meja siswa ll 507 tc,Meja Siswa,318.15000000000003
+2025-02-01,7,kursi stool st 02,Stacking Series,181.65
+2025-02-01,8,meja komputer cd 06,Meja Komputer ,175.35
+2025-02-01,9,kursi kerja dp 308,Stacking Series,171.85349999999997
+2025-02-01,10,meja siswa ll 508 tc,Meja Siswa,157.5
+2025-03-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1081.1695276765515
+2025-03-01,2,kursi auditorium ll 526 tb,Auditorium Series,543.3012701892219
+2025-03-01,3,kursi kerja dp 301 tb,Stacking Series,537.653351651566
+2025-03-01,4,kursi auditorium ll 184,Auditorium Series,490.05774571067815
+2025-03-01,5,kursi siswa ll 507 tc,Kursi Siswa,329.2405697346685
+2025-03-01,6,meja siswa ll 507 tc,Meja Siswa,329.2405697346685
+2025-03-01,7,kursi stool st 02,Stacking Series,187.98223948547079
+2025-03-01,8,meja komputer cd 06,Meja Komputer ,181.4626242432001
+2025-03-01,9,kursi kerja dp 308,Stacking Series,177.84423778373986
+2025-03-01,10,meja siswa ll 508 tc,Meja Siswa,162.99038105676658
+2025-04-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1094.5
+2025-04-01,2,kursi auditorium ll 526 tb,Auditorium Series,550.0
+2025-04-01,3,kursi kerja dp 301 tb,Stacking Series,544.2824444444445
+2025-04-01,4,kursi auditorium ll 184,Auditorium Series,496.1
+2025-04-01,5,kursi siswa ll 507 tc,Kursi Siswa,333.3
+2025-04-01,6,meja siswa ll 507 tc,Meja Siswa,333.3
+2025-04-01,7,kursi stool st 02,Stacking Series,190.3
+2025-04-01,8,meja komputer cd 06,Meja Komputer ,183.70000000000002
+2025-04-01,9,kursi kerja dp 308,Stacking Series,180.03699999999998
+2025-04-01,10,meja siswa ll 508 tc,Meja Siswa,165.0
+2025-05-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1081.1695276765515
+2025-05-01,2,kursi auditorium ll 526 tb,Auditorium Series,543.3012701892219
+2025-05-01,3,kursi kerja dp 301 tb,Stacking Series,537.653351651566
+2025-05-01,4,kursi auditorium ll 184,Auditorium Series,490.05774571067815
+2025-05-01,5,kursi siswa ll 507 tc,Kursi Siswa,329.2405697346685
+2025-05-01,6,meja siswa ll 507 tc,Meja Siswa,329.2405697346685
+2025-05-01,7,kursi stool st 02,Stacking Series,187.98223948547079
+2025-05-01,8,meja komputer cd 06,Meja Komputer ,181.4626242432001
+2025-05-01,9,kursi kerja dp 308,Stacking Series,177.84423778373986
+2025-05-01,10,meja siswa ll 508 tc,Meja Siswa,162.99038105676658
+2025-06-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1044.75
+2025-06-01,2,kursi auditorium ll 526 tb,Auditorium Series,525.0
+2025-06-01,3,kursi kerja dp 301 tb,Stacking Series,519.5423333333334
+2025-06-01,4,kursi auditorium ll 184,Auditorium Series,473.55
+2025-06-01,5,kursi siswa ll 507 tc,Kursi Siswa,318.15000000000003
+2025-06-01,6,meja siswa ll 507 tc,Meja Siswa,318.15000000000003
+2025-06-01,7,kursi stool st 02,Stacking Series,181.65
+2025-06-01,8,meja komputer cd 06,Meja Komputer ,175.35
+2025-06-01,9,kursi kerja dp 308,Stacking Series,171.85349999999997
+2025-06-01,10,meja siswa ll 508 tc,Meja Siswa,157.5
+2025-07-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,995.0
+2025-07-01,2,kursi auditorium ll 526 tb,Auditorium Series,500.0
+2025-07-01,3,kursi kerja dp 301 tb,Stacking Series,494.80222222222227
+2025-07-01,4,kursi auditorium ll 184,Auditorium Series,451.0
+2025-07-01,5,kursi siswa ll 507 tc,Kursi Siswa,303.0
+2025-07-01,6,meja siswa ll 507 tc,Meja Siswa,303.0
+2025-07-01,7,kursi stool st 02,Stacking Series,173.0
+2025-07-01,8,meja komputer cd 06,Meja Komputer ,167.0
+2025-07-01,9,kursi kerja dp 308,Stacking Series,163.66999999999996
+2025-07-01,10,meja siswa ll 508 tc,Meja Siswa,150.0
+2025-08-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,945.2500000000001
+2025-08-01,2,kursi auditorium ll 526 tb,Auditorium Series,475.00000000000006
+2025-08-01,3,kursi kerja dp 301 tb,Stacking Series,470.06211111111116
+2025-08-01,4,kursi auditorium ll 184,Auditorium Series,428.45000000000005
+2025-08-01,5,kursi siswa ll 507 tc,Kursi Siswa,287.85
+2025-08-01,6,meja siswa ll 507 tc,Meja Siswa,287.85
+2025-08-01,7,kursi stool st 02,Stacking Series,164.35000000000002
+2025-08-01,8,meja komputer cd 06,Meja Komputer ,158.65
+2025-08-01,9,kursi kerja dp 308,Stacking Series,155.48649999999998
+2025-08-01,10,meja siswa ll 508 tc,Meja Siswa,142.5
+2025-09-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,908.8304723234484
+2025-09-01,2,kursi auditorium ll 526 tb,Auditorium Series,456.6987298107781
+2025-09-01,3,kursi kerja dp 301 tb,Stacking Series,451.9510927928785
+2025-09-01,4,kursi auditorium ll 184,Auditorium Series,411.94225428932185
+2025-09-01,5,kursi siswa ll 507 tc,Kursi Siswa,276.7594302653315
+2025-09-01,6,meja siswa ll 507 tc,Meja Siswa,276.7594302653315
+2025-09-01,7,kursi stool st 02,Stacking Series,158.01776051452921
+2025-09-01,8,meja komputer cd 06,Meja Komputer ,152.5373757567999
+2025-09-01,9,kursi kerja dp 308,Stacking Series,149.49576221626006
+2025-09-01,10,meja siswa ll 508 tc,Meja Siswa,137.00961894323342
+2025-10-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,895.5
+2025-10-01,2,kursi auditorium ll 526 tb,Auditorium Series,450.0
+2025-10-01,3,kursi kerja dp 301 tb,Stacking Series,445.32200000000006
+2025-10-01,4,kursi auditorium ll 184,Auditorium Series,405.90000000000003
+2025-10-01,5,kursi siswa ll 507 tc,Kursi Siswa,272.7
+2025-10-01,6,meja siswa ll 507 tc,Meja Siswa,272.7
+2025-10-01,7,kursi stool st 02,Stacking Series,155.70000000000002
+2025-10-01,8,meja komputer cd 06,Meja Komputer ,150.3
+2025-10-01,9,kursi kerja dp 308,Stacking Series,147.30299999999997
+2025-10-01,10,meja siswa ll 508 tc,Meja Siswa,135.0
+2025-11-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,908.8304723234484
+2025-11-01,2,kursi auditorium ll 526 tb,Auditorium Series,456.6987298107781
+2025-11-01,3,kursi kerja dp 301 tb,Stacking Series,451.9510927928785
+2025-11-01,4,kursi auditorium ll 184,Auditorium Series,411.94225428932185
+2025-11-01,5,kursi siswa ll 507 tc,Kursi Siswa,276.7594302653315
+2025-11-01,6,meja siswa ll 507 tc,Meja Siswa,276.7594302653315
+2025-11-01,7,kursi stool st 02,Stacking Series,158.01776051452921
+2025-11-01,8,meja komputer cd 06,Meja Komputer ,152.5373757567999
+2025-11-01,9,kursi kerja dp 308,Stacking Series,149.49576221626006
+2025-11-01,10,meja siswa ll 508 tc,Meja Siswa,137.00961894323342
+2025-12-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,945.25
+2025-12-01,2,kursi auditorium ll 526 tb,Auditorium Series,475.0
+2025-12-01,3,kursi kerja dp 301 tb,Stacking Series,470.0621111111111
+2025-12-01,4,kursi auditorium ll 184,Auditorium Series,428.45
+2025-12-01,5,kursi siswa ll 507 tc,Kursi Siswa,287.84999999999997
+2025-12-01,6,meja siswa ll 507 tc,Meja Siswa,287.84999999999997
+2025-12-01,7,kursi stool st 02,Stacking Series,164.35
+2025-12-01,8,meja komputer cd 06,Meja Komputer ,158.65
+2025-12-01,9,kursi kerja dp 308,Stacking Series,155.48649999999995
+2025-12-01,10,meja siswa ll 508 tc,Meja Siswa,142.5
+2026-01-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,995.0
+2026-01-01,2,kursi auditorium ll 526 tb,Auditorium Series,500.0
+2026-01-01,3,kursi kerja dp 301 tb,Stacking Series,494.80222222222227
+2026-01-01,4,kursi auditorium ll 184,Auditorium Series,451.0
+2026-01-01,5,kursi siswa ll 507 tc,Kursi Siswa,303.0
+2026-01-01,6,meja siswa ll 507 tc,Meja Siswa,303.0
+2026-01-01,7,kursi stool st 02,Stacking Series,173.0
+2026-01-01,8,meja komputer cd 06,Meja Komputer ,167.0
+2026-01-01,9,kursi kerja dp 308,Stacking Series,163.66999999999996
+2026-01-01,10,meja siswa ll 508 tc,Meja Siswa,150.0
+2026-02-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1044.75
+2026-02-01,2,kursi auditorium ll 526 tb,Auditorium Series,525.0
+2026-02-01,3,kursi kerja dp 301 tb,Stacking Series,519.5423333333334
+2026-02-01,4,kursi auditorium ll 184,Auditorium Series,473.55
+2026-02-01,5,kursi siswa ll 507 tc,Kursi Siswa,318.15000000000003
+2026-02-01,6,meja siswa ll 507 tc,Meja Siswa,318.15000000000003
+2026-02-01,7,kursi stool st 02,Stacking Series,181.65
+2026-02-01,8,meja komputer cd 06,Meja Komputer ,175.35
+2026-02-01,9,kursi kerja dp 308,Stacking Series,171.85349999999997
+2026-02-01,10,meja siswa ll 508 tc,Meja Siswa,157.5
+2026-03-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1081.1695276765515
+2026-03-01,2,kursi auditorium ll 526 tb,Auditorium Series,543.3012701892219
+2026-03-01,3,kursi kerja dp 301 tb,Stacking Series,537.653351651566
+2026-03-01,4,kursi auditorium ll 184,Auditorium Series,490.05774571067815
+2026-03-01,5,kursi siswa ll 507 tc,Kursi Siswa,329.2405697346685
+2026-03-01,6,meja siswa ll 507 tc,Meja Siswa,329.2405697346685
+2026-03-01,7,kursi stool st 02,Stacking Series,187.98223948547079
+2026-03-01,8,meja komputer cd 06,Meja Komputer ,181.4626242432001
+2026-03-01,9,kursi kerja dp 308,Stacking Series,177.84423778373986
+2026-03-01,10,meja siswa ll 508 tc,Meja Siswa,162.99038105676658
+2026-04-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1094.5
+2026-04-01,2,kursi auditorium ll 526 tb,Auditorium Series,550.0
+2026-04-01,3,kursi kerja dp 301 tb,Stacking Series,544.2824444444445
+2026-04-01,4,kursi auditorium ll 184,Auditorium Series,496.1
+2026-04-01,5,kursi siswa ll 507 tc,Kursi Siswa,333.3
+2026-04-01,6,meja siswa ll 507 tc,Meja Siswa,333.3
+2026-04-01,7,kursi stool st 02,Stacking Series,190.3
+2026-04-01,8,meja komputer cd 06,Meja Komputer ,183.70000000000002
+2026-04-01,9,kursi kerja dp 308,Stacking Series,180.03699999999998
+2026-04-01,10,meja siswa ll 508 tc,Meja Siswa,165.0
+2026-05-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1081.1695276765515
+2026-05-01,2,kursi auditorium ll 526 tb,Auditorium Series,543.3012701892219
+2026-05-01,3,kursi kerja dp 301 tb,Stacking Series,537.653351651566
+2026-05-01,4,kursi auditorium ll 184,Auditorium Series,490.05774571067815
+2026-05-01,5,kursi siswa ll 507 tc,Kursi Siswa,329.2405697346685
+2026-05-01,6,meja siswa ll 507 tc,Meja Siswa,329.2405697346685
+2026-05-01,7,kursi stool st 02,Stacking Series,187.98223948547079
+2026-05-01,8,meja komputer cd 06,Meja Komputer ,181.4626242432001
+2026-05-01,9,kursi kerja dp 308,Stacking Series,177.84423778373986
+2026-05-01,10,meja siswa ll 508 tc,Meja Siswa,162.99038105676658
+2026-06-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,1044.75
+2026-06-01,2,kursi auditorium ll 526 tb,Auditorium Series,525.0
+2026-06-01,3,kursi kerja dp 301 tb,Stacking Series,519.5423333333334
+2026-06-01,4,kursi auditorium ll 184,Auditorium Series,473.55
+2026-06-01,5,kursi siswa ll 507 tc,Kursi Siswa,318.15000000000003
+2026-06-01,6,meja siswa ll 507 tc,Meja Siswa,318.15000000000003
+2026-06-01,7,kursi stool st 02,Stacking Series,181.65
+2026-06-01,8,meja komputer cd 06,Meja Komputer ,175.35
+2026-06-01,9,kursi kerja dp 308,Stacking Series,171.85349999999997
+2026-06-01,10,meja siswa ll 508 tc,Meja Siswa,157.5
+2026-07-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,995.0
+2026-07-01,2,kursi auditorium ll 526 tb,Auditorium Series,500.0
+2026-07-01,3,kursi kerja dp 301 tb,Stacking Series,494.80222222222227
+2026-07-01,4,kursi auditorium ll 184,Auditorium Series,451.0
+2026-07-01,5,kursi siswa ll 507 tc,Kursi Siswa,303.0
+2026-07-01,6,meja siswa ll 507 tc,Meja Siswa,303.0
+2026-07-01,7,kursi stool st 02,Stacking Series,173.0
+2026-07-01,8,meja komputer cd 06,Meja Komputer ,167.0
+2026-07-01,9,kursi kerja dp 308,Stacking Series,163.66999999999996
+2026-07-01,10,meja siswa ll 508 tc,Meja Siswa,150.0
+2026-08-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,945.2500000000001
+2026-08-01,2,kursi auditorium ll 526 tb,Auditorium Series,475.00000000000006
+2026-08-01,3,kursi kerja dp 301 tb,Stacking Series,470.06211111111116
+2026-08-01,4,kursi auditorium ll 184,Auditorium Series,428.45000000000005
+2026-08-01,5,kursi siswa ll 507 tc,Kursi Siswa,287.85
+2026-08-01,6,meja siswa ll 507 tc,Meja Siswa,287.85
+2026-08-01,7,kursi stool st 02,Stacking Series,164.35000000000002
+2026-08-01,8,meja komputer cd 06,Meja Komputer ,158.65
+2026-08-01,9,kursi kerja dp 308,Stacking Series,155.48649999999998
+2026-08-01,10,meja siswa ll 508 tc,Meja Siswa,142.5
+2026-09-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,908.8304723234484
+2026-09-01,2,kursi auditorium ll 526 tb,Auditorium Series,456.6987298107781
+2026-09-01,3,kursi kerja dp 301 tb,Stacking Series,451.9510927928785
+2026-09-01,4,kursi auditorium ll 184,Auditorium Series,411.94225428932185
+2026-09-01,5,kursi siswa ll 507 tc,Kursi Siswa,276.7594302653315
+2026-09-01,6,meja siswa ll 507 tc,Meja Siswa,276.7594302653315
+2026-09-01,7,kursi stool st 02,Stacking Series,158.01776051452921
+2026-09-01,8,meja komputer cd 06,Meja Komputer ,152.5373757567999
+2026-09-01,9,kursi kerja dp 308,Stacking Series,149.49576221626006
+2026-09-01,10,meja siswa ll 508 tc,Meja Siswa,137.00961894323342
+2026-10-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,895.5
+2026-10-01,2,kursi auditorium ll 526 tb,Auditorium Series,450.0
+2026-10-01,3,kursi kerja dp 301 tb,Stacking Series,445.32200000000006
+2026-10-01,4,kursi auditorium ll 184,Auditorium Series,405.90000000000003
+2026-10-01,5,kursi siswa ll 507 tc,Kursi Siswa,272.7
+2026-10-01,6,meja siswa ll 507 tc,Meja Siswa,272.7
+2026-10-01,7,kursi stool st 02,Stacking Series,155.70000000000002
+2026-10-01,8,meja komputer cd 06,Meja Komputer ,150.3
+2026-10-01,9,kursi kerja dp 308,Stacking Series,147.30299999999997
+2026-10-01,10,meja siswa ll 508 tc,Meja Siswa,135.0
+2026-11-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,908.8304723234484
+2026-11-01,2,kursi auditorium ll 526 tb,Auditorium Series,456.6987298107781
+2026-11-01,3,kursi kerja dp 301 tb,Stacking Series,451.9510927928785
+2026-11-01,4,kursi auditorium ll 184,Auditorium Series,411.94225428932185
+2026-11-01,5,kursi siswa ll 507 tc,Kursi Siswa,276.7594302653315
+2026-11-01,6,meja siswa ll 507 tc,Meja Siswa,276.7594302653315
+2026-11-01,7,kursi stool st 02,Stacking Series,158.01776051452921
+2026-11-01,8,meja komputer cd 06,Meja Komputer ,152.5373757567999
+2026-11-01,9,kursi kerja dp 308,Stacking Series,149.49576221626006
+2026-11-01,10,meja siswa ll 508 tc,Meja Siswa,137.00961894323342
+2026-12-01,1,kursi auditorium ll 516 tb tg,Auditorium Series,945.25
+2026-12-01,2,kursi auditorium ll 526 tb,Auditorium Series,475.0
+2026-12-01,3,kursi kerja dp 301 tb,Stacking Series,470.0621111111111
+2026-12-01,4,kursi auditorium ll 184,Auditorium Series,428.45
+2026-12-01,5,kursi siswa ll 507 tc,Kursi Siswa,287.84999999999997
+2026-12-01,6,meja siswa ll 507 tc,Meja Siswa,287.84999999999997
+2026-12-01,7,kursi stool st 02,Stacking Series,164.35
+2026-12-01,8,meja komputer cd 06,Meja Komputer ,158.65
+2026-12-01,9,kursi kerja dp 308,Stacking Series,155.48649999999995
+2026-12-01,10,meja siswa ll 508 tc,Meja Siswa,142.5

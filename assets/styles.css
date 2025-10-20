@@ -1,0 +1,61 @@
+/* Global styles for Streamlit app */
+:root {
+  --primary: #2563eb;
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+  --muted: #64748b;
+  --bg-card: #ffffff;
+}
+
+/* Metric cards */
+.block-container .metric-card {
+  background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(16,185,129,0.06));
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 20px rgba(2, 8, 20, 0.06);
+  border: 1px solid rgba(100,116,139,0.15);
+}
+
+.metric-value { font-size: 1.6rem; font-weight: 700; }
+.metric-label { color: var(--muted); font-size: .90rem; }
+
+/* Buttons */
+.stButton>button {
+  border-radius: 10px;
+  border: 1px solid rgba(2,8,20,0.05);
+  box-shadow: 0 8px 16px rgba(37,99,235,0.12);
+}
+.stButton>button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(37,99,235,0.18);
+}
+
+/* Cards/containers */
+.card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(2,8,20,0.06);
+  border: 1px solid rgba(2,8,20,0.06);
+}
+
+/* Log box like terminal */
+.log-box {
+  background: #0b1220;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  padding: 12px;
+  border-radius: 10px;
+  height: 320px;
+  overflow: auto;
+  border: 1px solid rgba(148,163,184,0.3);
+}
+
+.status-ok { color: var(--success); font-weight: 700; }
+.status-warn { color: var(--warning); font-weight: 700; }
+.status-info { color: var(--primary); font-weight: 700; }
+.status-bad { color: var(--danger); font-weight: 700; }
+
+/* Table tweaks */
+.dataframe tbody tr:hover { background: rgba(37,99,235,0.06); }
