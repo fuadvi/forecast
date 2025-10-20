@@ -1,0 +1,121 @@
+date,product_name,forecast,method,rank
+2025-01-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-01-01,kursi kerja dp 301,180.1157074952565,SES,2
+2025-01-01,kursi kerja br 205 ha,155.0,SES,3
+2025-01-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-01-01,kursi br 211 ca mesh,81.0,SES,5
+2025-02-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-02-01,kursi kerja br 205 ha,155.0,SES,2
+2025-02-01,kursi kerja dp 308,104.00103968017413,SES,3
+2025-02-01,kursi auditorium ll 520 tb,100.2711925090907,SES,4
+2025-02-01,kursi br 211 ca mesh,81.0,SES,5
+2025-03-01,kursi auditorium ll 520 tb,261.93928050230295,SES,1
+2025-03-01,kursi kerja dp 301 tb,184.15694951096208,SES,2
+2025-03-01,kursi kerja br 205 ha,155.0,SES,3
+2025-03-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-03-01,kursi br 211 ca mesh,81.0,SES,5
+2025-04-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-04-01,kursi kerja br 205 ha,155.0,SES,2
+2025-04-01,kursi kerja dp 308,104.00103968017413,SES,3
+2025-04-01,kursi br 211 ca mesh,81.0,SES,4
+2025-04-01,kursi auditorium ll 517 tb,80.0,SES,5
+2025-05-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-05-01,kursi kerja br 205 ha,155.0,SES,2
+2025-05-01,kursi auditorium ll 516 tb,140.22718102217462,SES,3
+2025-05-01,kursi auditorium ll 520 tb,110.34961652929813,SES,4
+2025-05-01,kursi kerja dp 308,104.00103968017413,SES,5
+2025-06-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-06-01,kursi kerja br 205 ha,155.0,SES,2
+2025-06-01,kursi auditorium ll 520 tb,141.13985458269235,SES,3
+2025-06-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-06-01,kursi auditorium ll 516 tb,85.18914879434375,SES,5
+2025-07-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-07-01,kursi kerja br 205 ha,155.0,SES,2
+2025-07-01,kursi auditorium ll 516 tb,109.61119607813094,SES,3
+2025-07-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-07-01,kursi br 211 ca mesh,81.0,SES,5
+2025-08-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-08-01,kursi kerja br 205 ha,155.0,SES,2
+2025-08-01,kursi auditorium ll 516 tb,139.48557697301186,SES,3
+2025-08-01,kursi auditorium ll 520 tb,131.05071229570234,SES,4
+2025-08-01,kursi kerja dp 308,104.00103968017413,SES,5
+2025-09-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-09-01,kursi kerja br 205 ha,155.0,SES,2
+2025-09-01,kursi kerja dp 308,104.00103968017413,SES,3
+2025-09-01,kursi kerja dp 301,82.34444650274472,SES,4
+2025-09-01,kursi br 211 ca mesh,81.0,SES,5
+2025-10-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-10-01,kursi kerja br 205 ha,155.0,SES,2
+2025-10-01,kursi kerja dp 308,104.00103968017413,SES,3
+2025-10-01,kursi br 211 ca mesh,81.0,SES,4
+2025-10-01,kursi auditorium ll 517 tb,80.0,SES,5
+2025-11-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-11-01,kursi kerja br 205 ha,155.0,SES,2
+2025-11-01,kursi auditorium ll 520 tb,138.75092053497391,SES,3
+2025-11-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-11-01,kursi auditorium ll 520,91.0781419768962,SES,5
+2025-12-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2025-12-01,kursi kerja br 205 ha,155.0,SES,2
+2025-12-01,kursi auditorium ll 520 tb,149.9249622973732,SES,3
+2025-12-01,kursi kerja dp 308,104.00103968017413,SES,4
+2025-12-01,kursi br 211 ca mesh,81.0,SES,5
+2026-01-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-01-01,kursi kerja dp 301,180.0219551847474,SES,2
+2026-01-01,kursi kerja br 205 ha,155.0,SES,3
+2026-01-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-01-01,kursi br 211 ca mesh,81.0,SES,5
+2026-02-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-02-01,kursi kerja br 205 ha,155.0,SES,2
+2026-02-01,kursi auditorium ll 520 tb,128.1405945097143,SES,3
+2026-02-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-02-01,kursi br 211 ca mesh,81.0,SES,5
+2026-03-01,kursi auditorium ll 520 tb,289.66933549292344,SES,1
+2026-03-01,kursi kerja dp 301 tb,184.15694951096208,SES,2
+2026-03-01,kursi kerja br 205 ha,155.0,SES,3
+2026-03-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-03-01,kursi br 211 ca mesh,81.0,SES,5
+2026-04-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-04-01,kursi kerja br 205 ha,155.0,SES,2
+2026-04-01,kursi kerja dp 308,104.00103968017413,SES,3
+2026-04-01,kursi br 211 ca mesh,81.0,SES,4
+2026-04-01,kursi auditorium ll 517 tb,80.0,SES,5
+2026-05-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-05-01,kursi kerja br 205 ha,155.0,SES,2
+2026-05-01,kursi auditorium ll 516 tb,153.18566891338182,SES,3
+2026-05-01,kursi auditorium ll 520 tb,137.8030642213872,SES,4
+2026-05-01,kursi kerja dp 308,104.00103968017413,SES,5
+2026-06-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-06-01,kursi auditorium ll 520 tb,168.45603503632094,SES,2
+2026-06-01,kursi kerja br 205 ha,155.0,SES,3
+2026-06-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-06-01,kursi auditorium ll 516 tb,98.04149921645069,SES,5
+2026-07-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-07-01,kursi kerja br 205 ha,155.0,SES,2
+2026-07-01,kursi auditorium ll 516 tb,122.35827835805611,SES,3
+2026-07-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-07-01,kursi auditorium ll 520 tb,98.49196382865063,SES,5
+2026-08-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-08-01,kursi auditorium ll 520 tb,158.09441384930597,SES,2
+2026-08-01,kursi kerja br 205 ha,155.0,SES,3
+2026-08-01,kursi auditorium ll 516 tb,152.1282533173863,SES,4
+2026-08-01,kursi kerja dp 308,104.00103968017413,SES,5
+2026-09-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-09-01,kursi kerja br 205 ha,155.0,SES,2
+2026-09-01,kursi kerja dp 308,104.00103968017413,SES,3
+2026-09-01,kursi kerja dp 301,82.32871747510562,SES,4
+2026-09-01,kursi br 211 ca mesh,81.0,SES,5
+2026-10-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-10-01,kursi kerja br 205 ha,155.0,SES,2
+2026-10-01,kursi kerja dp 308,104.00103968017413,SES,3
+2026-10-01,kursi auditorium ll 520 tb,98.72862065127278,SES,4
+2026-10-01,kursi br 211 ca mesh,81.0,SES,5
+2026-11-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-11-01,kursi auditorium ll 520 tb,165.39099146242734,SES,2
+2026-11-01,kursi kerja br 205 ha,155.0,SES,3
+2026-11-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-11-01,kursi auditorium ll 520,91.0651336577624,SES,5
+2026-12-01,kursi kerja dp 301 tb,184.15694951096208,SES,1
+2026-12-01,kursi auditorium ll 520 tb,176.43183287018937,SES,2
+2026-12-01,kursi kerja br 205 ha,155.0,SES,3
+2026-12-01,kursi kerja dp 308,104.00103968017413,SES,4
+2026-12-01,kursi br 211 ca mesh,81.0,SES,5

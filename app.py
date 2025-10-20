@@ -124,7 +124,7 @@ with sc3:
         st.info("ℹ️ Forecast belum digenerate.")
 
 st.subheader("⚡ Aksi Cepat")
-c1, c2, c3 = st.columns(3)
+c1, c2, c3, c4 = st.columns(4)
 with c1:
     if st.button("📤 Upload Data Baru", use_container_width=True):
         st.switch_page("pages/1_Upload_Data.py")
@@ -132,10 +132,13 @@ with c2:
     if st.button("🧠 Train Models", type="primary", use_container_width=True):
         st.switch_page("pages/2_Train_Models.py")
 with c3:
-    if st.button("🔮 Generate Forecast", use_container_width=True):
+    if st.button("🔮 Generate Forecast (LSTM)", use_container_width=True):
         st.switch_page("pages/3_Generate_Forecast.py")
+with c4:
+    if st.button("📈 SES Forecast", use_container_width=True):
+        st.switch_page("pages/5_SES_Forecast.py")
 
-st.info("Gunakan sidebar untuk navigasi antar halaman.")
+st.info("Gunakan sidebar untuk navigasi antar halaman. Kini tersedia alternatif metode SES selain LSTM.")
 
 # Optional recent activity
 activity = []

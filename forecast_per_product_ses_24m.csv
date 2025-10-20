@@ -1,0 +1,1921 @@
+date,product_name,forecast,method
+2025-01-01,credenza crd 07 1000,0.15320243706100362,SES
+2025-02-01,credenza crd 07 1000,0.1524844114935252,SES
+2025-03-01,credenza crd 07 1000,0.15176652659217257,SES
+2025-04-01,credenza crd 07 1000,0.15104838759726,SES
+2025-05-01,credenza crd 07 1000,0.1509824763960964,SES
+2025-06-01,credenza crd 07 1000,0.14961303037719487,SES
+2025-07-01,credenza crd 07 1000,0.14889542765059463,SES
+2025-08-01,credenza crd 07 1000,0.14817678701029546,SES
+2025-09-01,credenza crd 07 1000,0.14745686003354705,SES
+2025-10-01,credenza crd 07 1000,0.1467356061523678,SES
+2025-11-01,credenza crd 07 1000,0.8652040835653482,SES
+2025-12-01,credenza crd 07 1000,1.1976975111130588,SES
+2026-01-01,credenza crd 07 1000,0.24756763598478732,SES
+2026-02-01,credenza crd 07 1000,0.24637778442268993,SES
+2026-03-01,credenza crd 07 1000,0.24519043265669146,SES
+2026-04-01,credenza crd 07 1000,0.24400517413145625,SES
+2026-05-01,credenza crd 07 1000,0.24347447899762176,SES
+2026-06-01,credenza crd 07 1000,0.2416425729657125,SES
+2026-07-01,credenza crd 07 1000,0.24046482252616977,SES
+2026-08-01,credenza crd 07 1000,0.2392883349114927,SES
+2026-09-01,credenza crd 07 1000,0.23811285019523828,SES
+2026-10-01,credenza crd 07 1000,0.23693831636325063,SES
+2026-11-01,credenza crd 07 1000,0.9549557802251766,SES
+2026-12-01,credenza crd 07 1000,1.287000449289588,SES
+2025-01-01,credenza crd 09 a,10.0,SES
+2025-02-01,credenza crd 09 a,10.0,SES
+2025-03-01,credenza crd 09 a,10.0,SES
+2025-04-01,credenza crd 09 a,10.0,SES
+2025-05-01,credenza crd 09 a,10.0,SES
+2025-06-01,credenza crd 09 a,10.0,SES
+2025-07-01,credenza crd 09 a,10.0,SES
+2025-08-01,credenza crd 09 a,10.0,SES
+2025-09-01,credenza crd 09 a,10.0,SES
+2025-10-01,credenza crd 09 a,10.0,SES
+2025-11-01,credenza crd 09 a,10.0,SES
+2025-12-01,credenza crd 09 a,10.0,SES
+2026-01-01,credenza crd 09 a,10.0,SES
+2026-02-01,credenza crd 09 a,10.0,SES
+2026-03-01,credenza crd 09 a,10.0,SES
+2026-04-01,credenza crd 09 a,10.0,SES
+2026-05-01,credenza crd 09 a,10.0,SES
+2026-06-01,credenza crd 09 a,10.0,SES
+2026-07-01,credenza crd 09 a,10.0,SES
+2026-08-01,credenza crd 09 a,10.0,SES
+2026-09-01,credenza crd 09 a,10.0,SES
+2026-10-01,credenza crd 09 a,10.0,SES
+2026-11-01,credenza crd 09 a,10.0,SES
+2026-12-01,credenza crd 09 a,10.0,SES
+2025-01-01,kursi auditorium ll 516,5.585429981694833,SES
+2025-02-01,kursi auditorium ll 516,3.032331704253235,SES
+2025-03-01,kursi auditorium ll 516,0.0,SES
+2025-04-01,kursi auditorium ll 516,0.0,SES
+2025-05-01,kursi auditorium ll 516,7.678873641763356,SES
+2025-06-01,kursi auditorium ll 516,0.0,SES
+2025-07-01,kursi auditorium ll 516,0.0,SES
+2025-08-01,kursi auditorium ll 516,6.3376341258370035,SES
+2025-09-01,kursi auditorium ll 516,0.0,SES
+2025-10-01,kursi auditorium ll 516,3.700206193919699,SES
+2025-11-01,kursi auditorium ll 516,3.7097092326720613,SES
+2025-12-01,kursi auditorium ll 516,2.967698264118514,SES
+2026-01-01,kursi auditorium ll 516,5.585111920704444,SES
+2026-02-01,kursi auditorium ll 516,3.032077255460923,SES
+2026-03-01,kursi auditorium ll 516,0.0,SES
+2026-04-01,kursi auditorium ll 516,0.0,SES
+2026-05-01,kursi auditorium ll 516,7.678743363981692,SES
+2026-06-01,kursi auditorium ll 516,0.0,SES
+2026-07-01,kursi auditorium ll 516,0.0,SES
+2026-08-01,kursi auditorium ll 516,6.337567423612792,SES
+2026-09-01,kursi auditorium ll 516,0.0,SES
+2026-10-01,kursi auditorium ll 516,3.7001635044962033,SES
+2026-11-01,kursi auditorium ll 516,3.709675081133265,SES
+2026-12-01,kursi auditorium ll 516,2.967670942887477,SES
+2025-01-01,kursi auditorium ll 516 tb,48.30568710993164,SES
+2025-02-01,kursi auditorium ll 516 tb,66.05833844701986,SES
+2025-03-01,kursi auditorium ll 516 tb,31.14427967908918,SES
+2025-04-01,kursi auditorium ll 516 tb,46.89596463805204,SES
+2025-05-01,kursi auditorium ll 516 tb,140.22718102217462,SES
+2025-06-01,kursi auditorium ll 516 tb,85.18914879434375,SES
+2025-07-01,kursi auditorium ll 516 tb,109.61119607813094,SES
+2025-08-01,kursi auditorium ll 516 tb,139.48557697301186,SES
+2025-09-01,kursi auditorium ll 516 tb,35.316709635606514,SES
+2025-10-01,kursi auditorium ll 516 tb,55.06609390377406,SES
+2025-11-01,kursi auditorium ll 516 tb,67.14947530086981,SES
+2025-12-01,kursi auditorium ll 516 tb,60.90107179231802,SES
+2026-01-01,kursi auditorium ll 516 tb,61.697562620730054,SES
+2026-02-01,kursi auditorium ll 516 tb,79.34052679484408,SES
+2026-03-01,kursi auditorium ll 516 tb,44.317679264892206,SES
+2026-04-01,kursi auditorium ll 516 tb,59.96146650436635,SES
+2026-05-01,kursi auditorium ll 516 tb,153.18566891338182,SES
+2026-06-01,kursi auditorium ll 516 tb,98.04149921645069,SES
+2026-07-01,kursi auditorium ll 516 tb,122.35827835805611,SES
+2026-08-01,kursi auditorium ll 516 tb,152.1282533173863,SES
+2026-09-01,kursi auditorium ll 516 tb,47.8558351890931,SES
+2026-10-01,kursi auditorium ll 516 tb,67.50251680690891,SES
+2026-11-01,kursi auditorium ll 516 tb,79.48403674743034,SES
+2026-12-01,kursi auditorium ll 516 tb,73.13460608622073,SES
+2025-01-01,kursi auditorium ll 517 tb,80.0,SES
+2025-02-01,kursi auditorium ll 517 tb,80.0,SES
+2025-03-01,kursi auditorium ll 517 tb,80.0,SES
+2025-04-01,kursi auditorium ll 517 tb,80.0,SES
+2025-05-01,kursi auditorium ll 517 tb,80.0,SES
+2025-06-01,kursi auditorium ll 517 tb,80.0,SES
+2025-07-01,kursi auditorium ll 517 tb,80.0,SES
+2025-08-01,kursi auditorium ll 517 tb,80.0,SES
+2025-09-01,kursi auditorium ll 517 tb,80.0,SES
+2025-10-01,kursi auditorium ll 517 tb,80.0,SES
+2025-11-01,kursi auditorium ll 517 tb,80.0,SES
+2025-12-01,kursi auditorium ll 517 tb,80.0,SES
+2026-01-01,kursi auditorium ll 517 tb,80.0,SES
+2026-02-01,kursi auditorium ll 517 tb,80.0,SES
+2026-03-01,kursi auditorium ll 517 tb,80.0,SES
+2026-04-01,kursi auditorium ll 517 tb,80.0,SES
+2026-05-01,kursi auditorium ll 517 tb,80.0,SES
+2026-06-01,kursi auditorium ll 517 tb,80.0,SES
+2026-07-01,kursi auditorium ll 517 tb,80.0,SES
+2026-08-01,kursi auditorium ll 517 tb,80.0,SES
+2026-09-01,kursi auditorium ll 517 tb,80.0,SES
+2026-10-01,kursi auditorium ll 517 tb,80.0,SES
+2026-11-01,kursi auditorium ll 517 tb,80.0,SES
+2026-12-01,kursi auditorium ll 517 tb,80.0,SES
+2025-01-01,kursi auditorium ll 520,0.0,SES
+2025-02-01,kursi auditorium ll 520,0.0,SES
+2025-03-01,kursi auditorium ll 520,0.0,SES
+2025-04-01,kursi auditorium ll 520,0.0,SES
+2025-05-01,kursi auditorium ll 520,0.0,SES
+2025-06-01,kursi auditorium ll 520,0.10229485577089625,SES
+2025-07-01,kursi auditorium ll 520,51.67820630275526,SES
+2025-08-01,kursi auditorium ll 520,34.14146975279654,SES
+2025-09-01,kursi auditorium ll 520,0.0,SES
+2025-10-01,kursi auditorium ll 520,0.0,SES
+2025-11-01,kursi auditorium ll 520,91.0781419768962,SES
+2025-12-01,kursi auditorium ll 520,0.0,SES
+2026-01-01,kursi auditorium ll 520,0.0,SES
+2026-02-01,kursi auditorium ll 520,0.0,SES
+2026-03-01,kursi auditorium ll 520,0.0,SES
+2026-04-01,kursi auditorium ll 520,0.0,SES
+2026-05-01,kursi auditorium ll 520,0.0,SES
+2026-06-01,kursi auditorium ll 520,0.06259661622683188,SES
+2026-07-01,kursi auditorium ll 520,51.646447711120004,SES
+2026-08-01,kursi auditorium ll 520,34.11606287948834,SES
+2026-09-01,kursi auditorium ll 520,0.0,SES
+2026-10-01,kursi auditorium ll 520,0.0,SES
+2026-11-01,kursi auditorium ll 520,91.0651336577624,SES
+2026-12-01,kursi auditorium ll 520,0.0,SES
+2025-01-01,kursi auditorium ll 520 tb,45.615129034269586,SES
+2025-02-01,kursi auditorium ll 520 tb,100.2711925090907,SES
+2025-03-01,kursi auditorium ll 520 tb,261.93928050230295,SES
+2025-04-01,kursi auditorium ll 520 tb,44.72457337624025,SES
+2025-05-01,kursi auditorium ll 520 tb,110.34961652929813,SES
+2025-06-01,kursi auditorium ll 520 tb,141.13985458269235,SES
+2025-07-01,kursi auditorium ll 520 tb,71.31236427729016,SES
+2025-08-01,kursi auditorium ll 520 tb,131.05071229570234,SES
+2025-09-01,kursi auditorium ll 520 tb,43.89580006514467,SES
+2025-10-01,kursi auditorium ll 520 tb,71.9546800206663,SES
+2025-11-01,kursi auditorium ll 520 tb,138.75092053497391,SES
+2025-12-01,kursi auditorium ll 520 tb,149.9249622973732,SES
+2026-01-01,kursi auditorium ll 520 tb,73.62457828112748,SES
+2026-02-01,kursi auditorium ll 520 tb,128.1405945097143,SES
+2026-03-01,kursi auditorium ll 520 tb,289.66933549292344,SES
+2026-04-01,kursi auditorium ll 520 tb,72.31597809190765,SES
+2026-05-01,kursi auditorium ll 520 tb,137.8030642213872,SES
+2026-06-01,kursi auditorium ll 520 tb,168.45603503632094,SES
+2026-07-01,kursi auditorium ll 520 tb,98.49196382865063,SES
+2026-08-01,kursi auditorium ll 520 tb,158.09441384930597,SES
+2026-09-01,kursi auditorium ll 520 tb,70.80428311098032,SES
+2026-10-01,kursi auditorium ll 520 tb,98.72862065127278,SES
+2026-11-01,kursi auditorium ll 520 tb,165.39099146242734,SES
+2026-12-01,kursi auditorium ll 520 tb,176.43183287018937,SES
+2025-01-01,kursi auditorium ll 521 tb,20.0,SES
+2025-02-01,kursi auditorium ll 521 tb,20.0,SES
+2025-03-01,kursi auditorium ll 521 tb,20.0,SES
+2025-04-01,kursi auditorium ll 521 tb,20.0,SES
+2025-05-01,kursi auditorium ll 521 tb,20.0,SES
+2025-06-01,kursi auditorium ll 521 tb,20.0,SES
+2025-07-01,kursi auditorium ll 521 tb,20.0,SES
+2025-08-01,kursi auditorium ll 521 tb,20.0,SES
+2025-09-01,kursi auditorium ll 521 tb,20.0,SES
+2025-10-01,kursi auditorium ll 521 tb,20.0,SES
+2025-11-01,kursi auditorium ll 521 tb,20.0,SES
+2025-12-01,kursi auditorium ll 521 tb,20.0,SES
+2026-01-01,kursi auditorium ll 521 tb,20.0,SES
+2026-02-01,kursi auditorium ll 521 tb,20.0,SES
+2026-03-01,kursi auditorium ll 521 tb,20.0,SES
+2026-04-01,kursi auditorium ll 521 tb,20.0,SES
+2026-05-01,kursi auditorium ll 521 tb,20.0,SES
+2026-06-01,kursi auditorium ll 521 tb,20.0,SES
+2026-07-01,kursi auditorium ll 521 tb,20.0,SES
+2026-08-01,kursi auditorium ll 521 tb,20.0,SES
+2026-09-01,kursi auditorium ll 521 tb,20.0,SES
+2026-10-01,kursi auditorium ll 521 tb,20.0,SES
+2026-11-01,kursi auditorium ll 521 tb,20.0,SES
+2026-12-01,kursi auditorium ll 521 tb,20.0,SES
+2025-01-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-02-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-03-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-04-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-05-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-06-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-07-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-08-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-09-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-10-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-11-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-12-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-01-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-02-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-03-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-04-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-05-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-06-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-07-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-08-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-09-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-10-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-11-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2026-12-01,kursi auditorium ll 523 tb pp,0.3920403983295316,SES
+2025-01-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-02-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-03-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-04-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-05-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-06-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-07-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-08-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-09-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-10-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-11-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-12-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-01-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-02-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-03-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-04-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-05-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-06-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-07-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-08-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-09-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-10-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-11-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2026-12-01,kursi auditorium ll 536 wp,1.200000262260428,SES
+2025-01-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-02-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-03-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-04-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-05-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-06-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-07-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-08-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-09-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-10-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-11-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-12-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-01-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-02-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-03-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-04-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-05-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-06-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-07-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-08-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-09-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-10-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-11-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2026-12-01,kursi bar stool bs 510 pc,1.2322048794153506,SES
+2025-01-01,kursi br 211 ca mesh,81.0,SES
+2025-02-01,kursi br 211 ca mesh,81.0,SES
+2025-03-01,kursi br 211 ca mesh,81.0,SES
+2025-04-01,kursi br 211 ca mesh,81.0,SES
+2025-05-01,kursi br 211 ca mesh,81.0,SES
+2025-06-01,kursi br 211 ca mesh,81.0,SES
+2025-07-01,kursi br 211 ca mesh,81.0,SES
+2025-08-01,kursi br 211 ca mesh,81.0,SES
+2025-09-01,kursi br 211 ca mesh,81.0,SES
+2025-10-01,kursi br 211 ca mesh,81.0,SES
+2025-11-01,kursi br 211 ca mesh,81.0,SES
+2025-12-01,kursi br 211 ca mesh,81.0,SES
+2026-01-01,kursi br 211 ca mesh,81.0,SES
+2026-02-01,kursi br 211 ca mesh,81.0,SES
+2026-03-01,kursi br 211 ca mesh,81.0,SES
+2026-04-01,kursi br 211 ca mesh,81.0,SES
+2026-05-01,kursi br 211 ca mesh,81.0,SES
+2026-06-01,kursi br 211 ca mesh,81.0,SES
+2026-07-01,kursi br 211 ca mesh,81.0,SES
+2026-08-01,kursi br 211 ca mesh,81.0,SES
+2026-09-01,kursi br 211 ca mesh,81.0,SES
+2026-10-01,kursi br 211 ca mesh,81.0,SES
+2026-11-01,kursi br 211 ca mesh,81.0,SES
+2026-12-01,kursi br 211 ca mesh,81.0,SES
+2025-01-01,kursi br 211 mhar mesh,17.9352020154321,SES
+2025-02-01,kursi br 211 mhar mesh,0.0,SES
+2025-03-01,kursi br 211 mhar mesh,1.99739644567574,SES
+2025-04-01,kursi br 211 mhar mesh,0.0,SES
+2025-05-01,kursi br 211 mhar mesh,11.857752957185626,SES
+2025-06-01,kursi br 211 mhar mesh,16.986158437921546,SES
+2025-07-01,kursi br 211 mhar mesh,24.58912172303628,SES
+2025-08-01,kursi br 211 mhar mesh,24.671537345180994,SES
+2025-09-01,kursi br 211 mhar mesh,30.987361731607237,SES
+2025-10-01,kursi br 211 mhar mesh,0.0,SES
+2025-11-01,kursi br 211 mhar mesh,31.083280614292256,SES
+2025-12-01,kursi br 211 mhar mesh,1.3673610783060735,SES
+2026-01-01,kursi br 211 mhar mesh,17.922208994078332,SES
+2026-02-01,kursi br 211 mhar mesh,0.0,SES
+2026-03-01,kursi br 211 mhar mesh,1.989080912009328,SES
+2026-04-01,kursi br 211 mhar mesh,0.0,SES
+2026-05-01,kursi br 211 mhar mesh,11.852431015639121,SES
+2026-06-01,kursi br 211 mhar mesh,16.981900884684343,SES
+2026-07-01,kursi br 211 mhar mesh,24.585715680446512,SES
+2026-08-01,kursi br 211 mhar mesh,24.668812511109184,SES
+2026-09-01,kursi br 211 mhar mesh,30.98518186434979,SES
+2026-10-01,kursi br 211 mhar mesh,0.0,SES
+2026-11-01,kursi br 211 mhar mesh,31.08188549924749,SES
+2026-12-01,kursi br 211 mhar mesh,1.3662449862702601,SES
+2025-01-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-02-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-03-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-04-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-05-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-06-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-07-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-08-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-09-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-10-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-11-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-12-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-01-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-02-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-03-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-04-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-05-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-06-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-07-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-08-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-09-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-10-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-11-01,kursi br 213 har mesh,9.777902180002991,SES
+2026-12-01,kursi br 213 har mesh,9.777902180002991,SES
+2025-01-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-02-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-03-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-04-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-05-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-06-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-07-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-08-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-09-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-10-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-11-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-12-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-01-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-02-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-03-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-04-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-05-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-06-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-07-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-08-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-09-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-10-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-11-01,kursi executive x 616 har,0.4000003725290361,SES
+2026-12-01,kursi executive x 616 har,0.4000003725290361,SES
+2025-01-01,kursi hbot,8.512382053107192,SES
+2025-02-01,kursi hbot,8.512382053107192,SES
+2025-03-01,kursi hbot,8.512382053107192,SES
+2025-04-01,kursi hbot,8.512382053107192,SES
+2025-05-01,kursi hbot,8.512382053107192,SES
+2025-06-01,kursi hbot,8.512382053107192,SES
+2025-07-01,kursi hbot,8.512382053107192,SES
+2025-08-01,kursi hbot,8.512382053107192,SES
+2025-09-01,kursi hbot,8.512382053107192,SES
+2025-10-01,kursi hbot,8.512382053107192,SES
+2025-11-01,kursi hbot,8.512382053107192,SES
+2025-12-01,kursi hbot,8.512382053107192,SES
+2026-01-01,kursi hbot,8.512382053107192,SES
+2026-02-01,kursi hbot,8.512382053107192,SES
+2026-03-01,kursi hbot,8.512382053107192,SES
+2026-04-01,kursi hbot,8.512382053107192,SES
+2026-05-01,kursi hbot,8.512382053107192,SES
+2026-06-01,kursi hbot,8.512382053107192,SES
+2026-07-01,kursi hbot,8.512382053107192,SES
+2026-08-01,kursi hbot,8.512382053107192,SES
+2026-09-01,kursi hbot,8.512382053107192,SES
+2026-10-01,kursi hbot,8.512382053107192,SES
+2026-11-01,kursi hbot,8.512382053107192,SES
+2026-12-01,kursi hbot,8.512382053107192,SES
+2025-01-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-02-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-03-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-04-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-05-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-06-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-07-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-08-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-09-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-10-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-11-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-12-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-01-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-02-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-03-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-04-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-05-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-06-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-07-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-08-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-09-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-10-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-11-01,kursi kabag x 816 har,6.899508630647437,SES
+2026-12-01,kursi kabag x 816 har,6.899508630647437,SES
+2025-01-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-02-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-03-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-04-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-05-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-06-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-07-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-08-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-09-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-10-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-11-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-12-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-01-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-02-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-03-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-04-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-05-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-06-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-07-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-08-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-09-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-10-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-11-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2026-12-01,kursi kerja ar 702 ha,1.7104676546949253,SES
+2025-01-01,kursi kerja ar 703 ha,1.0,SES
+2025-02-01,kursi kerja ar 703 ha,1.0,SES
+2025-03-01,kursi kerja ar 703 ha,1.0,SES
+2025-04-01,kursi kerja ar 703 ha,1.0,SES
+2025-05-01,kursi kerja ar 703 ha,1.0,SES
+2025-06-01,kursi kerja ar 703 ha,1.0,SES
+2025-07-01,kursi kerja ar 703 ha,1.0,SES
+2025-08-01,kursi kerja ar 703 ha,1.0,SES
+2025-09-01,kursi kerja ar 703 ha,1.0,SES
+2025-10-01,kursi kerja ar 703 ha,1.0,SES
+2025-11-01,kursi kerja ar 703 ha,1.0,SES
+2025-12-01,kursi kerja ar 703 ha,1.0,SES
+2026-01-01,kursi kerja ar 703 ha,1.0,SES
+2026-02-01,kursi kerja ar 703 ha,1.0,SES
+2026-03-01,kursi kerja ar 703 ha,1.0,SES
+2026-04-01,kursi kerja ar 703 ha,1.0,SES
+2026-05-01,kursi kerja ar 703 ha,1.0,SES
+2026-06-01,kursi kerja ar 703 ha,1.0,SES
+2026-07-01,kursi kerja ar 703 ha,1.0,SES
+2026-08-01,kursi kerja ar 703 ha,1.0,SES
+2026-09-01,kursi kerja ar 703 ha,1.0,SES
+2026-10-01,kursi kerja ar 703 ha,1.0,SES
+2026-11-01,kursi kerja ar 703 ha,1.0,SES
+2026-12-01,kursi kerja ar 703 ha,1.0,SES
+2025-01-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-02-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-03-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-04-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-05-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-06-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-07-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-08-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-09-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-10-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-11-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-12-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-01-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-02-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-03-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-04-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-05-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-06-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-07-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-08-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-09-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-10-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-11-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2026-12-01,kursi kerja ar 703 har,0.4748081572515763,SES
+2025-01-01,kursi kerja ar 801 har,2.153071712427797,SES
+2025-02-01,kursi kerja ar 801 har,6.978731563753481,SES
+2025-03-01,kursi kerja ar 801 har,1.81929746689252,SES
+2025-04-01,kursi kerja ar 801 har,9.17125454088426,SES
+2025-05-01,kursi kerja ar 801 har,1.5365661950640137,SES
+2025-06-01,kursi kerja ar 801 har,1.4116617239671898,SES
+2025-07-01,kursi kerja ar 801 har,1.2969629034859782,SES
+2025-08-01,kursi kerja ar 801 har,1.1915242117790639,SES
+2025-09-01,kursi kerja ar 801 har,1.0945548497415583,SES
+2025-10-01,kursi kerja ar 801 har,1.0054165128242756,SES
+2025-11-01,kursi kerja ar 801 har,0.9234727108167506,SES
+2025-12-01,kursi kerja ar 801 har,3.919065812587659,SES
+2026-01-01,kursi kerja ar 801 har,2.4811114905392957,SES
+2026-02-01,kursi kerja ar 801 har,7.280170093518167,SES
+2026-03-01,kursi kerja ar 801 har,2.096291884306773,SES
+2026-04-01,kursi kerja ar 801 har,9.425787056480578,SES
+2026-05-01,kursi kerja ar 801 har,1.7704582788849665,SES
+2026-06-01,kursi kerja ar 801 har,1.626587140258085,SES
+2026-07-01,kursi kerja ar 801 har,1.4944596883843322,SES
+2026-08-01,kursi kerja ar 801 har,1.3730056797148738,SES
+2026-09-01,kursi kerja ar 801 har,1.2613197073117075,SES
+2026-10-01,kursi kerja ar 801 har,1.1586581525173643,SES
+2026-11-01,kursi kerja ar 801 har,1.0642877510955353,SES
+2026-12-01,kursi kerja ar 801 har,4.048461945443122,SES
+2025-01-01,kursi kerja br 204 h,6.91176938945667,SES
+2025-02-01,kursi kerja br 204 h,0.0,SES
+2025-03-01,kursi kerja br 204 h,0.0,SES
+2025-04-01,kursi kerja br 204 h,0.0,SES
+2025-05-01,kursi kerja br 204 h,0.0,SES
+2025-06-01,kursi kerja br 204 h,0.0,SES
+2025-07-01,kursi kerja br 204 h,0.0,SES
+2025-08-01,kursi kerja br 204 h,0.0,SES
+2025-09-01,kursi kerja br 204 h,3.201974924927695,SES
+2025-10-01,kursi kerja br 204 h,0.0,SES
+2025-11-01,kursi kerja br 204 h,0.0,SES
+2025-12-01,kursi kerja br 204 h,11.589617372867167,SES
+2026-01-01,kursi kerja br 204 h,6.907749608875724,SES
+2026-02-01,kursi kerja br 204 h,0.0,SES
+2026-03-01,kursi kerja br 204 h,0.0,SES
+2026-04-01,kursi kerja br 204 h,0.0,SES
+2026-05-01,kursi kerja br 204 h,0.0,SES
+2026-06-01,kursi kerja br 204 h,0.0,SES
+2026-07-01,kursi kerja br 204 h,0.0,SES
+2026-08-01,kursi kerja br 204 h,0.0,SES
+2026-09-01,kursi kerja br 204 h,3.201300517656904,SES
+2026-10-01,kursi kerja br 204 h,0.0,SES
+2026-11-01,kursi kerja br 204 h,0.0,SES
+2026-12-01,kursi kerja br 204 h,11.589272076344521,SES
+2025-01-01,kursi kerja br 205 ha,155.0,SES
+2025-02-01,kursi kerja br 205 ha,155.0,SES
+2025-03-01,kursi kerja br 205 ha,155.0,SES
+2025-04-01,kursi kerja br 205 ha,155.0,SES
+2025-05-01,kursi kerja br 205 ha,155.0,SES
+2025-06-01,kursi kerja br 205 ha,155.0,SES
+2025-07-01,kursi kerja br 205 ha,155.0,SES
+2025-08-01,kursi kerja br 205 ha,155.0,SES
+2025-09-01,kursi kerja br 205 ha,155.0,SES
+2025-10-01,kursi kerja br 205 ha,155.0,SES
+2025-11-01,kursi kerja br 205 ha,155.0,SES
+2025-12-01,kursi kerja br 205 ha,155.0,SES
+2026-01-01,kursi kerja br 205 ha,155.0,SES
+2026-02-01,kursi kerja br 205 ha,155.0,SES
+2026-03-01,kursi kerja br 205 ha,155.0,SES
+2026-04-01,kursi kerja br 205 ha,155.0,SES
+2026-05-01,kursi kerja br 205 ha,155.0,SES
+2026-06-01,kursi kerja br 205 ha,155.0,SES
+2026-07-01,kursi kerja br 205 ha,155.0,SES
+2026-08-01,kursi kerja br 205 ha,155.0,SES
+2026-09-01,kursi kerja br 205 ha,155.0,SES
+2026-10-01,kursi kerja br 205 ha,155.0,SES
+2026-11-01,kursi kerja br 205 ha,155.0,SES
+2026-12-01,kursi kerja br 205 ha,155.0,SES
+2025-01-01,kursi kerja br 207 hba,0.10181028880785671,SES
+2025-02-01,kursi kerja br 207 hba,0.10135757439613688,SES
+2025-03-01,kursi kerja br 207 hba,0.10081965429042875,SES
+2025-04-01,kursi kerja br 207 hba,0.10032761228725315,SES
+2025-05-01,kursi kerja br 207 hba,0.09983763297618269,SES
+2025-06-01,kursi kerja br 207 hba,0.09934975333401418,SES
+2025-07-01,kursi kerja br 207 hba,0.09886388189160483,SES
+2025-08-01,kursi kerja br 207 hba,0.4672704266473855,SES
+2025-09-01,kursi kerja br 207 hba,0.13321229038775034,SES
+2025-10-01,kursi kerja br 207 hba,0.13250923887600452,SES
+2025-11-01,kursi kerja br 207 hba,0.13181725533739136,SES
+2025-12-01,kursi kerja br 207 hba,0.797825405847369,SES
+2026-01-01,kursi kerja br 207 hba,0.1644537091214639,SES
+2026-02-01,kursi kerja br 207 hba,0.16368777760817604,SES
+2026-03-01,kursi kerja br 207 hba,0.16283820648640773,SES
+2026-04-01,kursi kerja br 207 hba,0.1620360717222522,SES
+2026-05-01,kursi kerja br 207 hba,0.1612375501140068,SES
+2026-06-01,kursi kerja br 207 hba,0.16044267088614916,SES
+2026-07-01,kursi kerja br 207 hba,0.1596513348559791,SES
+2026-08-01,kursi kerja br 207 hba,0.527753942346938,SES
+2026-09-01,kursi kerja br 207 hba,0.19339338850880497,SES
+2026-10-01,kursi kerja br 207 hba,0.19238943150645388,SES
+2026-11-01,kursi kerja br 207 hba,0.1913980470046885,SES
+2026-12-01,kursi kerja br 207 hba,0.8571082935563297,SES
+2025-01-01,kursi kerja dp 301,180.1157074952565,SES
+2025-02-01,kursi kerja dp 301,8.551654165312168,SES
+2025-03-01,kursi kerja dp 301,10.352028563972512,SES
+2025-04-01,kursi kerja dp 301,0.0,SES
+2025-05-01,kursi kerja dp 301,0.0,SES
+2025-06-01,kursi kerja dp 301,0.0,SES
+2025-07-01,kursi kerja dp 301,0.0,SES
+2025-08-01,kursi kerja dp 301,0.0,SES
+2025-09-01,kursi kerja dp 301,82.34444650274472,SES
+2025-10-01,kursi kerja dp 301,0.0,SES
+2025-11-01,kursi kerja dp 301,0.0,SES
+2025-12-01,kursi kerja dp 301,25.654117763396837,SES
+2026-01-01,kursi kerja dp 301,180.0219551847474,SES
+2026-02-01,kursi kerja dp 301,8.476652316904904,SES
+2026-03-01,kursi kerja dp 301,10.2920270852467,SES
+2026-04-01,kursi kerja dp 301,0.0,SES
+2026-05-01,kursi kerja dp 301,0.0,SES
+2026-06-01,kursi kerja dp 301,0.0,SES
+2026-07-01,kursi kerja dp 301,0.0,SES
+2026-08-01,kursi kerja dp 301,0.0,SES
+2026-09-01,kursi kerja dp 301,82.32871747510562,SES
+2026-10-01,kursi kerja dp 301,0.0,SES
+2026-11-01,kursi kerja dp 301,0.0,SES
+2026-12-01,kursi kerja dp 301,25.64606450124562,SES
+2025-01-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-02-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-03-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-04-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-05-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-06-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-07-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-08-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-09-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-10-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-11-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-12-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-01-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-02-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-03-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-04-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-05-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-06-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-07-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-08-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-09-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-10-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-11-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2026-12-01,kursi kerja dp 301 tb,184.15694951096208,SES
+2025-01-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-02-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-03-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-04-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-05-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-06-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-07-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-08-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-09-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-10-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-11-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-12-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-01-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-02-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-03-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-04-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-05-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-06-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-07-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-08-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-09-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-10-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-11-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2026-12-01,kursi kerja dp 302 a,3.5916707582863063,SES
+2025-01-01,kursi kerja dp 303,9.80000004470349,SES
+2025-02-01,kursi kerja dp 303,9.80000004470349,SES
+2025-03-01,kursi kerja dp 303,9.80000004470349,SES
+2025-04-01,kursi kerja dp 303,9.80000004470349,SES
+2025-05-01,kursi kerja dp 303,9.80000004470349,SES
+2025-06-01,kursi kerja dp 303,9.80000004470349,SES
+2025-07-01,kursi kerja dp 303,9.80000004470349,SES
+2025-08-01,kursi kerja dp 303,9.80000004470349,SES
+2025-09-01,kursi kerja dp 303,9.80000004470349,SES
+2025-10-01,kursi kerja dp 303,9.80000004470349,SES
+2025-11-01,kursi kerja dp 303,9.80000004470349,SES
+2025-12-01,kursi kerja dp 303,9.80000004470349,SES
+2026-01-01,kursi kerja dp 303,9.80000004470349,SES
+2026-02-01,kursi kerja dp 303,9.80000004470349,SES
+2026-03-01,kursi kerja dp 303,9.80000004470349,SES
+2026-04-01,kursi kerja dp 303,9.80000004470349,SES
+2026-05-01,kursi kerja dp 303,9.80000004470349,SES
+2026-06-01,kursi kerja dp 303,9.80000004470349,SES
+2026-07-01,kursi kerja dp 303,9.80000004470349,SES
+2026-08-01,kursi kerja dp 303,9.80000004470349,SES
+2026-09-01,kursi kerja dp 303,9.80000004470349,SES
+2026-10-01,kursi kerja dp 303,9.80000004470349,SES
+2026-11-01,kursi kerja dp 303,9.80000004470349,SES
+2026-12-01,kursi kerja dp 303,9.80000004470349,SES
+2025-01-01,kursi kerja dp 304,4.93574728317526,SES
+2025-02-01,kursi kerja dp 304,3.0459280239208715,SES
+2025-03-01,kursi kerja dp 304,3.0312836988193124,SES
+2025-04-01,kursi kerja dp 304,3.01664781737167,SES
+2025-05-01,kursi kerja dp 304,4.877109827518003,SES
+2025-06-01,kursi kerja dp 304,2.9874136502069293,SES
+2025-07-01,kursi kerja dp 304,2.97282757121584,SES
+2025-08-01,kursi kerja dp 304,2.9582213828453776,SES
+2025-09-01,kursi kerja dp 304,4.818782781340839,SES
+2025-10-01,kursi kerja dp 304,4.804337609481078,SES
+2025-11-01,kursi kerja dp 304,5.00043417720517,SES
+2025-12-01,kursi kerja dp 304,4.3187258278321465,SES
+2026-01-01,kursi kerja dp 304,5.9490740723321025,SES
+2026-02-01,kursi kerja dp 304,4.05418817913193,SES
+2026-03-01,kursi kerja dp 304,4.034502553254316,SES
+2026-04-01,kursi kerja dp 304,4.0148505775344985,SES
+2026-05-01,kursi kerja dp 304,5.870321573880017,SES
+2026-06-01,kursi kerja dp 304,3.9756593378371328,SES
+2026-07-01,kursi kerja dp 304,3.956132030407893,SES
+2026-08-01,kursi kerja dp 304,3.9366093197414695,SES
+2026-09-01,kursi kerja dp 304,5.792278778552451,SES
+2026-10-01,kursi kerja dp 304,5.772966126706632,SES
+2026-11-01,kursi kerja dp 304,5.964219551844597,SES
+2026-12-01,kursi kerja dp 304,5.277692275598375,SES
+2025-01-01,kursi kerja dp 305,12.0,SES
+2025-02-01,kursi kerja dp 305,12.0,SES
+2025-03-01,kursi kerja dp 305,12.0,SES
+2025-04-01,kursi kerja dp 305,12.0,SES
+2025-05-01,kursi kerja dp 305,12.0,SES
+2025-06-01,kursi kerja dp 305,12.0,SES
+2025-07-01,kursi kerja dp 305,12.0,SES
+2025-08-01,kursi kerja dp 305,12.0,SES
+2025-09-01,kursi kerja dp 305,12.0,SES
+2025-10-01,kursi kerja dp 305,12.0,SES
+2025-11-01,kursi kerja dp 305,12.0,SES
+2025-12-01,kursi kerja dp 305,12.0,SES
+2026-01-01,kursi kerja dp 305,12.0,SES
+2026-02-01,kursi kerja dp 305,12.0,SES
+2026-03-01,kursi kerja dp 305,12.0,SES
+2026-04-01,kursi kerja dp 305,12.0,SES
+2026-05-01,kursi kerja dp 305,12.0,SES
+2026-06-01,kursi kerja dp 305,12.0,SES
+2026-07-01,kursi kerja dp 305,12.0,SES
+2026-08-01,kursi kerja dp 305,12.0,SES
+2026-09-01,kursi kerja dp 305,12.0,SES
+2026-10-01,kursi kerja dp 305,12.0,SES
+2026-11-01,kursi kerja dp 305,12.0,SES
+2026-12-01,kursi kerja dp 305,12.0,SES
+2025-01-01,kursi kerja dp 308,104.00103968017413,SES
+2025-02-01,kursi kerja dp 308,104.00103968017413,SES
+2025-03-01,kursi kerja dp 308,104.00103968017413,SES
+2025-04-01,kursi kerja dp 308,104.00103968017413,SES
+2025-05-01,kursi kerja dp 308,104.00103968017413,SES
+2025-06-01,kursi kerja dp 308,104.00103968017413,SES
+2025-07-01,kursi kerja dp 308,104.00103968017413,SES
+2025-08-01,kursi kerja dp 308,104.00103968017413,SES
+2025-09-01,kursi kerja dp 308,104.00103968017413,SES
+2025-10-01,kursi kerja dp 308,104.00103968017413,SES
+2025-11-01,kursi kerja dp 308,104.00103968017413,SES
+2025-12-01,kursi kerja dp 308,104.00103968017413,SES
+2026-01-01,kursi kerja dp 308,104.00103968017413,SES
+2026-02-01,kursi kerja dp 308,104.00103968017413,SES
+2026-03-01,kursi kerja dp 308,104.00103968017413,SES
+2026-04-01,kursi kerja dp 308,104.00103968017413,SES
+2026-05-01,kursi kerja dp 308,104.00103968017413,SES
+2026-06-01,kursi kerja dp 308,104.00103968017413,SES
+2026-07-01,kursi kerja dp 308,104.00103968017413,SES
+2026-08-01,kursi kerja dp 308,104.00103968017413,SES
+2026-09-01,kursi kerja dp 308,104.00103968017413,SES
+2026-10-01,kursi kerja dp 308,104.00103968017413,SES
+2026-11-01,kursi kerja dp 308,104.00103968017413,SES
+2026-12-01,kursi kerja dp 308,104.00103968017413,SES
+2025-01-01,kursi kerja fs 904 har,2.565730137878883,SES
+2025-02-01,kursi kerja fs 904 har,3.0579007544130916,SES
+2025-03-01,kursi kerja fs 904 har,1.5501098652147907,SES
+2025-04-01,kursi kerja fs 904 har,1.5423582010230832,SES
+2025-05-01,kursi kerja fs 904 har,1.5346456971556113,SES
+2025-06-01,kursi kerja fs 904 har,1.52697151504291,SES
+2025-07-01,kursi kerja fs 904 har,1.5193367906661444,SES
+2025-08-01,kursi kerja fs 904 har,1.511739908575782,SES
+2025-09-01,kursi kerja fs 904 har,1.5041816737253195,SES
+2025-10-01,kursi kerja fs 904 har,1.4966610966849216,SES
+2025-11-01,kursi kerja fs 904 har,1.4891788248328046,SES
+2025-12-01,kursi kerja fs 904 har,7.481732373483709,SES
+2026-01-01,kursi kerja fs 904 har,3.528712177812808,SES
+2026-02-01,kursi kerja fs 904 har,4.016067884147347,SES
+2026-03-01,kursi kerja fs 904 har,2.503486159300375,SES
+2026-04-01,kursi kerja fs 904 har,2.4909676136382393,SES
+2026-05-01,kursi kerja fs 904 har,2.4785120627076913,SES
+2026-06-01,kursi kerja fs 904 har,2.4661185487672297,SES
+2026-07-01,kursi kerja fs 904 har,2.4537880892218427,SES
+2026-08-01,kursi kerja fs 904 har,2.4415189506387023,SES
+2026-09-01,kursi kerja fs 904 har,2.4293118205779245,SES
+2026-10-01,kursi kerja fs 904 har,2.417165592803264,SES
+2026-11-01,kursi kerja fs 904 har,2.405080798470555,SES
+2026-12-01,kursi kerja fs 904 har,8.39305483725327,SES
+2025-01-01,kursi kerja ll 508 pc,27.5,SES
+2025-02-01,kursi kerja ll 508 pc,27.5,SES
+2025-03-01,kursi kerja ll 508 pc,27.5,SES
+2025-04-01,kursi kerja ll 508 pc,27.5,SES
+2025-05-01,kursi kerja ll 508 pc,27.5,SES
+2025-06-01,kursi kerja ll 508 pc,27.5,SES
+2025-07-01,kursi kerja ll 508 pc,27.5,SES
+2025-08-01,kursi kerja ll 508 pc,27.5,SES
+2025-09-01,kursi kerja ll 508 pc,27.5,SES
+2025-10-01,kursi kerja ll 508 pc,27.5,SES
+2025-11-01,kursi kerja ll 508 pc,27.5,SES
+2025-12-01,kursi kerja ll 508 pc,27.5,SES
+2026-01-01,kursi kerja ll 508 pc,27.5,SES
+2026-02-01,kursi kerja ll 508 pc,27.5,SES
+2026-03-01,kursi kerja ll 508 pc,27.5,SES
+2026-04-01,kursi kerja ll 508 pc,27.5,SES
+2026-05-01,kursi kerja ll 508 pc,27.5,SES
+2026-06-01,kursi kerja ll 508 pc,27.5,SES
+2026-07-01,kursi kerja ll 508 pc,27.5,SES
+2026-08-01,kursi kerja ll 508 pc,27.5,SES
+2026-09-01,kursi kerja ll 508 pc,27.5,SES
+2026-10-01,kursi kerja ll 508 pc,27.5,SES
+2026-11-01,kursi kerja ll 508 pc,27.5,SES
+2026-12-01,kursi kerja ll 508 pc,27.5,SES
+2025-01-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-02-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-03-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-04-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-05-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-06-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-07-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-08-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-09-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-10-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-11-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-12-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-01-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-02-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-03-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-04-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-05-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-06-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-07-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-08-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-09-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-10-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-11-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2026-12-01,kursi kerja mg 903 har,0.5333333343267487,SES
+2025-01-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-02-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-03-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-04-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-05-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-06-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-07-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-08-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-09-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-10-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-11-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-12-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-01-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-02-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-03-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-04-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-05-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-06-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-07-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-08-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-09-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-10-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-11-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2026-12-01,kursi kerja x 816 mhar,2.8057885469729085,SES
+2025-01-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-02-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-03-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-04-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-05-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-06-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-07-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-08-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-09-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-10-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-11-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-12-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-01-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-02-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-03-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-04-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-05-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-06-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-07-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-08-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-09-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-10-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-11-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2026-12-01,kursi kerja x 903 mhar cpt,0.5499999612569816,SES
+2025-01-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-02-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-03-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-04-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-05-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-06-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-07-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-08-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-09-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-10-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-11-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-12-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-01-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-02-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-03-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-04-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-05-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-06-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-07-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-08-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-09-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-10-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-11-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2026-12-01,kursi lab ll 503 hchfr,21.09052096697816,SES
+2025-01-01,kursi lounge lc 515 wood,3.75,SES
+2025-02-01,kursi lounge lc 515 wood,3.75,SES
+2025-03-01,kursi lounge lc 515 wood,3.75,SES
+2025-04-01,kursi lounge lc 515 wood,3.75,SES
+2025-05-01,kursi lounge lc 515 wood,3.75,SES
+2025-06-01,kursi lounge lc 515 wood,3.75,SES
+2025-07-01,kursi lounge lc 515 wood,3.75,SES
+2025-08-01,kursi lounge lc 515 wood,3.75,SES
+2025-09-01,kursi lounge lc 515 wood,3.75,SES
+2025-10-01,kursi lounge lc 515 wood,3.75,SES
+2025-11-01,kursi lounge lc 515 wood,3.75,SES
+2025-12-01,kursi lounge lc 515 wood,3.75,SES
+2026-01-01,kursi lounge lc 515 wood,3.75,SES
+2026-02-01,kursi lounge lc 515 wood,3.75,SES
+2026-03-01,kursi lounge lc 515 wood,3.75,SES
+2026-04-01,kursi lounge lc 515 wood,3.75,SES
+2026-05-01,kursi lounge lc 515 wood,3.75,SES
+2026-06-01,kursi lounge lc 515 wood,3.75,SES
+2026-07-01,kursi lounge lc 515 wood,3.75,SES
+2026-08-01,kursi lounge lc 515 wood,3.75,SES
+2026-09-01,kursi lounge lc 515 wood,3.75,SES
+2026-10-01,kursi lounge lc 515 wood,3.75,SES
+2026-11-01,kursi lounge lc 515 wood,3.75,SES
+2026-12-01,kursi lounge lc 515 wood,3.75,SES
+2025-01-01,kursi pimpinan x 902 mhar cpt,2.023734873238004,SES
+2025-02-01,kursi pimpinan x 902 mhar cpt,2.4520368172080325,SES
+2025-03-01,kursi pimpinan x 902 mhar cpt,2.8626914134454378,SES
+2025-04-01,kursi pimpinan x 902 mhar cpt,3.2557873760293177,SES
+2025-05-01,kursi pimpinan x 902 mhar cpt,3.6314118844665324,SES
+2025-06-01,kursi pimpinan x 902 mhar cpt,3.989662612783831,SES
+2025-07-01,kursi pimpinan x 902 mhar cpt,4.330589954412478,SES
+2025-08-01,kursi pimpinan x 902 mhar cpt,4.6543142879840635,SES
+2025-09-01,kursi pimpinan x 902 mhar cpt,4.960911318404076,SES
+2025-10-01,kursi pimpinan x 902 mhar cpt,5.250471323154448,SES
+2025-11-01,kursi pimpinan x 902 mhar cpt,5.523083924563484,SES
+2025-12-01,kursi pimpinan x 902 mhar cpt,7.7726663321543885,SES
+2026-01-01,kursi pimpinan x 902 mhar cpt,7.052673027357868,SES
+2026-02-01,kursi pimpinan x 902 mhar cpt,7.455830280557298,SES
+2026-03-01,kursi pimpinan x 902 mhar cpt,7.841465909477957,SES
+2026-04-01,kursi pimpinan x 902 mhar cpt,8.209667999581672,SES
+2026-05-01,kursi pimpinan x 902 mhar cpt,8.560523104901126,SES
+2026-06-01,kursi pimpinan x 902 mhar cpt,8.89412827711625,SES
+2026-07-01,kursi pimpinan x 902 mhar cpt,9.210533290423236,SES
+2026-08-01,kursi pimpinan x 902 mhar cpt,9.509857907314768,SES
+2026-09-01,kursi pimpinan x 902 mhar cpt,9.792177219638127,SES
+2026-10-01,kursi pimpinan x 902 mhar cpt,10.057580894882328,SES
+2026-11-01,kursi pimpinan x 902 mhar cpt,10.306157948432725,SES
+2026-12-01,kursi pimpinan x 902 mhar cpt,12.531824985904283,SES
+2025-01-01,kursi tunggu ll 515 4sa,16.85785724290689,SES
+2025-02-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-03-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-04-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-05-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-06-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-07-01,kursi tunggu ll 515 4sa,5.3386657020010215,SES
+2025-08-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-09-01,kursi tunggu ll 515 4sa,0.5999596372024479,SES
+2025-10-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-11-01,kursi tunggu ll 515 4sa,0.0,SES
+2025-12-01,kursi tunggu ll 515 4sa,0.11924985373783725,SES
+2026-01-01,kursi tunggu ll 515 4sa,16.852476797202886,SES
+2026-02-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-03-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-04-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-05-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-06-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-07-01,kursi tunggu ll 515 4sa,5.337255250442391,SES
+2026-08-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-09-01,kursi tunggu ll 515 4sa,0.5990569482049248,SES
+2026-10-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-11-01,kursi tunggu ll 515 4sa,0.0,SES
+2026-12-01,kursi tunggu ll 515 4sa,0.11878767697110537,SES
+2025-01-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-02-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-03-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-04-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-05-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-06-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-07-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-08-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-09-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-10-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-11-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-12-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-01-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-02-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-03-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-04-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-05-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-06-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-07-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-08-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-09-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-10-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-11-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2026-12-01,kursi tunggu vc 401 3s,0.38193167907716663,SES
+2025-01-01,lemari alat lc 02,1.0,SES
+2025-02-01,lemari alat lc 02,1.0,SES
+2025-03-01,lemari alat lc 02,1.0,SES
+2025-04-01,lemari alat lc 02,1.0,SES
+2025-05-01,lemari alat lc 02,1.0,SES
+2025-06-01,lemari alat lc 02,1.0,SES
+2025-07-01,lemari alat lc 02,1.0,SES
+2025-08-01,lemari alat lc 02,1.0,SES
+2025-09-01,lemari alat lc 02,1.0,SES
+2025-10-01,lemari alat lc 02,1.0,SES
+2025-11-01,lemari alat lc 02,1.0,SES
+2025-12-01,lemari alat lc 02,1.0,SES
+2026-01-01,lemari alat lc 02,1.0,SES
+2026-02-01,lemari alat lc 02,1.0,SES
+2026-03-01,lemari alat lc 02,1.0,SES
+2026-04-01,lemari alat lc 02,1.0,SES
+2026-05-01,lemari alat lc 02,1.0,SES
+2026-06-01,lemari alat lc 02,1.0,SES
+2026-07-01,lemari alat lc 02,1.0,SES
+2026-08-01,lemari alat lc 02,1.0,SES
+2026-09-01,lemari alat lc 02,1.0,SES
+2026-10-01,lemari alat lc 02,1.0,SES
+2026-11-01,lemari alat lc 02,1.0,SES
+2026-12-01,lemari alat lc 02,1.0,SES
+2025-01-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-02-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-03-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-04-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-05-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-06-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-07-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-08-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-09-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-10-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-11-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-12-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-01-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-02-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-03-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-04-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-05-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-06-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-07-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-08-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-09-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-10-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-11-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2026-12-01,lemari besi pintu kaca fc 10 900,2.324498551582944,SES
+2025-01-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-02-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-03-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-04-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-05-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-06-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-07-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-08-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-09-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-10-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-11-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-12-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-01-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-02-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-03-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-04-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-05-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-06-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-07-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-08-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-09-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-10-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-11-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2026-12-01,lemari besi swing door fc 07 900,0.6380212327869357,SES
+2025-01-01,lemari file fc 08,8.75,SES
+2025-02-01,lemari file fc 08,8.75,SES
+2025-03-01,lemari file fc 08,8.75,SES
+2025-04-01,lemari file fc 08,8.75,SES
+2025-05-01,lemari file fc 08,8.75,SES
+2025-06-01,lemari file fc 08,8.75,SES
+2025-07-01,lemari file fc 08,8.75,SES
+2025-08-01,lemari file fc 08,8.75,SES
+2025-09-01,lemari file fc 08,8.75,SES
+2025-10-01,lemari file fc 08,8.75,SES
+2025-11-01,lemari file fc 08,8.75,SES
+2025-12-01,lemari file fc 08,8.75,SES
+2026-01-01,lemari file fc 08,8.75,SES
+2026-02-01,lemari file fc 08,8.75,SES
+2026-03-01,lemari file fc 08,8.75,SES
+2026-04-01,lemari file fc 08,8.75,SES
+2026-05-01,lemari file fc 08,8.75,SES
+2026-06-01,lemari file fc 08,8.75,SES
+2026-07-01,lemari file fc 08,8.75,SES
+2026-08-01,lemari file fc 08,8.75,SES
+2026-09-01,lemari file fc 08,8.75,SES
+2026-10-01,lemari file fc 08,8.75,SES
+2026-11-01,lemari file fc 08,8.75,SES
+2026-12-01,lemari file fc 08,8.75,SES
+2025-01-01,lemari hc 06 b 1200,0.23143063004147407,SES
+2025-02-01,lemari hc 06 b 1200,0.18514509797888845,SES
+2025-03-01,lemari hc 06 b 1200,0.1481166410538291,SES
+2025-04-01,lemari hc 06 b 1200,0.11849362214944748,SES
+2025-05-01,lemari hc 06 b 1200,0.09479317687117811,SES
+2025-06-01,lemari hc 06 b 1200,0.07583494790047479,SES
+2025-07-01,lemari hc 06 b 1200,0.06066870188999107,SES
+2025-08-01,lemari hc 06 b 1200,0.04853468422272922,SES
+2025-09-01,lemari hc 06 b 1200,0.038827295871334766,SES
+2025-10-01,lemari hc 06 b 1200,0.031061079380320877,SES
+2025-11-01,lemari hc 06 b 1200,0.5774100321487363,SES
+2025-12-01,lemari hc 06 b 1200,2.528598013148364,SES
+2026-01-01,lemari hc 06 b 1200,0.23335232287800728,SES
+2026-02-01,lemari hc 06 b 1200,0.18668245224811503,SES
+2026-03-01,lemari hc 06 b 1200,0.14934652446921037,SES
+2026-04-01,lemari hc 06 b 1200,0.1194775288817525,SES
+2026-05-01,lemari hc 06 b 1200,0.09558030225702213,SES
+2026-06-01,lemari hc 06 b 1200,0.07646464820915,SES
+2026-07-01,lemari hc 06 b 1200,0.06117246213693128,SES
+2026-08-01,lemari hc 06 b 1200,0.04893769242028134,SES
+2026-09-01,lemari hc 06 b 1200,0.03914970242937649,SES
+2026-10-01,lemari hc 06 b 1200,0.03131900462675424,SES
+2026-11-01,lemari hc 06 b 1200,0.577616372345883,SES
+2026-12-01,lemari hc 06 b 1200,2.528763085306081,SES
+2025-01-01,lemari lc 03 800,1.599999946355826,SES
+2025-02-01,lemari lc 03 800,1.599999946355826,SES
+2025-03-01,lemari lc 03 800,1.599999946355826,SES
+2025-04-01,lemari lc 03 800,1.599999946355826,SES
+2025-05-01,lemari lc 03 800,1.599999946355826,SES
+2025-06-01,lemari lc 03 800,1.599999946355826,SES
+2025-07-01,lemari lc 03 800,1.599999946355826,SES
+2025-08-01,lemari lc 03 800,1.599999946355826,SES
+2025-09-01,lemari lc 03 800,1.599999946355826,SES
+2025-10-01,lemari lc 03 800,1.599999946355826,SES
+2025-11-01,lemari lc 03 800,1.599999946355826,SES
+2025-12-01,lemari lc 03 800,1.599999946355826,SES
+2026-01-01,lemari lc 03 800,1.599999946355826,SES
+2026-02-01,lemari lc 03 800,1.599999946355826,SES
+2026-03-01,lemari lc 03 800,1.599999946355826,SES
+2026-04-01,lemari lc 03 800,1.599999946355826,SES
+2026-05-01,lemari lc 03 800,1.599999946355826,SES
+2026-06-01,lemari lc 03 800,1.599999946355826,SES
+2026-07-01,lemari lc 03 800,1.599999946355826,SES
+2026-08-01,lemari lc 03 800,1.599999946355826,SES
+2026-09-01,lemari lc 03 800,1.599999946355826,SES
+2026-10-01,lemari lc 03 800,1.599999946355826,SES
+2026-11-01,lemari lc 03 800,1.599999946355826,SES
+2026-12-01,lemari lc 03 800,1.599999946355826,SES
+2025-01-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-02-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-03-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-04-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-05-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-06-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-07-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-08-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-09-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-10-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-11-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-12-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-01-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-02-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-03-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-04-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-05-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-06-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-07-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-08-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-09-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-10-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-11-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2026-12-01,lemari pakaian cd 02 1200,1.2000000923872025,SES
+2025-01-01,locker lr 02 1200,21.936273181094116,SES
+2025-02-01,locker lr 02 1200,21.936273181094116,SES
+2025-03-01,locker lr 02 1200,21.936273181094116,SES
+2025-04-01,locker lr 02 1200,21.936273181094116,SES
+2025-05-01,locker lr 02 1200,21.936273181094116,SES
+2025-06-01,locker lr 02 1200,21.936273181094116,SES
+2025-07-01,locker lr 02 1200,21.936273181094116,SES
+2025-08-01,locker lr 02 1200,21.936273181094116,SES
+2025-09-01,locker lr 02 1200,21.936273181094116,SES
+2025-10-01,locker lr 02 1200,21.936273181094116,SES
+2025-11-01,locker lr 02 1200,21.936273181094116,SES
+2025-12-01,locker lr 02 1200,21.936273181094116,SES
+2026-01-01,locker lr 02 1200,21.936273181094116,SES
+2026-02-01,locker lr 02 1200,21.936273181094116,SES
+2026-03-01,locker lr 02 1200,21.936273181094116,SES
+2026-04-01,locker lr 02 1200,21.936273181094116,SES
+2026-05-01,locker lr 02 1200,21.936273181094116,SES
+2026-06-01,locker lr 02 1200,21.936273181094116,SES
+2026-07-01,locker lr 02 1200,21.936273181094116,SES
+2026-08-01,locker lr 02 1200,21.936273181094116,SES
+2026-09-01,locker lr 02 1200,21.936273181094116,SES
+2026-10-01,locker lr 02 1200,21.936273181094116,SES
+2026-11-01,locker lr 02 1200,21.936273181094116,SES
+2026-12-01,locker lr 02 1200,21.936273181094116,SES
+2025-01-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-02-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-03-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-04-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-05-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-06-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-07-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-08-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-09-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-10-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-11-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-12-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-01-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-02-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-03-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-04-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-05-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-06-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-07-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-08-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-09-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-10-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-11-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2026-12-01,meja kerja wdb 01 3000,42.87753287245035,SES
+2025-01-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-02-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-03-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-04-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-05-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-06-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-07-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-08-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-09-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-10-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-11-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-12-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-01-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-02-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-03-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-04-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-05-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-06-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-07-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-08-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-09-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-10-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-11-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2026-12-01,meja kerja wdb 01 pd,7.403197206633943,SES
+2025-01-01,meja kerja wdb 02 1200,3.153603332965526,SES
+2025-02-01,meja kerja wdb 02 1200,15.187194194884865,SES
+2025-03-01,meja kerja wdb 02 1200,2.712764007064971,SES
+2025-04-01,meja kerja wdb 02 1200,3.833207817374423,SES
+2025-05-01,meja kerja wdb 02 1200,4.630092246619686,SES
+2025-06-01,meja kerja wdb 02 1200,5.168354430066067,SES
+2025-07-01,meja kerja wdb 02 1200,5.500062885537621,SES
+2025-08-01,meja kerja wdb 02 1200,5.666804789121985,SES
+2025-09-01,meja kerja wdb 02 1200,5.7020366244333225,SES
+2025-10-01,meja kerja wdb 02 1200,13.6318823815461,SES
+2025-11-01,meja kerja wdb 02 1200,5.476032723901356,SES
+2025-12-01,meja kerja wdb 02 1200,13.252573764013055,SES
+2026-01-01,meja kerja wdb 02 1200,4.948618348201627,SES
+2026-02-01,meja kerja wdb 02 1200,16.623206207073746,SES
+2026-03-01,meja kerja wdb 02 1200,3.8615736168160746,SES
+2026-04-01,meja kerja wdb 02 1200,4.752255505175307,SES
+2026-05-01,meja kerja wdb 02 1200,5.365330396860394,SES
+2026-06-01,meja kerja wdb 02 1200,5.7565449502586326,SES
+2026-07-01,meja kerja wdb 02 1200,5.970615301691673,SES
+2026-08-01,meja kerja wdb 02 1200,6.043246722045227,SES
+2026-09-01,meja kerja wdb 02 1200,6.003190170771917,SES
+2026-10-01,meja kerja wdb 02 1200,13.872805218616975,SES
+2026-11-01,meja kerja wdb 02 1200,5.668770993558056,SES
+2026-12-01,meja kerja wdb 02 1200,13.406764379738416,SES
+2025-01-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-02-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-03-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-04-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-05-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-06-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-07-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-08-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-09-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-10-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-11-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-12-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-01-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-02-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-03-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-04-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-05-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-06-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-07-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-08-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-09-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-10-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-11-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2026-12-01,meja kerja wdb 03 1400,1.6771569171876568,SES
+2025-01-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-02-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-03-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-04-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-05-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-06-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-07-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-08-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-09-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-10-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-11-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-12-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-01-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-02-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-03-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-04-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-05-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-06-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-07-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-08-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-09-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-10-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-11-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2026-12-01,meja kerja wdb 04 pd,51.07752651470856,SES
+2025-01-01,meja kerja wdb 05,4.0,SES
+2025-02-01,meja kerja wdb 05,4.0,SES
+2025-03-01,meja kerja wdb 05,4.0,SES
+2025-04-01,meja kerja wdb 05,4.0,SES
+2025-05-01,meja kerja wdb 05,4.0,SES
+2025-06-01,meja kerja wdb 05,4.0,SES
+2025-07-01,meja kerja wdb 05,4.0,SES
+2025-08-01,meja kerja wdb 05,4.0,SES
+2025-09-01,meja kerja wdb 05,4.0,SES
+2025-10-01,meja kerja wdb 05,4.0,SES
+2025-11-01,meja kerja wdb 05,4.0,SES
+2025-12-01,meja kerja wdb 05,4.0,SES
+2026-01-01,meja kerja wdb 05,4.0,SES
+2026-02-01,meja kerja wdb 05,4.0,SES
+2026-03-01,meja kerja wdb 05,4.0,SES
+2026-04-01,meja kerja wdb 05,4.0,SES
+2026-05-01,meja kerja wdb 05,4.0,SES
+2026-06-01,meja kerja wdb 05,4.0,SES
+2026-07-01,meja kerja wdb 05,4.0,SES
+2026-08-01,meja kerja wdb 05,4.0,SES
+2026-09-01,meja kerja wdb 05,4.0,SES
+2026-10-01,meja kerja wdb 05,4.0,SES
+2026-11-01,meja kerja wdb 05,4.0,SES
+2026-12-01,meja kerja wdb 05,4.0,SES
+2025-01-01,meja kerja wde 01 1600,3.0,SES
+2025-02-01,meja kerja wde 01 1600,3.0,SES
+2025-03-01,meja kerja wde 01 1600,3.0,SES
+2025-04-01,meja kerja wde 01 1600,3.0,SES
+2025-05-01,meja kerja wde 01 1600,3.0,SES
+2025-06-01,meja kerja wde 01 1600,3.0,SES
+2025-07-01,meja kerja wde 01 1600,3.0,SES
+2025-08-01,meja kerja wde 01 1600,3.0,SES
+2025-09-01,meja kerja wde 01 1600,3.0,SES
+2025-10-01,meja kerja wde 01 1600,3.0,SES
+2025-11-01,meja kerja wde 01 1600,3.0,SES
+2025-12-01,meja kerja wde 01 1600,3.0,SES
+2026-01-01,meja kerja wde 01 1600,3.0,SES
+2026-02-01,meja kerja wde 01 1600,3.0,SES
+2026-03-01,meja kerja wde 01 1600,3.0,SES
+2026-04-01,meja kerja wde 01 1600,3.0,SES
+2026-05-01,meja kerja wde 01 1600,3.0,SES
+2026-06-01,meja kerja wde 01 1600,3.0,SES
+2026-07-01,meja kerja wde 01 1600,3.0,SES
+2026-08-01,meja kerja wde 01 1600,3.0,SES
+2026-09-01,meja kerja wde 01 1600,3.0,SES
+2026-10-01,meja kerja wde 01 1600,3.0,SES
+2026-11-01,meja kerja wde 01 1600,3.0,SES
+2026-12-01,meja kerja wde 01 1600,3.0,SES
+2025-01-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-02-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-03-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-04-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-05-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-06-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-07-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-08-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-09-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-10-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-11-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-12-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-01-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-02-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-03-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-04-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-05-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-06-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-07-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-08-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-09-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-10-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-11-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2026-12-01,meja kerja wde 02 a 1600,1.599999973177927,SES
+2025-01-01,meja kerja wde 03 1600,1.0,SES
+2025-02-01,meja kerja wde 03 1600,1.0,SES
+2025-03-01,meja kerja wde 03 1600,1.0,SES
+2025-04-01,meja kerja wde 03 1600,1.0,SES
+2025-05-01,meja kerja wde 03 1600,1.0,SES
+2025-06-01,meja kerja wde 03 1600,1.0,SES
+2025-07-01,meja kerja wde 03 1600,1.0,SES
+2025-08-01,meja kerja wde 03 1600,1.0,SES
+2025-09-01,meja kerja wde 03 1600,1.0,SES
+2025-10-01,meja kerja wde 03 1600,1.0,SES
+2025-11-01,meja kerja wde 03 1600,1.0,SES
+2025-12-01,meja kerja wde 03 1600,1.0,SES
+2026-01-01,meja kerja wde 03 1600,1.0,SES
+2026-02-01,meja kerja wde 03 1600,1.0,SES
+2026-03-01,meja kerja wde 03 1600,1.0,SES
+2026-04-01,meja kerja wde 03 1600,1.0,SES
+2026-05-01,meja kerja wde 03 1600,1.0,SES
+2026-06-01,meja kerja wde 03 1600,1.0,SES
+2026-07-01,meja kerja wde 03 1600,1.0,SES
+2026-08-01,meja kerja wde 03 1600,1.0,SES
+2026-09-01,meja kerja wde 03 1600,1.0,SES
+2026-10-01,meja kerja wde 03 1600,1.0,SES
+2026-11-01,meja kerja wde 03 1600,1.0,SES
+2026-12-01,meja kerja wde 03 1600,1.0,SES
+2025-01-01,meja komputer cd 02,1.5962354950741209,SES
+2025-02-01,meja komputer cd 02,1.5962354950741209,SES
+2025-03-01,meja komputer cd 02,1.5962354950741209,SES
+2025-04-01,meja komputer cd 02,1.5962354950741209,SES
+2025-05-01,meja komputer cd 02,1.5962354950741209,SES
+2025-06-01,meja komputer cd 02,1.5962354950741209,SES
+2025-07-01,meja komputer cd 02,1.5962354950741209,SES
+2025-08-01,meja komputer cd 02,1.5962354950741209,SES
+2025-09-01,meja komputer cd 02,1.5962354950741209,SES
+2025-10-01,meja komputer cd 02,1.5962354950741209,SES
+2025-11-01,meja komputer cd 02,1.5962354950741209,SES
+2025-12-01,meja komputer cd 02,1.5962354950741209,SES
+2026-01-01,meja komputer cd 02,1.5962354950741209,SES
+2026-02-01,meja komputer cd 02,1.5962354950741209,SES
+2026-03-01,meja komputer cd 02,1.5962354950741209,SES
+2026-04-01,meja komputer cd 02,1.5962354950741209,SES
+2026-05-01,meja komputer cd 02,1.5962354950741209,SES
+2026-06-01,meja komputer cd 02,1.5962354950741209,SES
+2026-07-01,meja komputer cd 02,1.5962354950741209,SES
+2026-08-01,meja komputer cd 02,1.5962354950741209,SES
+2026-09-01,meja komputer cd 02,1.5962354950741209,SES
+2026-10-01,meja komputer cd 02,1.5962354950741209,SES
+2026-11-01,meja komputer cd 02,1.5962354950741209,SES
+2026-12-01,meja komputer cd 02,1.5962354950741209,SES
+2025-01-01,meja lipat ft 01,3.5999998137355282,SES
+2025-02-01,meja lipat ft 01,3.5999998137355282,SES
+2025-03-01,meja lipat ft 01,3.5999998137355282,SES
+2025-04-01,meja lipat ft 01,3.5999998137355282,SES
+2025-05-01,meja lipat ft 01,3.5999998137355282,SES
+2025-06-01,meja lipat ft 01,3.5999998137355282,SES
+2025-07-01,meja lipat ft 01,3.5999998137355282,SES
+2025-08-01,meja lipat ft 01,3.5999998137355282,SES
+2025-09-01,meja lipat ft 01,3.5999998137355282,SES
+2025-10-01,meja lipat ft 01,3.5999998137355282,SES
+2025-11-01,meja lipat ft 01,3.5999998137355282,SES
+2025-12-01,meja lipat ft 01,3.5999998137355282,SES
+2026-01-01,meja lipat ft 01,3.5999998137355282,SES
+2026-02-01,meja lipat ft 01,3.5999998137355282,SES
+2026-03-01,meja lipat ft 01,3.5999998137355282,SES
+2026-04-01,meja lipat ft 01,3.5999998137355282,SES
+2026-05-01,meja lipat ft 01,3.5999998137355282,SES
+2026-06-01,meja lipat ft 01,3.5999998137355282,SES
+2026-07-01,meja lipat ft 01,3.5999998137355282,SES
+2026-08-01,meja lipat ft 01,3.5999998137355282,SES
+2026-09-01,meja lipat ft 01,3.5999998137355282,SES
+2026-10-01,meja lipat ft 01,3.5999998137355282,SES
+2026-11-01,meja lipat ft 01,3.5999998137355282,SES
+2026-12-01,meja lipat ft 01,3.5999998137355282,SES
+2025-01-01,meja lipat ft 02,2.0,SES
+2025-02-01,meja lipat ft 02,2.0,SES
+2025-03-01,meja lipat ft 02,2.0,SES
+2025-04-01,meja lipat ft 02,2.0,SES
+2025-05-01,meja lipat ft 02,2.0,SES
+2025-06-01,meja lipat ft 02,2.0,SES
+2025-07-01,meja lipat ft 02,2.0,SES
+2025-08-01,meja lipat ft 02,2.0,SES
+2025-09-01,meja lipat ft 02,2.0,SES
+2025-10-01,meja lipat ft 02,2.0,SES
+2025-11-01,meja lipat ft 02,2.0,SES
+2025-12-01,meja lipat ft 02,2.0,SES
+2026-01-01,meja lipat ft 02,2.0,SES
+2026-02-01,meja lipat ft 02,2.0,SES
+2026-03-01,meja lipat ft 02,2.0,SES
+2026-04-01,meja lipat ft 02,2.0,SES
+2026-05-01,meja lipat ft 02,2.0,SES
+2026-06-01,meja lipat ft 02,2.0,SES
+2026-07-01,meja lipat ft 02,2.0,SES
+2026-08-01,meja lipat ft 02,2.0,SES
+2026-09-01,meja lipat ft 02,2.0,SES
+2026-10-01,meja lipat ft 02,2.0,SES
+2026-11-01,meja lipat ft 02,2.0,SES
+2026-12-01,meja lipat ft 02,2.0,SES
+2025-01-01,meja makan dt 01,1.0,SES
+2025-02-01,meja makan dt 01,1.0,SES
+2025-03-01,meja makan dt 01,1.0,SES
+2025-04-01,meja makan dt 01,1.0,SES
+2025-05-01,meja makan dt 01,1.0,SES
+2025-06-01,meja makan dt 01,1.0,SES
+2025-07-01,meja makan dt 01,1.0,SES
+2025-08-01,meja makan dt 01,1.0,SES
+2025-09-01,meja makan dt 01,1.0,SES
+2025-10-01,meja makan dt 01,1.0,SES
+2025-11-01,meja makan dt 01,1.0,SES
+2025-12-01,meja makan dt 01,1.0,SES
+2026-01-01,meja makan dt 01,1.0,SES
+2026-02-01,meja makan dt 01,1.0,SES
+2026-03-01,meja makan dt 01,1.0,SES
+2026-04-01,meja makan dt 01,1.0,SES
+2026-05-01,meja makan dt 01,1.0,SES
+2026-06-01,meja makan dt 01,1.0,SES
+2026-07-01,meja makan dt 01,1.0,SES
+2026-08-01,meja makan dt 01,1.0,SES
+2026-09-01,meja makan dt 01,1.0,SES
+2026-10-01,meja makan dt 01,1.0,SES
+2026-11-01,meja makan dt 01,1.0,SES
+2026-12-01,meja makan dt 01,1.0,SES
+2025-01-01,meja podium pt 01b,0.5333333790302323,SES
+2025-02-01,meja podium pt 01b,0.5333333790302323,SES
+2025-03-01,meja podium pt 01b,0.5333333790302323,SES
+2025-04-01,meja podium pt 01b,0.5333333790302323,SES
+2025-05-01,meja podium pt 01b,0.5333333790302323,SES
+2025-06-01,meja podium pt 01b,0.5333333790302323,SES
+2025-07-01,meja podium pt 01b,0.5333333790302323,SES
+2025-08-01,meja podium pt 01b,0.5333333790302323,SES
+2025-09-01,meja podium pt 01b,0.5333333790302323,SES
+2025-10-01,meja podium pt 01b,0.5333333790302323,SES
+2025-11-01,meja podium pt 01b,0.5333333790302323,SES
+2025-12-01,meja podium pt 01b,0.5333333790302323,SES
+2026-01-01,meja podium pt 01b,0.5333333790302323,SES
+2026-02-01,meja podium pt 01b,0.5333333790302323,SES
+2026-03-01,meja podium pt 01b,0.5333333790302323,SES
+2026-04-01,meja podium pt 01b,0.5333333790302323,SES
+2026-05-01,meja podium pt 01b,0.5333333790302323,SES
+2026-06-01,meja podium pt 01b,0.5333333790302323,SES
+2026-07-01,meja podium pt 01b,0.5333333790302323,SES
+2026-08-01,meja podium pt 01b,0.5333333790302323,SES
+2026-09-01,meja podium pt 01b,0.5333333790302323,SES
+2026-10-01,meja podium pt 01b,0.5333333790302323,SES
+2026-11-01,meja podium pt 01b,0.5333333790302323,SES
+2026-12-01,meja podium pt 01b,0.5333333790302323,SES
+2025-01-01,meja proyektor pd 01,3.125,SES
+2025-02-01,meja proyektor pd 01,3.125,SES
+2025-03-01,meja proyektor pd 01,3.125,SES
+2025-04-01,meja proyektor pd 01,3.125,SES
+2025-05-01,meja proyektor pd 01,3.125,SES
+2025-06-01,meja proyektor pd 01,3.125,SES
+2025-07-01,meja proyektor pd 01,3.125,SES
+2025-08-01,meja proyektor pd 01,3.125,SES
+2025-09-01,meja proyektor pd 01,3.125,SES
+2025-10-01,meja proyektor pd 01,3.125,SES
+2025-11-01,meja proyektor pd 01,3.125,SES
+2025-12-01,meja proyektor pd 01,3.125,SES
+2026-01-01,meja proyektor pd 01,3.125,SES
+2026-02-01,meja proyektor pd 01,3.125,SES
+2026-03-01,meja proyektor pd 01,3.125,SES
+2026-04-01,meja proyektor pd 01,3.125,SES
+2026-05-01,meja proyektor pd 01,3.125,SES
+2026-06-01,meja proyektor pd 01,3.125,SES
+2026-07-01,meja proyektor pd 01,3.125,SES
+2026-08-01,meja proyektor pd 01,3.125,SES
+2026-09-01,meja proyektor pd 01,3.125,SES
+2026-10-01,meja proyektor pd 01,3.125,SES
+2026-11-01,meja proyektor pd 01,3.125,SES
+2026-12-01,meja proyektor pd 01,3.125,SES
+2025-01-01,meja rapat ct 01,4.0,SES
+2025-02-01,meja rapat ct 01,4.0,SES
+2025-03-01,meja rapat ct 01,4.0,SES
+2025-04-01,meja rapat ct 01,4.0,SES
+2025-05-01,meja rapat ct 01,4.0,SES
+2025-06-01,meja rapat ct 01,4.0,SES
+2025-07-01,meja rapat ct 01,4.0,SES
+2025-08-01,meja rapat ct 01,4.0,SES
+2025-09-01,meja rapat ct 01,4.0,SES
+2025-10-01,meja rapat ct 01,4.0,SES
+2025-11-01,meja rapat ct 01,4.0,SES
+2025-12-01,meja rapat ct 01,4.0,SES
+2026-01-01,meja rapat ct 01,4.0,SES
+2026-02-01,meja rapat ct 01,4.0,SES
+2026-03-01,meja rapat ct 01,4.0,SES
+2026-04-01,meja rapat ct 01,4.0,SES
+2026-05-01,meja rapat ct 01,4.0,SES
+2026-06-01,meja rapat ct 01,4.0,SES
+2026-07-01,meja rapat ct 01,4.0,SES
+2026-08-01,meja rapat ct 01,4.0,SES
+2026-09-01,meja rapat ct 01,4.0,SES
+2026-10-01,meja rapat ct 01,4.0,SES
+2026-11-01,meja rapat ct 01,4.0,SES
+2026-12-01,meja rapat ct 01,4.0,SES
+2025-01-01,meja rapat ct 02,0.7984823929551834,SES
+2025-02-01,meja rapat ct 02,0.7984823929551834,SES
+2025-03-01,meja rapat ct 02,0.7984823929551834,SES
+2025-04-01,meja rapat ct 02,0.7984823929551834,SES
+2025-05-01,meja rapat ct 02,0.7984823929551834,SES
+2025-06-01,meja rapat ct 02,0.7984823929551834,SES
+2025-07-01,meja rapat ct 02,0.7984823929551834,SES
+2025-08-01,meja rapat ct 02,0.7984823929551834,SES
+2025-09-01,meja rapat ct 02,0.7984823929551834,SES
+2025-10-01,meja rapat ct 02,0.7984823929551834,SES
+2025-11-01,meja rapat ct 02,0.7984823929551834,SES
+2025-12-01,meja rapat ct 02,0.7984823929551834,SES
+2026-01-01,meja rapat ct 02,0.7984823929551834,SES
+2026-02-01,meja rapat ct 02,0.7984823929551834,SES
+2026-03-01,meja rapat ct 02,0.7984823929551834,SES
+2026-04-01,meja rapat ct 02,0.7984823929551834,SES
+2026-05-01,meja rapat ct 02,0.7984823929551834,SES
+2026-06-01,meja rapat ct 02,0.7984823929551834,SES
+2026-07-01,meja rapat ct 02,0.7984823929551834,SES
+2026-08-01,meja rapat ct 02,0.7984823929551834,SES
+2026-09-01,meja rapat ct 02,0.7984823929551834,SES
+2026-10-01,meja rapat ct 02,0.7984823929551834,SES
+2026-11-01,meja rapat ct 02,0.7984823929551834,SES
+2026-12-01,meja rapat ct 02,0.7984823929551834,SES
+2025-01-01,meja rapat ct 08 1600,1.25,SES
+2025-02-01,meja rapat ct 08 1600,1.25,SES
+2025-03-01,meja rapat ct 08 1600,1.25,SES
+2025-04-01,meja rapat ct 08 1600,1.25,SES
+2025-05-01,meja rapat ct 08 1600,1.25,SES
+2025-06-01,meja rapat ct 08 1600,1.25,SES
+2025-07-01,meja rapat ct 08 1600,1.25,SES
+2025-08-01,meja rapat ct 08 1600,1.25,SES
+2025-09-01,meja rapat ct 08 1600,1.25,SES
+2025-10-01,meja rapat ct 08 1600,1.25,SES
+2025-11-01,meja rapat ct 08 1600,1.25,SES
+2025-12-01,meja rapat ct 08 1600,1.25,SES
+2026-01-01,meja rapat ct 08 1600,1.25,SES
+2026-02-01,meja rapat ct 08 1600,1.25,SES
+2026-03-01,meja rapat ct 08 1600,1.25,SES
+2026-04-01,meja rapat ct 08 1600,1.25,SES
+2026-05-01,meja rapat ct 08 1600,1.25,SES
+2026-06-01,meja rapat ct 08 1600,1.25,SES
+2026-07-01,meja rapat ct 08 1600,1.25,SES
+2026-08-01,meja rapat ct 08 1600,1.25,SES
+2026-09-01,meja rapat ct 08 1600,1.25,SES
+2026-10-01,meja rapat ct 08 1600,1.25,SES
+2026-11-01,meja rapat ct 08 1600,1.25,SES
+2026-12-01,meja rapat ct 08 1600,1.25,SES
+2025-01-01,meja rapat ct 09 a,0.625,SES
+2025-02-01,meja rapat ct 09 a,0.625,SES
+2025-03-01,meja rapat ct 09 a,0.625,SES
+2025-04-01,meja rapat ct 09 a,0.625,SES
+2025-05-01,meja rapat ct 09 a,0.625,SES
+2025-06-01,meja rapat ct 09 a,0.625,SES
+2025-07-01,meja rapat ct 09 a,0.625,SES
+2025-08-01,meja rapat ct 09 a,0.625,SES
+2025-09-01,meja rapat ct 09 a,0.625,SES
+2025-10-01,meja rapat ct 09 a,0.625,SES
+2025-11-01,meja rapat ct 09 a,0.625,SES
+2025-12-01,meja rapat ct 09 a,0.625,SES
+2026-01-01,meja rapat ct 09 a,0.625,SES
+2026-02-01,meja rapat ct 09 a,0.625,SES
+2026-03-01,meja rapat ct 09 a,0.625,SES
+2026-04-01,meja rapat ct 09 a,0.625,SES
+2026-05-01,meja rapat ct 09 a,0.625,SES
+2026-06-01,meja rapat ct 09 a,0.625,SES
+2026-07-01,meja rapat ct 09 a,0.625,SES
+2026-08-01,meja rapat ct 09 a,0.625,SES
+2026-09-01,meja rapat ct 09 a,0.625,SES
+2026-10-01,meja rapat ct 09 a,0.625,SES
+2026-11-01,meja rapat ct 09 a,0.625,SES
+2026-12-01,meja rapat ct 09 a,0.625,SES
+2025-01-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-02-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-03-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-04-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-05-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-06-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-07-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-08-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-09-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-10-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-11-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-12-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-01-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-02-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-03-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-04-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-05-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-06-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-07-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-08-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-09-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-10-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-11-01,meja siswa ll 506 tc,7.333333065112604,SES
+2026-12-01,meja siswa ll 506 tc,7.333333065112604,SES
+2025-01-01,meja tamu cft 05,1.25,SES
+2025-02-01,meja tamu cft 05,1.25,SES
+2025-03-01,meja tamu cft 05,1.25,SES
+2025-04-01,meja tamu cft 05,1.25,SES
+2025-05-01,meja tamu cft 05,1.25,SES
+2025-06-01,meja tamu cft 05,1.25,SES
+2025-07-01,meja tamu cft 05,1.25,SES
+2025-08-01,meja tamu cft 05,1.25,SES
+2025-09-01,meja tamu cft 05,1.25,SES
+2025-10-01,meja tamu cft 05,1.25,SES
+2025-11-01,meja tamu cft 05,1.25,SES
+2025-12-01,meja tamu cft 05,1.25,SES
+2026-01-01,meja tamu cft 05,1.25,SES
+2026-02-01,meja tamu cft 05,1.25,SES
+2026-03-01,meja tamu cft 05,1.25,SES
+2026-04-01,meja tamu cft 05,1.25,SES
+2026-05-01,meja tamu cft 05,1.25,SES
+2026-06-01,meja tamu cft 05,1.25,SES
+2026-07-01,meja tamu cft 05,1.25,SES
+2026-08-01,meja tamu cft 05,1.25,SES
+2026-09-01,meja tamu cft 05,1.25,SES
+2026-10-01,meja tamu cft 05,1.25,SES
+2026-11-01,meja tamu cft 05,1.25,SES
+2026-12-01,meja tamu cft 05,1.25,SES
+2025-01-01,meja workstation ws 03,4.999999925494194,SES
+2025-02-01,meja workstation ws 03,4.999999925494194,SES
+2025-03-01,meja workstation ws 03,4.999999925494194,SES
+2025-04-01,meja workstation ws 03,4.999999925494194,SES
+2025-05-01,meja workstation ws 03,4.999999925494194,SES
+2025-06-01,meja workstation ws 03,4.999999925494194,SES
+2025-07-01,meja workstation ws 03,4.999999925494194,SES
+2025-08-01,meja workstation ws 03,4.999999925494194,SES
+2025-09-01,meja workstation ws 03,4.999999925494194,SES
+2025-10-01,meja workstation ws 03,4.999999925494194,SES
+2025-11-01,meja workstation ws 03,4.999999925494194,SES
+2025-12-01,meja workstation ws 03,4.999999925494194,SES
+2026-01-01,meja workstation ws 03,4.999999925494194,SES
+2026-02-01,meja workstation ws 03,4.999999925494194,SES
+2026-03-01,meja workstation ws 03,4.999999925494194,SES
+2026-04-01,meja workstation ws 03,4.999999925494194,SES
+2026-05-01,meja workstation ws 03,4.999999925494194,SES
+2026-06-01,meja workstation ws 03,4.999999925494194,SES
+2026-07-01,meja workstation ws 03,4.999999925494194,SES
+2026-08-01,meja workstation ws 03,4.999999925494194,SES
+2026-09-01,meja workstation ws 03,4.999999925494194,SES
+2026-10-01,meja workstation ws 03,4.999999925494194,SES
+2026-11-01,meja workstation ws 03,4.999999925494194,SES
+2026-12-01,meja workstation ws 03,4.999999925494194,SES
+2025-01-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-02-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-03-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-04-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-05-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-06-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-07-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-08-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-09-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-10-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-11-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-12-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-01-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-02-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-03-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-04-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-05-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-06-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-07-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-08-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-09-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-10-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-11-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2026-12-01,papan pengumuman ib 01 1800,0.5882090015871361,SES
+2025-01-01,papan tulis wbs 02,2.191847381030699,SES
+2025-02-01,papan tulis wbs 02,6.753196980628474,SES
+2025-03-01,papan tulis wbs 02,1.4026609324156065,SES
+2025-04-01,papan tulis wbs 02,1.1220546333114982,SES
+2025-05-01,papan tulis wbs 02,10.897498002576585,SES
+2025-06-01,papan tulis wbs 02,0.7179499645212495,SES
+2025-07-01,papan tulis wbs 02,3.0741853029682464,SES
+2025-08-01,papan tulis wbs 02,0.45942918799661703,SES
+2025-09-01,papan tulis wbs 02,0.3675638145985274,SES
+2025-10-01,papan tulis wbs 02,0.2940376055941294,SES
+2025-11-01,papan tulis wbs 02,6.310935210677197,SES
+2025-12-01,papan tulis wbs 02,8.515003045548426,SES
+2026-01-01,papan tulis wbs 02,2.2100419115482235,SES
+2026-02-01,papan tulis wbs 02,6.767752605042493,SES
+2026-03-01,papan tulis wbs 02,1.4143054319468225,SES
+2026-04-01,papan tulis wbs 02,1.131370232936471,SES
+2026-05-01,papan tulis wbs 02,10.904950482276563,SES
+2026-06-01,papan tulis wbs 02,0.7239119482812324,SES
+2026-07-01,papan tulis wbs 02,3.0789548899762322,SES
+2026-08-01,papan tulis wbs 02,0.4632448576030055,SES
+2026-09-01,papan tulis wbs 02,0.37061635028363904,SES
+2026-10-01,papan tulis wbs 02,0.296479634142218,SES
+2026-11-01,papan tulis wbs 02,6.312888833515668,SES
+2026-12-01,papan tulis wbs 02,8.516565943819202,SES
+2025-01-01,rak buku bs 01,0.8333332985639618,SES
+2025-02-01,rak buku bs 01,0.8333332985639618,SES
+2025-03-01,rak buku bs 01,0.8333332985639618,SES
+2025-04-01,rak buku bs 01,0.8333332985639618,SES
+2025-05-01,rak buku bs 01,0.8333332985639618,SES
+2025-06-01,rak buku bs 01,0.8333332985639618,SES
+2025-07-01,rak buku bs 01,0.8333332985639618,SES
+2025-08-01,rak buku bs 01,0.8333332985639618,SES
+2025-09-01,rak buku bs 01,0.8333332985639618,SES
+2025-10-01,rak buku bs 01,0.8333332985639618,SES
+2025-11-01,rak buku bs 01,0.8333332985639618,SES
+2025-12-01,rak buku bs 01,0.8333332985639618,SES
+2026-01-01,rak buku bs 01,0.8333332985639618,SES
+2026-02-01,rak buku bs 01,0.8333332985639618,SES
+2026-03-01,rak buku bs 01,0.8333332985639618,SES
+2026-04-01,rak buku bs 01,0.8333332985639618,SES
+2026-05-01,rak buku bs 01,0.8333332985639618,SES
+2026-06-01,rak buku bs 01,0.8333332985639618,SES
+2026-07-01,rak buku bs 01,0.8333332985639618,SES
+2026-08-01,rak buku bs 01,0.8333332985639618,SES
+2026-09-01,rak buku bs 01,0.8333332985639618,SES
+2026-10-01,rak buku bs 01,0.8333332985639618,SES
+2026-11-01,rak buku bs 01,0.8333332985639618,SES
+2026-12-01,rak buku bs 01,0.8333332985639618,SES
+2025-01-01,rak buku bs 02,7.5,SES
+2025-02-01,rak buku bs 02,7.5,SES
+2025-03-01,rak buku bs 02,7.5,SES
+2025-04-01,rak buku bs 02,7.5,SES
+2025-05-01,rak buku bs 02,7.5,SES
+2025-06-01,rak buku bs 02,7.5,SES
+2025-07-01,rak buku bs 02,7.5,SES
+2025-08-01,rak buku bs 02,7.5,SES
+2025-09-01,rak buku bs 02,7.5,SES
+2025-10-01,rak buku bs 02,7.5,SES
+2025-11-01,rak buku bs 02,7.5,SES
+2025-12-01,rak buku bs 02,7.5,SES
+2026-01-01,rak buku bs 02,7.5,SES
+2026-02-01,rak buku bs 02,7.5,SES
+2026-03-01,rak buku bs 02,7.5,SES
+2026-04-01,rak buku bs 02,7.5,SES
+2026-05-01,rak buku bs 02,7.5,SES
+2026-06-01,rak buku bs 02,7.5,SES
+2026-07-01,rak buku bs 02,7.5,SES
+2026-08-01,rak buku bs 02,7.5,SES
+2026-09-01,rak buku bs 02,7.5,SES
+2026-10-01,rak buku bs 02,7.5,SES
+2026-11-01,rak buku bs 02,7.5,SES
+2026-12-01,rak buku bs 02,7.5,SES
+2025-01-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-02-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-03-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-04-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-05-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-06-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-07-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-08-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-09-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-10-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-11-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-12-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-01-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-02-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-03-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-04-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-05-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-06-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-07-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-08-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-09-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-10-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-11-01,rak sepatu sr 03,0.24481182320098427,SES
+2026-12-01,rak sepatu sr 03,0.24481182320098427,SES
+2025-01-01,ranjang single sb 02,5.0,SES
+2025-02-01,ranjang single sb 02,5.0,SES
+2025-03-01,ranjang single sb 02,5.0,SES
+2025-04-01,ranjang single sb 02,5.0,SES
+2025-05-01,ranjang single sb 02,5.0,SES
+2025-06-01,ranjang single sb 02,5.0,SES
+2025-07-01,ranjang single sb 02,5.0,SES
+2025-08-01,ranjang single sb 02,5.0,SES
+2025-09-01,ranjang single sb 02,5.0,SES
+2025-10-01,ranjang single sb 02,5.0,SES
+2025-11-01,ranjang single sb 02,5.0,SES
+2025-12-01,ranjang single sb 02,5.0,SES
+2026-01-01,ranjang single sb 02,5.0,SES
+2026-02-01,ranjang single sb 02,5.0,SES
+2026-03-01,ranjang single sb 02,5.0,SES
+2026-04-01,ranjang single sb 02,5.0,SES
+2026-05-01,ranjang single sb 02,5.0,SES
+2026-06-01,ranjang single sb 02,5.0,SES
+2026-07-01,ranjang single sb 02,5.0,SES
+2026-08-01,ranjang single sb 02,5.0,SES
+2026-09-01,ranjang single sb 02,5.0,SES
+2026-10-01,ranjang single sb 02,5.0,SES
+2026-11-01,ranjang single sb 02,5.0,SES
+2026-12-01,ranjang single sb 02,5.0,SES
+2025-01-01,sofa bench sb 204,20.0,SES
+2025-02-01,sofa bench sb 204,20.0,SES
+2025-03-01,sofa bench sb 204,20.0,SES
+2025-04-01,sofa bench sb 204,20.0,SES
+2025-05-01,sofa bench sb 204,20.0,SES
+2025-06-01,sofa bench sb 204,20.0,SES
+2025-07-01,sofa bench sb 204,20.0,SES
+2025-08-01,sofa bench sb 204,20.0,SES
+2025-09-01,sofa bench sb 204,20.0,SES
+2025-10-01,sofa bench sb 204,20.0,SES
+2025-11-01,sofa bench sb 204,20.0,SES
+2025-12-01,sofa bench sb 204,20.0,SES
+2026-01-01,sofa bench sb 204,20.0,SES
+2026-02-01,sofa bench sb 204,20.0,SES
+2026-03-01,sofa bench sb 204,20.0,SES
+2026-04-01,sofa bench sb 204,20.0,SES
+2026-05-01,sofa bench sb 204,20.0,SES
+2026-06-01,sofa bench sb 204,20.0,SES
+2026-07-01,sofa bench sb 204,20.0,SES
+2026-08-01,sofa bench sb 204,20.0,SES
+2026-09-01,sofa bench sb 204,20.0,SES
+2026-10-01,sofa bench sb 204,20.0,SES
+2026-11-01,sofa bench sb 204,20.0,SES
+2026-12-01,sofa bench sb 204,20.0,SES
+2025-01-01,tempat tidur tt uks,0.0,SES
+2025-02-01,tempat tidur tt uks,0.0,SES
+2025-03-01,tempat tidur tt uks,0.0,SES
+2025-04-01,tempat tidur tt uks,0.0,SES
+2025-05-01,tempat tidur tt uks,0.0,SES
+2025-06-01,tempat tidur tt uks,0.0,SES
+2025-07-01,tempat tidur tt uks,0.0,SES
+2025-08-01,tempat tidur tt uks,0.0,SES
+2025-09-01,tempat tidur tt uks,0.0,SES
+2025-10-01,tempat tidur tt uks,0.0,SES
+2025-11-01,tempat tidur tt uks,0.0,SES
+2025-12-01,tempat tidur tt uks,14.103262283778385,SES
+2026-01-01,tempat tidur tt uks,0.0,SES
+2026-02-01,tempat tidur tt uks,0.0,SES
+2026-03-01,tempat tidur tt uks,0.0,SES
+2026-04-01,tempat tidur tt uks,0.0,SES
+2026-05-01,tempat tidur tt uks,0.0,SES
+2026-06-01,tempat tidur tt uks,0.0,SES
+2026-07-01,tempat tidur tt uks,0.0,SES
+2026-08-01,tempat tidur tt uks,0.0,SES
+2026-09-01,tempat tidur tt uks,0.0,SES
+2026-10-01,tempat tidur tt uks,0.0,SES
+2026-11-01,tempat tidur tt uks,0.0,SES
+2026-12-01,tempat tidur tt uks,14.098276908219809,SES
+2025-01-01,tiang bendera fg 01,6.25,SES
+2025-02-01,tiang bendera fg 01,6.25,SES
+2025-03-01,tiang bendera fg 01,6.25,SES
+2025-04-01,tiang bendera fg 01,6.25,SES
+2025-05-01,tiang bendera fg 01,6.25,SES
+2025-06-01,tiang bendera fg 01,6.25,SES
+2025-07-01,tiang bendera fg 01,6.25,SES
+2025-08-01,tiang bendera fg 01,6.25,SES
+2025-09-01,tiang bendera fg 01,6.25,SES
+2025-10-01,tiang bendera fg 01,6.25,SES
+2025-11-01,tiang bendera fg 01,6.25,SES
+2025-12-01,tiang bendera fg 01,6.25,SES
+2026-01-01,tiang bendera fg 01,6.25,SES
+2026-02-01,tiang bendera fg 01,6.25,SES
+2026-03-01,tiang bendera fg 01,6.25,SES
+2026-04-01,tiang bendera fg 01,6.25,SES
+2026-05-01,tiang bendera fg 01,6.25,SES
+2026-06-01,tiang bendera fg 01,6.25,SES
+2026-07-01,tiang bendera fg 01,6.25,SES
+2026-08-01,tiang bendera fg 01,6.25,SES
+2026-09-01,tiang bendera fg 01,6.25,SES
+2026-10-01,tiang bendera fg 01,6.25,SES
+2026-11-01,tiang bendera fg 01,6.25,SES
+2026-12-01,tiang bendera fg 01,6.25,SES

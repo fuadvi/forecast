@@ -81,7 +81,7 @@ with colC:
     if st.button("🔄 Reset"):
         st.session_state["training_in_progress"] = False
         st.session_state["training_complete"] = False
-        st.experimental_rerun()
+        st.rerun()
 
 # Progress and logs
 ph_prog = st.empty()
