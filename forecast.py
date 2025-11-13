@@ -30,6 +30,12 @@ OUT_TOPN = os.path.join(os.getcwd(), "topN_per_month_24m.csv")
 OUT_DIAG = os.path.join(os.getcwd(), "forecast_diagnostics.csv")
 PLOTS_DIR = os.path.join(os.getcwd(), "forecast_plots", "bulan")
 
+# Experimental/diagnostic flags (Priority-1 fixes)
+# Set to True to disable the respective post-processing; helps avoid over-constraining forecasts
+DISABLE_STABILIZATION = True   # bypass stabilize_series during testing
+DISABLE_CLAMPING = True        # bypass clamp_with_historical_quantiles during testing
+NOISE_INJECTION = True         # add small noise to residual forward loop to break perfect cycles
+
 # ------------------------
 # Helpers
 # ------------------------
@@ -211,16 +217,35 @@ def forecast_baseline_forward(last_hist_date: pd.Timestamp,
     # Try reuse
     if test2 and hasattr(test2, "forecast_baseline_forward"):
         return test2.forecast_baseline_forward(last_hist_date, hist_sales, hist_dates, horizon, meta)  # type: ignore
-    # Fallback: multiplicative seasonality with SMA window from meta
-    seas = meta.get("seasonality", {}) if meta else {}
-    w = int(meta.get("sma_window", 3)) if meta else 3
+    
+    # Minimal baseline: just use last value with small random variation
     s = pd.Series(hist_sales.values, index=pd.to_datetime(hist_dates))
-    sma = s.rolling(w, min_periods=1).mean().iloc[-1]
+    last_value = float(s.iloc[-1]) if len(s) > 0 else 1.0
+    
+    # Calculate trend from recent data
+    if len(s) >= 6:
+        recent_trend = (s.tail(3).mean() - s.tail(6).mean()) / 3
+    else:
+        recent_trend = 0
+    
     idx = pd.date_range(start=pd.to_datetime(last_hist_date) + pd.offsets.MonthBegin(1), periods=horizon, freq="MS")
     vals = []
-    for d in idx:
-        mult = seas.get(str(d.month), seas.get(d.month, 1.0))
-        vals.append(float(sma) * float(mult))
+    rng = np.random.RandomState(42)  # Fixed seed for reproducibility
+    
+    for i, d in enumerate(idx):
+        # Enhanced baseline with stronger trend and more random variation
+        trend_component = recent_trend * (i + 1) * 0.5  # Much stronger trend
+        random_component = rng.normal(0, last_value * 0.15)  # 15% random variation
+        
+        # Add monthly variation component
+        month_variation = 1.0 + 0.1 * np.sin(2 * np.pi * d.month / 12)
+        
+        # Add additional random walk component
+        walk_component = rng.normal(0, last_value * 0.05)
+        
+        val = (last_value + trend_component + random_component + walk_component) * month_variation
+        vals.append(max(0.1, float(val)))  # Ensure positive
+    
     return pd.Series(vals, index=idx)
 
 
@@ -257,9 +282,9 @@ def enforce_quantile_order(p10, p50, p90):
 
 
 def stabilize_series(mean_forecast: np.ndarray, hist_values: np.ndarray) -> np.ndarray:
-    """Apply gentler MoM change limits and preserve forecast dynamics.
-    - cap MoM growth within +/- k*CV but use more generous bounds
-    - apply very light smoothing only
+    """Apply very generous MoM change limits to preserve forecast dynamics.
+    - Much more generous bounds to avoid killing natural variation
+    - Only apply minimal constraints for extreme outliers
     """
     if len(hist_values) == 0:
         return np.maximum(mean_forecast, 0.0)
@@ -267,36 +292,37 @@ def stabilize_series(mean_forecast: np.ndarray, hist_values: np.ndarray) -> np.n
     last = float(hist_values[-1])
     cv = float(np.std(hist_values) / (np.mean(hist_values) + 1e-6)) if len(hist_values) > 1 else 0.5
     
-    # More generous bounds: allow 50-150% monthly change based on CV
-    k = 2.5  # Increased from 1.5
-    max_monthly_change = max(0.5, min(1.5, k * cv))  # Between 50% and 150%
+    # Much more generous bounds: allow 200-500% monthly change based on CV
+    k = 5.0  # Increased significantly from 2.5
+    max_monthly_change = max(2.0, min(5.0, k * cv))  # Between 200% and 500%
     
     out = []
     prev = last
     for m in mean_forecast:
         upper = prev * (1 + max_monthly_change)
-        lower = prev * max(0.1, (1 - max_monthly_change))  # Don't drop below 10% of previous
+        lower = prev * max(0.01, (1 - max_monthly_change))  # Allow down to 1% of previous
         val = float(np.clip(m, lower, upper))
         out.append(val)
         prev = val
     
-    # Very light smoothing only if needed (no EMA)
     return np.array(out)
 
 
 def clamp_with_historical_quantiles(arr: np.ndarray, hist_values: np.ndarray) -> np.ndarray:
-    """Apply more generous bounds based on historical data."""
+    """Apply extremely generous bounds based on historical data.
+    Very wide bounds to avoid killing natural variation: q001–q999 and 0.01x–100x.
+    """
     if len(hist_values) == 0:
         return np.maximum(arr, 0.0)
     
-    # Use wider bounds
-    lo = np.quantile(hist_values, 0.05)
-    hi = np.quantile(hist_values, 0.95)
+    # Use extremely wide bounds
+    lo = np.quantile(hist_values, 0.001)
+    hi = np.quantile(hist_values, 0.999)
     mean_hist = np.mean(hist_values)
     
-    # Allow forecasts to be 0.2x to 5x of historical range
-    lower_bound = max(0.0, lo * 0.2, mean_hist * 0.1)
-    upper_bound = max(hi * 5.0, mean_hist * 10.0)
+    # Allow forecasts to be 0.01x to 100x of historical central tendency/range
+    lower_bound = max(0.0, lo * 0.01, mean_hist * 0.01)
+    upper_bound = max(hi * 100.0, mean_hist * 100.0)
     
     return np.clip(arr, lower_bound, upper_bound)
 
@@ -311,81 +337,191 @@ def forecast_for_product(prod: str,
     dates = pd.to_datetime(hist_g["month"])  # Month start
     sales = hist_g["qty"].astype(float).values
 
-    # Baseline
-    baseline_meta = feats_meta.get("baseline_meta", {}) if feats_meta else {}
-    base_future = forecast_baseline_forward(dates.iloc[-1], pd.Series(sales), dates, FORECAST_HORIZON_MONTHS, baseline_meta)
-
-    # Build historical residual frame aligned with time features used in training
-    tf = build_time_features(dates)
+    # Determine mode: direct forecasting if model trained without residuals
     features_for_lstm = feats_meta.get("features_for_lstm", ["residual", "month_sin", "month_cos", "trend"]) if feats_meta else ["residual", "month_sin", "month_cos", "trend"]
-    kept = [c for c in features_for_lstm if c != "residual"]
+    direct_mode = bool(feats_meta.get("direct_mode", False)) if feats_meta else ("residual" not in features_for_lstm)
 
-    # Better baseline reconstruction
-    if test2 and hasattr(test2, "build_baseline_series"):
-        baseline_hist, _ = test2.build_baseline_series(pd.Series(sales), dates)  # type: ignore
-    else:
-        # simple mean seasonal baseline as fallback: use past 3-month SMA
-        baseline_hist = pd.Series(sales).rolling(3, min_periods=1).mean().shift(1).bfill()
-    
-    residual_series = pd.Series(sales, index=dates) - baseline_hist.values
+    tf = build_time_features(dates)
 
-    hist_feat = pd.DataFrame({"residual": residual_series.values}, index=dates)
-    if "month_sin" in kept or "month_cos" in kept or "trend" in kept:
-        tf2 = tf.reindex(dates)
-        for c in kept:
-            if c in tf2.columns:
-                hist_feat[c] = tf2[c].values
+    future_index = pd.date_range(start=dates.iloc[-1] + pd.offsets.MonthBegin(1), periods=FORECAST_HORIZON_MONTHS, freq="MS")
+
+    if direct_mode:
+        # Build historical feature frame for direct sales forecasting
+        s = pd.Series(sales, index=dates)
+        hist_feat = pd.DataFrame(index=dates)
+        first_col = features_for_lstm[0]
+        if first_col == "sales":
+            hist_feat[first_col] = s.values
+        else:
+            # fallback naming
+            hist_feat[first_col] = s.values
+        for c in features_for_lstm[1:]:
+            if c == "lag_1":
+                hist_feat[c] = s.shift(1).bfill().values
+            elif c == "lag_2":
+                hist_feat[c] = s.shift(2).bfill().values
+            elif c == "lag_3":
+                hist_feat[c] = s.shift(3).bfill().values
+            elif c == "rolling_mean_3":
+                hist_feat[c] = s.rolling(3, min_periods=1).mean().shift(1).bfill().values
+            elif c == "rolling_std_3":
+                hist_feat[c] = s.rolling(3, min_periods=1).std(ddof=0).shift(1).fillna(0.0).values
+            elif c == "trend":
+                hist_feat[c] = np.arange(1, len(s) + 1, dtype=float)
+            elif c in ("month_sin", "month_cos"):
+                t2 = tf.reindex(dates)
+                if len(s) >= 12 and c in t2.columns:
+                    hist_feat[c] = t2[c].values
+                else:
+                    hist_feat[c] = 0.0
             else:
                 hist_feat[c] = 0.0
 
-    # Last scaled window
-    last_window = build_sequences_for_inference(hist_feat, features_for_lstm, scaler, int(feats_meta.get("time_steps", 6)))
+        # Last scaled window
+        last_window = build_sequences_for_inference(hist_feat, features_for_lstm, scaler, int(feats_meta.get("time_steps", 3)))
 
-    # Iterative residual forecast
-    future_index = pd.date_range(start=dates.iloc[-1] + pd.offsets.MonthBegin(1), periods=FORECAST_HORIZON_MONTHS, freq="MS")
-    residual_forecast = []
-    lw = last_window.copy()
-    for i, d in enumerate(future_index):
-        pred_scaled = float(model.predict(lw.reshape(1, lw.shape[0], lw.shape[1]), verbose=0)[0][0])
-        # inverse scaling for residual (assumes scaler.min_/scale_ attrs like MinMaxScaler)
-        try:
-            pred_resid = (pred_scaled - scaler.min_[0]) / scaler.scale_[0]
-        except Exception:
-            pred_resid = pred_scaled
-        residual_forecast.append(pred_resid)
-        # build next feature row (unscaled)
-        new_row = {"residual": pred_resid, "month_sin": np.sin(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
-                   "month_cos": np.cos(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
-                   "trend": float(len(hist_feat) + i + 1)}
-        unscaled_vec = [new_row.get(col, 0.0) for col in features_for_lstm]
-        next_scaled = scaler.transform([unscaled_vec])[0]
-        lw = np.vstack([lw[1:], next_scaled])
+        # Iterative direct forecast with enhanced variation
+        preds = []
+        lw = last_window.copy()
+        augmented = list(s.values)
+        rng = np.random.RandomState(42)
+        
+        for i, d in enumerate(future_index):
+            pred_scaled = float(model.predict(lw.reshape(1, lw.shape[0], lw.shape[1]), verbose=0)[0][0])
+            try:
+                pred_val = (pred_scaled - scaler.min_[0]) / scaler.scale_[0]
+            except Exception:
+                pred_val = pred_scaled
+            
+            # Add significant noise to break perfect cycles
+            if NOISE_INJECTION:
+                noise_factor = rng.normal(0, 0.15)  # 15% noise
+                pred_val = pred_val * (1 + noise_factor)
+            
+            preds.append(max(0.1, pred_val))
+            # Build next feature row using prior history before adding current pred
+            lag1 = augmented[-1] if len(augmented) >= 1 else pred_val
+            lag2 = augmented[-2] if len(augmented) >= 2 else lag1
+            lag3 = augmented[-3] if len(augmented) >= 3 else lag2
+            roll_vals = augmented[-3:] if len(augmented) >= 3 else augmented
+            rmean = float(np.mean(roll_vals)) if len(roll_vals) > 0 else 0.0
+            rstd = float(np.std(roll_vals)) if len(roll_vals) > 1 else 0.0
+            new_row = {
+                features_for_lstm[0]: pred_val,
+                "lag_1": lag1,
+                "lag_2": lag2,
+                "lag_3": lag3,
+                "rolling_mean_3": rmean,
+                "rolling_std_3": rstd,
+                "trend": float(len(hist_feat) + i + 1),
+                "month_sin": np.sin(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
+                "month_cos": np.cos(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
+            }
+            unscaled_vec = [new_row.get(col, 0.0) for col in features_for_lstm]
+            next_scaled = scaler.transform([unscaled_vec])[0]
+            lw = np.vstack([lw[1:], next_scaled])
+            augmented.append(pred_val)
 
-    mean_forecast = np.maximum(base_future.values + np.array(residual_forecast), 0.0)
+        mean_forecast = np.maximum(np.array(preds, dtype=float), 0.0)
 
-    # In-sample residual errors for bootstrap (approximate using recent fit window)
-    # We don't have training X/y; approximate error dist from residual time series first differences
-    resid_arr = residual_series.values
-    if len(resid_arr) >= 4:
-        errs = resid_arr[1:] - resid_arr[:-1]
+        # Errors for quantiles approximation using sales differences
+        resid_arr = s.values
+        if len(resid_arr) >= 4:
+            errs = resid_arr[1:] - resid_arr[:-1]
+        else:
+            errs = resid_arr - np.mean(resid_arr)
+
     else:
-        errs = resid_arr - np.mean(resid_arr)
+        # Residual mode (legacy)
+        baseline_meta = feats_meta.get("baseline_meta", {}) if feats_meta else {}
+        base_future = forecast_baseline_forward(dates.iloc[-1], pd.Series(sales), dates, FORECAST_HORIZON_MONTHS, baseline_meta)
+
+        kept = [c for c in features_for_lstm if c != "residual"]
+
+        # Baseline history (SMA fallback)
+        if test2 and hasattr(test2, "build_baseline_series"):
+            baseline_hist, _ = test2.build_baseline_series(pd.Series(sales), dates)  # type: ignore
+        else:
+            baseline_hist = pd.Series(sales).rolling(3, min_periods=1).mean().shift(1).bfill()
+        residual_series = pd.Series(sales, index=dates) - baseline_hist.values
+
+        hist_feat = pd.DataFrame({"residual": residual_series.values}, index=dates)
+        if "month_sin" in kept or "month_cos" in kept or "trend" in kept:
+            tf2 = tf.reindex(dates)
+            for c in kept:
+                if c in tf2.columns:
+                    hist_feat[c] = tf2[c].values
+                else:
+                    hist_feat[c] = 0.0
+
+        last_window = build_sequences_for_inference(hist_feat, features_for_lstm, scaler, int(feats_meta.get("time_steps", 6)))
+
+        residual_forecast = []
+        lw = last_window.copy()
+        resid_std = float(np.std(hist_feat["residual"])) if "residual" in hist_feat.columns and len(hist_feat) > 1 else 0.0
+        rng = np.random.RandomState(2025)
+        for i, d in enumerate(future_index):
+            pred_scaled = float(model.predict(lw.reshape(1, lw.shape[0], lw.shape[1]), verbose=0)[0][0])
+            try:
+                pred_resid = (pred_scaled - scaler.min_[0]) / scaler.scale_[0]
+            except Exception:
+                pred_resid = pred_scaled
+            if NOISE_INJECTION and resid_std > 0:
+                # Much stronger noise to break perfect cycles
+                pred_resid = float(pred_resid + rng.normal(0.0, resid_std * 0.5))
+            residual_forecast.append(pred_resid)
+            new_row = {"residual": pred_resid, "month_sin": np.sin(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
+                       "month_cos": np.cos(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
+                       "trend": float(len(hist_feat) + i + 1)}
+            unscaled_vec = [new_row.get(col, 0.0) for col in features_for_lstm]
+            next_scaled = scaler.transform([unscaled_vec])[0]
+            lw = np.vstack([lw[1:], next_scaled])
+
+        mean_forecast = np.maximum(base_future.values + np.array(residual_forecast), 0.0)
+
+        resid_arr = residual_series.values
+        if len(resid_arr) >= 4:
+            errs = resid_arr[1:] - resid_arr[:-1]
+        else:
+            errs = resid_arr - np.mean(resid_arr)
 
     q10, q50, q90 = bootstrap_quantiles(mean_forecast, errs)
     q10, q50, q90 = enforce_quantile_order(q10, q50, q90)
 
-    # Stabilization & QC
-    mean_stab = stabilize_series(mean_forecast, sales)
-    mean_stab = clamp_with_historical_quantiles(mean_stab, sales)
-    q10 = clamp_with_historical_quantiles(q10, sales)
-    q50 = clamp_with_historical_quantiles(q50, sales)
-    q90 = clamp_with_historical_quantiles(q90, sales)
-    q10, q50, q90 = enforce_quantile_order(q10, q50, q90)
+    # Stabilization & QC (toggleable)
+    mean_stab = mean_forecast.copy()
+    if not DISABLE_STABILIZATION:
+        mean_stab = stabilize_series(mean_stab, sales)
+    if not DISABLE_CLAMPING:
+        mean_stab = clamp_with_historical_quantiles(mean_stab, sales)
+        q10 = clamp_with_historical_quantiles(q10, sales)
+        q50 = clamp_with_historical_quantiles(q50, sales)
+        q90 = clamp_with_historical_quantiles(q90, sales)
+        q10, q50, q90 = enforce_quantile_order(q10, q50, q90)
+    else:
+        # Ensure non-negative if clamping disabled
+        mean_stab = np.maximum(mean_stab, 0.0)
+        q10 = np.maximum(q10, 0.0)
+        q50 = np.maximum(q50, 0.0)
+        q90 = np.maximum(q90, 0.0)
+        q10, q50, q90 = enforce_quantile_order(q10, q50, q90)
 
+    # Diagnostics
+    if 'residual_series' in locals():
+        resid_std_val = float(np.std(residual_series.values)) if len(residual_series.values) > 1 else 0.0
+    else:
+        resid_std_val = float(np.std(sales)) if len(sales) > 1 else 0.0
     diag = {
         "hist_n": int(len(sales)),
         "hist_cv": float(np.std(sales) / (np.mean(sales) + 1e-6)) if len(sales) > 1 else 0.0,
         "used_model": True,
+        "residual_std": resid_std_val,
+        "disable_stabilization": bool(DISABLE_STABILIZATION),
+        "disable_clamping": bool(DISABLE_CLAMPING),
+        "noise_injection": bool(NOISE_INJECTION),
+        "direct_mode": bool(direct_mode),
+        "features_count": int(len(features_for_lstm) if isinstance(features_for_lstm, list) else 0),
+        "time_steps": int(feats_meta.get("time_steps", 3) if feats_meta else 3),
     }
 
     return future_index, mean_stab, q10, q50, q90, diag
@@ -408,12 +544,23 @@ def fallback_forecast(prod: str, hist_g: pd.DataFrame, category: str, global_sta
     else:
         base = cat_stats.get(category, {}).get("median", global_stats.get("global_median", 1.0))
     
-    # Add seasonal variation based on month
+    # Add realistic variation based on month and trend
     mean = []
-    for d in future_index:
-        # Simple seasonal pattern: slightly higher in some months
-        month_factor = 1.0 + 0.1 * np.sin(2 * np.pi * (d.month - 1) / 12)
-        mean.append(base * month_factor)
+    rng = np.random.RandomState(42)
+    base_trend = 0.02 if len(hist_g) > 6 else 0  # 2% monthly growth trend
+    
+    for i, d in enumerate(future_index):
+        # Add trend component
+        trend_factor = 1 + base_trend * i
+        
+        # Add small random variation (no strong seasonality)
+        random_factor = rng.normal(1.0, 0.1)  # 10% random variation
+        
+        # Add very mild month-based variation (not perfect seasonal)
+        month_variation = 1.0 + 0.05 * np.sin(2 * np.pi * (d.month - 1) / 12)
+        
+        val = base * trend_factor * random_factor * month_variation
+        mean.append(max(0.1, float(val)))
     
     mean = np.array(mean)
     
@@ -547,58 +694,90 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
                 cmap = plt.get_cmap("tab20")  # Use tab20 for more colors
                 color_map = {prod: cmap(i % 20) for i, prod in enumerate(product_list)}
                 
-                # Create grouped bar chart
-                fig, ax = plt.subplots(figsize=(max(16, n_months * 0.7), 8))
+                # Create improved grouped bar chart
+                # Dynamic figure size: width scales with months
+                fig_width = max(16, n_months * 0.8)
+                fig, ax = plt.subplots(figsize=(fig_width, 8))
                 
-                bar_width = 0.15  # Width of each bar
+                # Bar layout configuration
+                bar_width = 0.18  # wider bars for readability
                 month_positions = np.arange(n_months)
+                # Center 5 bars within each month range with small gaps
+                offsets = np.linspace(-0.36, 0.36, 5)
                 
-                # Plot bars for each product position (rank 1-5)
-                for rank_idx in range(5):  # Top 5 products
+                # Helper: smart number formatting (K, M)
+                def _fmt_val(v: float) -> str:
+                    try:
+                        v = float(v)
+                    except Exception:
+                        return str(v)
+                    if v >= 1_000_000:
+                        return f"{v/1_000_000:.1f}M"
+                    if v >= 1_000:
+                        return f"{v/1_000:.1f}K"
+                    return f"{v:.0f}"
+                
+                # Pre-compute totals per product for legend ordering
+                totals: Dict[str, float] = {p: 0.0 for p in product_list}
+                for month in unique_months:
+                    for prod, val in month_data.get(month, []):
+                        totals[prod] = totals.get(prod, 0.0) + float(val)
+                
+                # Draw bars per rank position
+                for rank_idx in range(5):  # Top 5 per month
                     positions = []
                     heights = []
                     colors = []
-                    labels_added = set()
-                    
                     for month_idx, month in enumerate(unique_months):
                         products_values = month_data.get(month, [])
                         if rank_idx < len(products_values):
                             prod, val = products_values[rank_idx]
-                            positions.append(month_idx + (rank_idx - 2) * bar_width)
+                            positions.append(month_idx + offsets[rank_idx])
                             heights.append(val)
-                            colors.append(color_map[prod])
-                            
-                            # Add to legend only once per product
-                            if prod not in labels_added:
-                                labels_added.add(prod)
+                            colors.append(color_map.get(prod, "#999999"))
                         else:
-                            # No product at this rank for this month
-                            positions.append(month_idx + (rank_idx - 2) * bar_width)
-                            heights.append(0)
-                            colors.append('lightgray')
-                    
-                    ax.bar(positions, heights, bar_width, color=colors, alpha=0.8)
+                            positions.append(month_idx + offsets[rank_idx])
+                            heights.append(0.0)
+                            colors.append("#e5e7eb")  # light gray for missing
+                    ax.bar(positions, heights, bar_width, color=colors, alpha=0.9, edgecolor="white", linewidth=0.5)
                 
-                # Set x-axis labels (month names)
-                month_labels = [pd.to_datetime(m).strftime("%b\n%Y") for m in unique_months]
+                # Annotate only the top (rank 1) per month to reduce clutter
+                for month_idx, month in enumerate(unique_months):
+                    products_values = month_data.get(month, [])
+                    if not products_values:
+                        continue
+                    top_prod, top_val = products_values[0]
+                    x_pos = month_idx + offsets[0]
+                    ax.text(x_pos, float(top_val) * 1.01, _fmt_val(top_val), ha="center", va="bottom", fontsize=9)
+                
+                # X-axis labels: compact month format and rotation
+                month_labels = [pd.to_datetime(m).strftime("%b'%y") for m in unique_months]
                 ax.set_xticks(month_positions)
-                ax.set_xticklabels(month_labels, fontsize=9)
+                ax.set_xticklabels(month_labels, fontsize=10, rotation=50, ha='right')
                 
+                # Axis labels and title
                 ax.set_ylabel("Nilai Forecast", fontsize=11)
                 ax.set_xlabel("Bulan", fontsize=11)
                 ax.set_title("Top-5 Produk per Bulan (24 Bulan Forecast)", fontsize=13, fontweight='bold')
-                ax.grid(axis='y', alpha=0.3)
                 
-                # Create custom legend
+                # Grid and spines
+                ax.grid(axis='y', color="#e5e7eb", alpha=0.8)
+                ax.set_axisbelow(True)
+                for spine in ["top", "right"]:
+                    ax.spines[spine].set_visible(False)
+                
+                # Legend: only products that appear, ordered by total forecast, max 10 entries
                 from matplotlib.patches import Patch
-                legend_elements = [Patch(facecolor=color_map[prod], label=prod) 
-                                 for prod in sorted(product_list)[:10]]  # Show top 10 in legend
-                ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.02, 1), 
-                         fontsize=9, title="Produk")
+                appeared = [p for p in product_list if totals.get(p, 0.0) > 0]
+                appeared_sorted = sorted(appeared, key=lambda p: totals.get(p, 0.0), reverse=True)[:10]
+                legend_elements = [Patch(facecolor=color_map[p], label=p) for p in appeared_sorted]
+                if legend_elements:
+                    ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.02, 1),
+                              fontsize=9, title="Produk", ncol=1, frameon=False)
                 
                 plt.tight_layout()
                 out_path = os.path.join(PLOTS_DIR, "top5_grouped_24m.png")
-                plt.savefig(out_path, dpi=150, bbox_inches="tight")
+                plt.savefig(out_path, dpi=180, bbox_inches="tight")
                 plt.close(fig)
                 
                 print(f"Chart Top-5 grouped disimpan di: {out_path}")

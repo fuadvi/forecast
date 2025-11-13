@@ -85,7 +85,6 @@ def generate_total_forecast_chart(df: pd.DataFrame, show_ci: bool = True) -> go.
 
 
 def generate_top_products_chart(df: pd.DataFrame, month: Optional[str] = None, grouped: bool = False):
-    # Expect columns: date, rank, product, category, forecast
     date_col = next((c for c in df.columns if c.lower().startswith("date")), "date")
     rank_col = next((c for c in df.columns if c.lower() == "rank"), "rank")
     prod_col = next((c for c in df.columns if "product" in c.lower()), "product")
@@ -94,27 +93,22 @@ def generate_top_products_chart(df: pd.DataFrame, month: Optional[str] = None, g
         num_cols = df.select_dtypes(include="number").columns
         val_col = num_cols[-1] if len(num_cols) else None
 
-    # Parse and format dates
     dser = pd.to_datetime(df[date_col])
     df = df.copy()
     df[date_col] = dser
-    df["month_label_space"] = df[date_col].dt.strftime("%b %Y")  # e.g., Jan 2025
+    df["month_label_space"] = df[date_col].dt.strftime("%b %Y")
 
-    # Always keep only top-5 per month for visualization
     df = df[df[rank_col] <= 5]
 
     if month and not grouped:
-        # Allow selecting by either raw string or formatted month
         try:
             m_dt = pd.to_datetime(month)
         except Exception:
-            # try matching formatted label
             mask = df["month_label_space"].astype(str) == str(month)
             ddf = df[mask]
         else:
             ddf = df[df[date_col] == m_dt]
         ddf = ddf.sort_values(rank_col)
-        # Horizontal bar for a single month (still 5 bars)
         fig = px.bar(
             ddf,
             x=val_col,
@@ -122,46 +116,57 @@ def generate_top_products_chart(df: pd.DataFrame, month: Optional[str] = None, g
             orientation="h",
             color=prod_col,
             color_discrete_sequence=px.colors.qualitative.Set2,
-            hover_data={prod_col: False},  # we'll use hovertemplate
+            hover_data={prod_col: False},
+            # custom_data dan hovertemplate juga bisa diletakkan di sini
+            custom_data=[ddf["month_label_space"], ddf[rank_col]],
+            hovertemplate=(
+                    "Produk: %{y}<br>"
+                    + "Bulan: %{customdata[0]}<br>"
+                    + "Forecast: %{x:,.0f}<br>"
+                    + "Ranking: %{customdata[1]}<extra></extra>"
+            ),
         )
         fig.update_traces(
-            hovertemplate=(
-                "Produk: %{y}<br>"
-                + "Bulan: %{customdata[0]}<br>"
-                + "Forecast: %{x:,.0f}<br>"
-                + "Ranking: %{customdata[1]}<extra></extra>"
-            ),
-            customdata=ddf[["month_label_space", rank_col]].to_numpy(),
             texttemplate="%{x:,.0f}",
             textposition="outside",
         )
-        fig = customize_chart_layout(fig, title=f"Top Produk - {ddf['month_label_space'].iloc[0] if len(ddf) else month}")
+        fig = customize_chart_layout(fig,
+                                     title=f"Top Produk - {ddf['month_label_space'].iloc[0] if len(ddf) else month}")
         fig.update_xaxes(title_text="Forecast")
         fig.update_yaxes(title_text="Produk")
         return fig
 
-    # Grouped across months: five bars per month
-    # Sort months and preserve chronological order on x-axis
+
     df = df.sort_values([date_col, rank_col])
+
+    # Definisikan kolom yang ingin Anda tampilkan di hover
+    # Kita akan merujuk ini sebagai %{customdata[0]} dan %{customdata[1]}
+    custom_data_cols = [prod_col, rank_col]
+
     fig = px.bar(
         df,
         x="month_label_space",
         y=val_col,
         color=prod_col,
         barmode="group",
-        category_orders={"month_label_space": sorted(df["month_label_space"].unique(), key=lambda s: pd.to_datetime("01-"+s, format="%d-%b %Y"))},
+        category_orders={"month_label_space": sorted(df["month_label_space"].unique(),
+                                                     key=lambda s: pd.to_datetime("01-" + s, format="%d-%b %Y"))},
         color_discrete_sequence=px.colors.qualitative.Set2,
         hover_data={prod_col: False},
+
+        custom_data=custom_data_cols,
     )
+
     fig.update_traces(
         hovertemplate=(
-            "Produk: %{customdata[0]}<br>"
-            + "Bulan: %{x}<br>"
-            + "Forecast: %{y:,.0f}<br>"
-            + "Ranking: %{customdata[1]}<extra></extra>"
+                "Produk: %{customdata[0]}<br>"
+                + "Bulan: %{x}<br>"
+                + "Forecast: %{y:,.0f}<br>"
+                + "Ranking: %{customdata[1]}<extra></extra>"
         )
     )
-    fig.update_traces(customdata=df[[prod_col, rank_col]].to_numpy())
+
+    # Lanjutkan sisa kode Anda
     fig = customize_chart_layout(fig, title="Top Produk per Bulan (Top 5)")
     fig.update_xaxes(title_text="Bulan")
     fig.update_yaxes(title_text="Forecast")

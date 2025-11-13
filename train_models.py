@@ -34,9 +34,9 @@ test2 = None
 # Configuration
 # ------------------------
 FORECAST_HORIZON_MONTHS = 24
-TIME_STEPS = 6
-MIN_DATA_POINTS_MONTHS = 8
-MIN_NONZERO_TRANSACTIONS = 3
+TIME_STEPS = 2  # Reduced from 3 to 2 to allow more products
+MIN_DATA_POINTS_MONTHS = 3  # Further reduced to 3 months
+MIN_NONZERO_TRANSACTIONS = 1  # Reduced to 1 transaction
 OUTPUT_DIR = os.path.join(os.getcwd(), "trained_models")
 DIAG_CSV = os.path.join(OUTPUT_DIR, "training_diagnostics.csv")
 SKIPPED_LOG = os.path.join(OUTPUT_DIR, "skipped_products.log")
@@ -124,19 +124,35 @@ def _forecast_baseline_forward(last_hist_date: pd.Timestamp,
                               meta: dict = None) -> pd.Series:
     if test2 and hasattr(test2, "forecast_baseline_forward"):
         return test2.forecast_baseline_forward(last_hist_date, hist_sales, hist_dates, horizon, meta)
-    # Extend baseline with SMA + seasonal profile
-    if meta is None:
-        base_hist, meta = _build_baseline_series(hist_sales, hist_dates)
-    seas = meta.get("seasonality", {})
-    w = int(meta.get("sma_window", _select_sma_window(hist_sales)))
+    
+    # Minimal baseline: just use last value with small random variation
     sales = pd.Series(hist_sales.values, index=pd.to_datetime(hist_dates))
-    sma = sales.rolling(w, min_periods=1).mean().iloc[-1]
+    last_value = float(sales.iloc[-1]) if len(sales) > 0 else 1.0
+    
+    # Calculate trend from recent data
+    if len(sales) >= 6:
+        recent_trend = (sales.tail(3).mean() - sales.tail(6).mean()) / 3
+    else:
+        recent_trend = 0
+    
     future_index = pd.date_range(start=pd.to_datetime(last_hist_date) + pd.offsets.MonthBegin(1), periods=horizon, freq="MS")
     future_vals = []
-    for d in future_index:
-        m = d.month
-        mult = seas.get(m, 1.0)
-        future_vals.append(float(sma) * float(mult))
+    rng = np.random.RandomState(42)  # Fixed seed for reproducibility
+    
+    for i, d in enumerate(future_index):
+        # Enhanced baseline with stronger trend and more random variation
+        trend_component = recent_trend * (i + 1) * 0.5  # Much stronger trend
+        random_component = rng.normal(0, last_value * 0.15)  # 15% random variation
+        
+        # Add monthly variation component
+        month_variation = 1.0 + 0.1 * np.sin(2 * np.pi * d.month / 12)
+        
+        # Add additional random walk component
+        walk_component = rng.normal(0, last_value * 0.05)
+        
+        val = (last_value + trend_component + random_component + walk_component) * month_variation
+        future_vals.append(max(0.1, float(val)))  # Ensure positive
+    
     return pd.Series(future_vals, index=future_index)
 
 
@@ -310,25 +326,196 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     # Time features
     time_feats = build_time_features(dates)
 
-    # Baseline and residual
+    # Strategy flag: direct forecasting on raw sales (recommended)
+    USE_BASELINE_DECOMP_FLAG = os.environ.get("USE_BASELINE_DECOMP", "false").lower() == "true"
+    direct_mode = not USE_BASELINE_DECOMP_FLAG
+
+    if direct_mode:
+        # Build feature matrix using lags and rolling stats
+        df_feat = pd.DataFrame({
+            "sales": sales.values,
+            "trend": np.arange(1, len(sales) + 1, dtype=float),
+        }, index=dates)
+        # Add month features but they will be mild; drop if history < 12
+        if len(sales) >= 12:
+            df_feat["month_sin"] = time_feats["month_sin"].values
+            df_feat["month_cos"] = time_feats["month_cos"].values
+        else:
+            df_feat["month_sin"] = 0.0
+            df_feat["month_cos"] = 0.0
+        # Enhanced lags and momentum features
+        df_feat["lag_1"] = df_feat["sales"].shift(1)
+        df_feat["lag_2"] = df_feat["sales"].shift(2)
+        df_feat["lag_3"] = df_feat["sales"].shift(3)
+        df_feat["lag_6"] = df_feat["sales"].shift(6)
+        df_feat["lag_12"] = df_feat["sales"].shift(12)
+        
+        # Rolling stats (shifted to avoid leakage)
+        df_feat["rolling_mean_3"] = df_feat["sales"].rolling(3, min_periods=1).mean().shift(1)
+        df_feat["rolling_mean_6"] = df_feat["sales"].rolling(6, min_periods=1).mean().shift(1)
+        df_feat["rolling_std_3"] = df_feat["sales"].rolling(3, min_periods=1).std(ddof=0).shift(1)
+        df_feat["rolling_std_6"] = df_feat["sales"].rolling(6, min_periods=1).std(ddof=0).shift(1)
+        
+        # Momentum features
+        df_feat["momentum_3"] = df_feat["sales"].diff(3).shift(1)  # 3-month momentum
+        df_feat["momentum_6"] = df_feat["sales"].diff(6).shift(1)  # 6-month momentum
+        df_feat["acceleration"] = df_feat["momentum_3"].diff(1).shift(1)  # Rate of change of momentum
+        
+        # Relative features
+        df_feat["sales_vs_mean3"] = df_feat["sales"] / (df_feat["rolling_mean_3"] + 1e-6)
+        df_feat["sales_vs_mean6"] = df_feat["sales"] / (df_feat["rolling_mean_6"] + 1e-6)
+        
+        df_feat = df_feat.bfill().fillna(0.0)
+
+        # Define feature order (target first) - enhanced feature set
+        features_for_lstm = [
+            "sales", "lag_1", "lag_2", "lag_3", "lag_6", "lag_12",
+            "rolling_mean_3", "rolling_mean_6", "rolling_std_3", "rolling_std_6",
+            "momentum_3", "momentum_6", "acceleration",
+            "sales_vs_mean3", "sales_vs_mean6", "trend", "month_sin", "month_cos"
+        ]
+        data_mat = df_feat[features_for_lstm].astype(float)
+
+        scaler = MinMaxScaler(feature_range=(0.0, 1.0))
+        data_scaled = scaler.fit_transform(data_mat.values)
+
+        target_idx = 0
+        X_seq, y_seq = _create_sequences(data_scaled, TIME_STEPS, target_idx)
+        if len(X_seq) < max(4, TIME_STEPS):
+            raise ValueError("insufficient sequences for LSTM training")
+
+        split_idx = max(1, int(len(X_seq) * 0.8))
+        X_train, y_train = X_seq[:split_idx], y_seq[:split_idx]
+        X_val, y_val = (X_seq[split_idx:], y_seq[split_idx:]) if split_idx < len(X_seq) else (X_seq[-1:], y_seq[-1:])
+
+        # Enhanced stacked LSTM with more capacity
+        model = Sequential([
+            LSTM(128, input_shape=(TIME_STEPS, data_mat.shape[1]), return_sequences=True, activation="tanh"),
+            Dropout(0.3),
+            LSTM(96, return_sequences=True, activation="tanh"),
+            Dropout(0.3),
+            LSTM(64, return_sequences=False, activation="tanh"),
+            Dropout(0.2),
+            Dense(64, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="linear")
+        ])
+        model.compile(optimizer="adam", loss="mse")
+        es = EarlyStopping(monitor="val_loss", patience=25, restore_best_weights=True, verbose=0)
+        rlrop = ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8, min_lr=1e-6, verbose=0)
+        model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=300, batch_size=min(16, len(X_train)), callbacks=[es, rlrop], verbose=0)
+
+        # Validate one forward pass
+        _ = model.predict(X_train[:1], verbose=0)
+
+        # Forecast directly next sales with iterative loop
+        last_hist_date = dates.iloc[-1]
+        future_dates = pd.date_range(start=last_hist_date + pd.offsets.MonthBegin(1), periods=FORECAST_HORIZON_MONTHS, freq="MS")
+
+        last_window = X_seq[-1]
+        preds = []
+        augmented = list(sales.values)
+        for i, d in enumerate(future_dates):
+            pred_scaled = float(model.predict(last_window.reshape(1, TIME_STEPS, data_mat.shape[1]), verbose=0)[0][0])
+            if hasattr(scaler, "scale_") and scaler.scale_[0] != 0:
+                pred_val = (pred_scaled - scaler.min_[0]) / scaler.scale_[0]
+            else:
+                pred_val = pred_scaled
+            preds.append(pred_val)
+
+            # Build next feature row using prior history (before adding current pred)
+            lag1 = augmented[-1] if len(augmented) >= 1 else pred_val
+            lag2 = augmented[-2] if len(augmented) >= 2 else lag1
+            lag3 = augmented[-3] if len(augmented) >= 3 else lag2
+            lag6 = augmented[-6] if len(augmented) >= 6 else lag3
+            lag12 = augmented[-12] if len(augmented) >= 12 else lag6
+            
+            roll_vals_3 = augmented[-3:] if len(augmented) >= 3 else augmented
+            roll_vals_6 = augmented[-6:] if len(augmented) >= 6 else augmented
+            rmean3 = float(np.mean(roll_vals_3)) if len(roll_vals_3) > 0 else 0.0
+            rmean6 = float(np.mean(roll_vals_6)) if len(roll_vals_6) > 0 else 0.0
+            rstd3 = float(np.std(roll_vals_3)) if len(roll_vals_3) > 1 else 0.0
+            rstd6 = float(np.std(roll_vals_6)) if len(roll_vals_6) > 1 else 0.0
+            
+            # Momentum features
+            momentum3 = pred_val - lag3 if len(augmented) >= 3 else 0.0
+            momentum6 = pred_val - lag6 if len(augmented) >= 6 else 0.0
+            acceleration = momentum3 - (augmented[-2] - augmented[-5]) if len(augmented) >= 5 else 0.0
+            
+            # Relative features
+            sales_vs_mean3 = pred_val / (rmean3 + 1e-6)
+            sales_vs_mean6 = pred_val / (rmean6 + 1e-6)
+            
+            new_row = {
+                "sales": pred_val,
+                "lag_1": lag1,
+                "lag_2": lag2,
+                "lag_3": lag3,
+                "lag_6": lag6,
+                "lag_12": lag12,
+                "rolling_mean_3": rmean3,
+                "rolling_mean_6": rmean6,
+                "rolling_std_3": rstd3,
+                "rolling_std_6": rstd6,
+                "momentum_3": momentum3,
+                "momentum_6": momentum6,
+                "acceleration": acceleration,
+                "sales_vs_mean3": sales_vs_mean3,
+                "sales_vs_mean6": sales_vs_mean6,
+                "trend": float(len(data_mat) + i + 1),
+                "month_sin": np.sin(2 * np.pi * d.month / 12) if len(sales) >= 12 else 0.0,
+                "month_cos": np.cos(2 * np.pi * d.month / 12) if len(sales) >= 12 else 0.0,
+            }
+            next_unscaled = [new_row.get(col, 0.0) for col in features_for_lstm]
+            next_scaled = scaler.transform([next_unscaled])[0]
+            last_window = np.vstack([last_window[1:], next_scaled])
+            augmented.append(pred_val)
+
+        point_forecast = np.maximum(np.array(preds, dtype=float), 0.0)
+
+        # Diagnostics on fit
+        ins_pred = model.predict(X_train, verbose=0).flatten()
+        ins_true = y_train.flatten()
+        mae = float(mean_absolute_error(ins_true, ins_pred)) if len(ins_true) > 0 else None
+        rmse = float(np.sqrt(mean_squared_error(ins_true, ins_pred))) if len(ins_true) > 0 else None
+
+        result = {
+            "model": model,
+            "scaler": scaler,
+            "features": {
+                "selected_features": ["lag_1", "lag_2", "lag_3", "lag_6", "lag_12", "rolling_mean_3", "rolling_mean_6", "rolling_std_3", "rolling_std_6", "momentum_3", "momentum_6", "acceleration", "sales_vs_mean3", "sales_vs_mean6", "trend", "month_sin", "month_cos"],
+                "features_for_lstm": features_for_lstm,
+                "baseline_meta": {},
+                "time_steps": TIME_STEPS,
+                "horizon": FORECAST_HORIZON_MONTHS,
+                "direct_mode": True,
+            },
+            "diagnostics": {
+                "train_mae_residual": mae,
+                "train_rmse_residual": rmse,
+                "n_points": int(len(g)),
+            },
+            "forecast": pd.Series(point_forecast, index=future_dates),
+        }
+        return result
+
+    # Fallback: legacy residual mode with simplified baseline
     baseline_hist, baseline_meta = _build_baseline_series(sales, dates)
     residual = sales.values - baseline_hist.values
 
-    # Candidate features
     Xc = time_feats[["month_sin", "month_cos", "trend"]].copy()
     Xc = Xc.reset_index(drop=True)
     y = pd.Series(residual, index=Xc.index)
 
-    # RFE selection (use RF based on residuals)
     kept, elim, rfe_hist = rfe_select_features(Xc, y, min_features=2, max_features=min(6, Xc.shape[1]))
 
-    # Prepare matrix for LSTM: target residual + kept features
     features_for_lstm = ["residual"] + kept
     data_mat = pd.DataFrame({"residual": y.values}, index=Xc.index)
     for c in kept:
         data_mat[c] = Xc[c].values
 
-    scaler = MinMaxScaler(feature_range=(0.1, 0.9))
+    scaler = MinMaxScaler(feature_range=(0.0, 1.0))
     data_scaled = scaler.fit_transform(data_mat.values.astype(float))
 
     target_idx = 0
@@ -340,38 +527,39 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     X_train, y_train = X_seq[:split_idx], y_seq[:split_idx]
     X_val, y_val = (X_seq[split_idx:], y_seq[split_idx:]) if split_idx < len(X_seq) else (X_seq[-1:], y_seq[-1:])
 
-    # Lightweight LSTM
     model = Sequential([
-        LSTM(16, input_shape=(TIME_STEPS, data_mat.shape[1]), return_sequences=False, activation="tanh"),
+        LSTM(128, input_shape=(TIME_STEPS, data_mat.shape[1]), return_sequences=True, activation="tanh"),
+        Dropout(0.3),
+        LSTM(96, return_sequences=True, activation="tanh"),
+        Dropout(0.3),
+        LSTM(64, return_sequences=False, activation="tanh"),
         Dropout(0.2),
-        Dense(8, activation="relu"),
+        Dense(64, activation="relu"),
+        Dense(32, activation="relu"),
+        Dense(16, activation="relu"),
         Dense(1, activation="linear")
     ])
     model.compile(optimizer="adam", loss="mse")
-    es = EarlyStopping(monitor="val_loss", patience=10, restore_best_weights=True, verbose=0)
-    model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=100, batch_size=min(8, len(X_train)), callbacks=[es], verbose=0)
+    es = EarlyStopping(monitor="val_loss", patience=25, restore_best_weights=True, verbose=0)
+    rlrop = ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8, min_lr=1e-6, verbose=0)
+    model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=300, batch_size=min(16, len(X_train)), callbacks=[es, rlrop], verbose=0)
 
-    # Validate model: simple forward pass
     _ = model.predict(X_train[:1], verbose=0)
 
-    # Build forecast horizon via iterative residual prediction
     last_hist_date = dates.iloc[-1]
     future_dates = pd.date_range(start=last_hist_date + pd.offsets.MonthBegin(1), periods=FORECAST_HORIZON_MONTHS, freq="MS")
 
     baseline_future = _forecast_baseline_forward(last_hist_date, sales, dates, FORECAST_HORIZON_MONTHS, baseline_meta)
 
-    # Start from last window
     last_window = X_seq[-1]
     residual_forecast = []
     for i, d in enumerate(future_dates):
         pred_resid_scaled = float(model.predict(last_window.reshape(1, TIME_STEPS, data_mat.shape[1]), verbose=0)[0][0])
-        # inverse scaling for residual (feature index 0)
         if hasattr(scaler, "scale_") and scaler.scale_[0] != 0:
             pred_resid = (pred_resid_scaled - scaler.min_[0]) / scaler.scale_[0]
         else:
             pred_resid = pred_resid_scaled
         residual_forecast.append(pred_resid)
-        # Compose next feature row
         new_feats = {
             "residual": pred_resid,
             "month_sin": np.sin(2 * np.pi * d.month / 12) if len(time_feats) >= 12 else 0.0,
@@ -380,12 +568,10 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
         }
         next_row_unscaled = [new_feats.get(col, 0.0) for col in features_for_lstm]
         next_row_scaled = scaler.transform([next_row_unscaled])[0]
-        # roll window
         last_window = np.vstack([last_window[1:], next_row_scaled])
 
     point_forecast = np.maximum(baseline_future.values + np.array(residual_forecast), 0.0)
 
-    # Diagnostics on residual fit
     ins_pred = model.predict(X_train, verbose=0).flatten()
     ins_true = y_train.flatten()
     mae = float(mean_absolute_error(ins_true, ins_pred)) if len(ins_true) > 0 else None
@@ -400,6 +586,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
             "baseline_meta": baseline_meta,
             "time_steps": TIME_STEPS,
             "horizon": FORECAST_HORIZON_MONTHS,
+            "direct_mode": False,
         },
         "diagnostics": {
             "train_mae_residual": mae,

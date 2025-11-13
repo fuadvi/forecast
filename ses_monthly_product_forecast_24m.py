@@ -369,15 +369,14 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
 # ==========================
 
 def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
-                      width: float = 0.15, annotate_only_max: bool = True) -> None:
+                      width: float = 0.18, annotate_only_max: bool = True) -> None:
     if topN_df is None or topN_df.empty:
-        # Tetap buat canvas kosong untuk kepatuhan
         ensure_dir(os.path.dirname(out_path))
         plt.figure(figsize=(20, 8))
         plt.title("Top-5 Produk per Bulan (SES) - 24 Bulan")
         plt.grid(axis="y", alpha=0.25)
         plt.tight_layout()
-        plt.savefig(out_path, dpi=150, bbox_inches="tight")
+        plt.savefig(out_path, dpi=180, bbox_inches="tight")
         plt.close()
         return
 
@@ -386,18 +385,18 @@ def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
     df = df.dropna(subset=["date", "product_name"])  # type: ignore
 
-    # Gunakan 24 bulan berurutan
+    # Ambil hingga 24 bulan berurutan
     months = sorted(df["date"].dt.to_period("M").dt.to_timestamp().unique())
     if len(months) > 24:
         months = months[:24]
 
-    # Produk yang tampil minimal sekali
+    # Filter top-5 per bulan dan daftar produk yang muncul
     filtered = df[df["date"].isin(months)].copy()
     filtered = (filtered.sort_values(["date", "forecast"], ascending=[True, False])
                         .groupby("date", as_index=False).head(5))
     prods = sorted(filtered["product_name"].unique().tolist())
 
-    # Peta warna stabil per produk
+    # Warna stabil dan kontras per produk
     try:
         cmap = plt.get_cmap("tab20")
         base_colors = list(getattr(cmap, "colors", []))
@@ -411,38 +410,57 @@ def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
     ensure_dir(os.path.dirname(out_path))
 
     x = np.arange(len(months))
-    offsets = np.linspace(-0.3, 0.3, 5) * (width / 0.15)  # center 5 bars
+    offsets = np.linspace(-0.36, 0.36, 5)  # center 5 bars
 
-    plt.figure(figsize=(20, 8))
-    handles: Dict[str, any] = {}
+    # Dynamic figure width based on months
+    fig_width = max(16, len(months) * 0.8)
+    plt.figure(figsize=(fig_width, 8))
 
+    # Helper for compact number formatting
+    def _fmt(v: float) -> str:
+        v = float(v)
+        if v >= 1_000_000:
+            return f"{v/1_000_000:.1f}M"
+        if v >= 1_000:
+            return f"{v/1_000:.1f}K"
+        return f"{v:.0f}"
+
+    # Totals per product for legend ordering
+    totals: Dict[str, float] = {p: 0.0 for p in prods}
+    for _, row in filtered.iterrows():
+        totals[row["product_name"]] += float(row["forecast"])  # type: ignore
+
+    # Draw bars and annotate only top per month
     for mi, m in enumerate(months):
         sub = filtered[filtered["date"] == m].sort_values("forecast", ascending=False).head(5)
         vals = sub["forecast"].astype(float).values
         names = sub["product_name"].astype(str).values
-        max_idx = int(np.argmax(vals)) if len(vals) else -1
         for k in range(len(vals)):
             p = names[k]
             v = float(vals[k])
             pos = x[mi] + offsets[k]
-            bar = plt.bar(pos, v, width=width, color=color_map.get(p, "#999999"), edgecolor="white")
-            if p not in handles:
-                handles[p] = bar[0]
-            if not annotate_only_max or k == max_idx:
-                label = f"{v:,.0f}" if v >= 100 else f"{v:,.1f}"
-                plt.text(pos, v, label, ha="center", va="bottom", fontsize=8)
+            plt.bar(pos, v, width=width, color=color_map.get(p, "#999999"),
+                    edgecolor="white", linewidth=0.5, alpha=0.9)
+        # annotate top-1 only
+        if len(vals):
+            plt.text(x[mi] + offsets[0], float(vals[0]) * 1.01, _fmt(vals[0]), ha="center", va="bottom", fontsize=9)
 
-    month_labels = [pd.Timestamp(m).strftime("%b-%Y") for m in months]
-    plt.xticks(x, month_labels, rotation=50, ha="right")
+    month_labels = [pd.Timestamp(m).strftime("%b'%y") for m in months]
+    plt.xticks(x, month_labels, rotation=50, ha="right", fontsize=10)
     plt.ylabel("Forecast")
     plt.title("Top-5 Produk per Bulan (Grouped) - 24 Bulan - SES")
-    plt.grid(axis="y", alpha=0.25)
-    if handles:
-        ordered = sorted(handles.keys())
-        plt.legend([handles[n] for n in ordered], ordered, title="Produk", ncol=4, fontsize=8, title_fontsize=9,
-                   frameon=False)
+    plt.grid(axis="y", color="#e5e7eb", alpha=0.8)
+
+    # Legend: only appeared products, sort by totals and limit to 10 entries
+    ordered = sorted([p for p in prods if totals.get(p, 0.0) > 0], key=lambda p: totals[p], reverse=True)[:10]
+    if ordered:
+        from matplotlib.patches import Patch
+        plt.legend([Patch(facecolor=color_map[p], label=p) for p in ordered], ordered,
+                   title="Produk", ncol=1, fontsize=9, title_fontsize=10, frameon=False,
+                   loc='upper left', bbox_to_anchor=(1.02, 1))
+
     plt.tight_layout()
-    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.savefig(out_path, dpi=180, bbox_inches="tight")
     plt.close()
 
 
