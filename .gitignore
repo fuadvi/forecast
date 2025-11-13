@@ -1,3 +1,8 @@
 forecast_plots/*
 trained_models/*
 backup/*
+SKIP_DIAGNOSIS_SUMMARY.md
+FIX_APPLIED_SUMMARY.md
+FORECAST_IMPROVEMENTS_DOCUMENTATION.md
+SKIP_ANALYSIS_SUMMARY.md
+.idea/*

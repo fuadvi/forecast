@@ -35,7 +35,7 @@ test2 = None
 # ------------------------
 FORECAST_HORIZON_MONTHS = 24
 TIME_STEPS = 2  # Reduced from 3 to 2 to allow more products
-MIN_DATA_POINTS_MONTHS = 3  # Further reduced to 3 months
+MIN_DATA_POINTS_MONTHS = 2  # Reduced to 2 months (Balanced approach per SKIP_DIAGNOSIS_SUMMARY.md)
 MIN_NONZERO_TRANSACTIONS = 1  # Reduced to 1 transaction
 OUTPUT_DIR = os.path.join(os.getcwd(), "trained_models")
 DIAG_CSV = os.path.join(OUTPUT_DIR, "training_diagnostics.csv")
@@ -53,6 +53,23 @@ OUT_FORECAST_TOTAL = os.path.join(os.getcwd(), "forecast_total_24m.csv")
 OUT_TOPN = os.path.join(os.getcwd(), "topN_per_month_24m.csv")
 OUT_DIAG = os.path.join(os.getcwd(), "forecast_diagnostics.csv")
 PLOTS_DIR = os.path.join(os.getcwd(), "forecast_plots", "bulan")
+
+# ------------------------
+# Column Mapping (consistent with test2.py)
+# ------------------------
+column_mapping = {
+    "Tanggal Transaksi": "date",
+    # "Jumlah Unit Terjual": "sales",
+    "Jumlah": "sales",
+    "Total Harga": "total_price",
+    "Kategori Barang": "category",
+    "Nama Produk": "product_name",
+    "Kota": "city",
+    "Jenis Pembelian": "purchase_type",
+    "Instansi": "institution",
+    "Bahan": "material",
+    "Warna": "color",
+}
 
 # ------------------------
 # Utility functions (fallbacks if test2 is absent)
@@ -196,60 +213,45 @@ def build_time_features(dates: pd.Series) -> pd.DataFrame:
 
 
 def read_and_preprocess(excel_path: str) -> pd.DataFrame:
-    # Try to handle both English and Indonesian column names
+    # Use column_mapping consistent with test2.py
     df = pd.read_excel(excel_path)
+    print(f"Data berhasil dibaca: {len(df)} baris")
     
-    # Debug: Print actual column names
-    print(f"Actual columns in Excel file: {list(df.columns)}")
+    # Debug: Print all columns in Excel before mapping
+    print(f"Kolom di Excel (sebelum mapping): {list(df.columns)}")
     
-    cols = {c.lower().strip(): c for c in df.columns}
+    # Apply column mapping (same approach as test2.py)
+    existing_columns = {k: v for k, v in column_mapping.items() if k in df.columns}
+    df = df.rename(columns=existing_columns)
+    print(f"Kolom yang ditemukan setelah mapping: {list(existing_columns.values())}")
     
-    # More flexible column mapping - case insensitive and partial matching
-    def find_column(possible_names, df_columns):
-        for possible in possible_names:
-            # Exact match (case insensitive)
-            for col in df_columns:
-                if col.lower().strip() == possible.lower().strip():
-                    return col
-            # Partial match (case insensitive)
-            for col in df_columns:
-                if possible.lower().strip() in col.lower().strip():
-                    return col
-        return None
+    # Check if "Kategori Barang" exists with different name
+    if "category" not in df.columns and "Kategori Barang" not in existing_columns:
+        # Try to find similar column names
+        possible_category_cols = [col for col in df.columns if 'kategori' in col.lower() or 'category' in col.lower()]
+        if possible_category_cols:
+            print(f"Warning: Kolom kategori mungkin dengan nama berbeda: {possible_category_cols}")
+            # Use the first match
+            df = df.rename(columns={possible_category_cols[0]: "category"})
+            print(f"  Menggunakan kolom '{possible_category_cols[0]}' sebagai 'category'")
     
-    # Extended candidates with more variations
-    date_candidates = ["Transaction Date", "Tanggal Transaksi", "date", "tanggal", "Date", "Tanggal"]
-    qty_candidates = ["Quantity", "Jumlah", "sales", "qty", "Sales", "Qty", "Jumlah Unit Terjual"]
-    product_candidates = ["Product Name", "Nama Produk", "product", "Product", "product_name"]
-    category_candidates = ["Product Category", "Kategori Barang", "category", "Category", "Kategori"]
+    # Validate required columns (same as test2.py)
+    if "product_name" not in df.columns:
+        raise ValueError("Kolom 'Nama Produk' tidak ditemukan di file sumber.")
     
-    # Find actual column names
-    date_col = find_column(date_candidates, df.columns)
-    qty_col = find_column(qty_candidates, df.columns)
-    product_col = find_column(product_candidates, df.columns)
-    category_col = find_column(category_candidates, df.columns)
+    if "date" not in df.columns:
+        raise ValueError("Kolom tanggal tidak ditemukan setelah mapping.")
     
-    # Check if all required columns were found
-    missing_cols = []
-    if not date_col:
-        missing_cols.append("date column")
-    if not qty_col:
-        missing_cols.append("quantity/sales column")
-    if not product_col:
-        missing_cols.append("product name column")
-    if not category_col:
-        missing_cols.append("category column")
+    # Handle category column - make it optional with default value
+    if "category" not in df.columns:
+        print("Warning: Kolom 'category' tidak ditemukan. Menggunakan nilai default 'Unknown'.")
+        df["category"] = "Unknown"
     
-    if missing_cols:
-        print(f"Available columns: {list(df.columns)}")
-        raise ValueError(f"Could not find columns for: {', '.join(missing_cols)}. "
-                        f"Please check that your Excel file contains the required columns.")
-    
-    print(f"Mapped columns: date='{date_col}', qty='{qty_col}', product='{product_col}', category='{category_col}'")
-    
-    # Select and rename columns
-    df = df[[date_col, qty_col, product_col, category_col]].copy()
-    df.columns = ["date", "sales", "product_name", "category"]
+    # Select only required columns for training (date, sales, product_name, category)
+    # Note: Other columns from column_mapping (city, purchase_type, etc.) are available
+    # but not used in training - keeping only essential columns for consistency
+    required_cols = ["date", "sales", "product_name", "category"]
+    df = df[required_cols].copy()
 
     # Normalize product names
     df["product_norm"] = df["product_name"].apply(_normalize_product_name)
@@ -381,7 +383,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
 
         target_idx = 0
         X_seq, y_seq = _create_sequences(data_scaled, TIME_STEPS, target_idx)
-        if len(X_seq) < max(4, TIME_STEPS):
+        if len(X_seq) < max(2, TIME_STEPS):  # Reduced from max(4, TIME_STEPS) per SKIP_DIAGNOSIS_SUMMARY.md
             raise ValueError("insufficient sequences for LSTM training")
 
         split_idx = max(1, int(len(X_seq) * 0.8))
@@ -520,7 +522,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
 
     target_idx = 0
     X_seq, y_seq = _create_sequences(data_scaled, TIME_STEPS, target_idx)
-    if len(X_seq) < max(4, TIME_STEPS):
+    if len(X_seq) < max(2, TIME_STEPS):  # Reduced from max(4, TIME_STEPS) per SKIP_DIAGNOSIS_SUMMARY.md
         raise ValueError("insufficient sequences for LSTM training")
 
     split_idx = max(1, int(len(X_seq) * 0.8))
@@ -779,28 +781,43 @@ def normalize_product_name(name: str) -> str:
 
 
 def read_excel_latest(excel_path: str) -> pd.DataFrame:
+    # Use column_mapping consistent with test2.py
     df = pd.read_excel(excel_path)
-    # detect columns
-    candidates = [
-        {"date": "Transaction Date", "qty": "Quantity", "product": "Product Name", "category": "Product Category"},
-        {"date": "Tanggal Transaksi", "qty": "Jumlah", "product": "Nama Produk", "category": "Kategori Barang"},
-    ]
-    mapping = None
-    for cand in candidates:
-        ok = all(any(c2.lower() == v.lower() for c2 in df.columns) for v in cand.values())
-        if ok:
-            mapping = cand
-            break
-    if mapping is None and test2 and hasattr(test2, "column_mapping"):
-        mapping = {"date": test2.column_mapping.get("Tanggal Transaksi", "date"),
-                   "qty": test2.column_mapping.get("Jumlah", "sales"),
-                   "product": test2.column_mapping.get("Nama Produk", "product_name"),
-                   "category": test2.column_mapping.get("Kategori Barang", "category")}
-    if mapping is None:
-        raise ValueError("Could not infer column mapping for Excel file.")
-
-    df = df[[mapping["date"], mapping["qty"], mapping["product"], mapping["category"]]].copy()
-    df.columns = ["date", "sales", "product_name", "category"]
+    print(f"Data berhasil dibaca: {len(df)} baris")
+    
+    # Debug: Print all columns in Excel before mapping
+    print(f"Kolom di Excel (sebelum mapping): {list(df.columns)}")
+    
+    # Apply column mapping (same approach as test2.py)
+    existing_columns = {k: v for k, v in column_mapping.items() if k in df.columns}
+    df = df.rename(columns=existing_columns)
+    print(f"Kolom yang ditemukan setelah mapping: {list(existing_columns.values())}")
+    
+    # Check if "Kategori Barang" exists with different name
+    if "category" not in df.columns and "Kategori Barang" not in existing_columns:
+        # Try to find similar column names
+        possible_category_cols = [col for col in df.columns if 'kategori' in col.lower() or 'category' in col.lower()]
+        if possible_category_cols:
+            print(f"Warning: Kolom kategori mungkin dengan nama berbeda: {possible_category_cols}")
+            # Use the first match
+            df = df.rename(columns={possible_category_cols[0]: "category"})
+            print(f"  Menggunakan kolom '{possible_category_cols[0]}' sebagai 'category'")
+    
+    # Validate required columns (same as test2.py)
+    if "product_name" not in df.columns:
+        raise ValueError("Kolom 'Nama Produk' tidak ditemukan di file sumber.")
+    
+    if "date" not in df.columns:
+        raise ValueError("Kolom tanggal tidak ditemukan setelah mapping.")
+    
+    # Handle category column - make it optional with default value
+    if "category" not in df.columns:
+        print("Warning: Kolom 'category' tidak ditemukan. Menggunakan nilai default 'Unknown'.")
+        df["category"] = "Unknown"
+    
+    # Select only required columns for training
+    required_cols = ["date", "sales", "product_name", "category"]
+    df = df[required_cols].copy()
     df.dropna(subset=["date"], inplace=True)
     
     # Use safe date parsing instead of direct pd.to_datetime
