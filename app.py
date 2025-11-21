@@ -38,7 +38,8 @@ st.title("📈 Sales Forecasting System")
 st.caption("LSTM-based Multi-Product Sales Forecasting")
 
 # Quick stats
-col1, col2, col3, col4 = st.columns(4)
+# col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 
 # Total produk di data
 try:
@@ -91,11 +92,11 @@ try:
             n_points = len(dts)
 except Exception:
     pass
-with col4:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    st.markdown("<div class='metric-label'>📅 Total Data Poin (bulan)</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='metric-value'>{n_points}</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+# with col4:
+#     st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+#     st.markdown("<div class='metric-label'>📅 Total Data Poin (bulan)</div>", unsafe_allow_html=True)
+#     st.markdown(f"<div class='metric-value'>{n_points}</div>", unsafe_allow_html=True)
+#     st.markdown("</div>", unsafe_allow_html=True)
 
 st.divider()
 
