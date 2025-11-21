@@ -305,3 +305,7 @@ Untuk diagnosis lebih baik, perlu logging detail:
 2. Turunkan `MIN_DATA_POINTS_MONTHS` dari 3 ke 2
 3. Tambahkan logging detail untuk tracking
 
+
+
+
+

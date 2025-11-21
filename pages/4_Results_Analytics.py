@@ -19,6 +19,8 @@ from config.settings import (
     SES_GROUPED_TOP5_PNG,
     SES_MODEL_PARAMS,
     TRAINING_DIAGNOSTICS,
+    ROOT_DIR,
+    DEFAULT_EXCEL,
 )
 from utils.chart_generator import (
     generate_total_forecast_chart,
@@ -107,6 +109,114 @@ def calculate_metrics_from_data(actual: np.ndarray, predicted: np.ndarray) -> di
         "source": "calculated"
     }
 
+def get_ses_evaluation_metrics() -> dict:
+    """Get SES evaluation metrics from saved CSV file or calculate from data if available"""
+    metrics = {
+        "mae": None,
+        "mse": None,
+        "rmse": None,
+        "mape": None,
+        "source": "calculated"
+    }
+    
+    try:
+        # First, try to load from saved evaluation metrics CSV
+        ses_metrics_path = ROOT_DIR / "ses_evaluation_metrics.csv"
+        if ses_metrics_path.exists():
+            try:
+                metrics_df = pd.read_csv(ses_metrics_path)
+                if not metrics_df.empty and "mae" in metrics_df.columns and "rmse" in metrics_df.columns:
+                    # Calculate average metrics across all products
+                    mae_values = metrics_df["mae"].dropna()
+                    rmse_values = metrics_df["rmse"].dropna()
+                    mape_values = metrics_df["mape"].dropna() if "mape" in metrics_df.columns else pd.Series()
+                    
+                    if len(mae_values) > 0:
+                        metrics["mae"] = float(mae_values.mean())
+                    if len(rmse_values) > 0:
+                        metrics["rmse"] = float(rmse_values.mean())
+                        # MSE = RMSE^2
+                        metrics["mse"] = float(metrics["rmse"] ** 2) if metrics["rmse"] is not None else None
+                    if len(mape_values) > 0:
+                        metrics["mape"] = float(mape_values.mean())
+                    
+                    metrics["source"] = "ses_evaluation_metrics_csv"
+                    return metrics
+            except Exception:
+                pass
+        
+        # Fallback: Try to calculate from forecast data and historical data
+        ses_per_path = Path(SES_FORECAST_PER_PRODUCT)
+        if not ses_per_path.exists():
+            return metrics
+        
+        ses_df = pd.read_csv(ses_per_path)
+        
+        # Try to load historical data from Excel for comparison
+        excel_path = Path(DEFAULT_EXCEL)
+        if excel_path.exists():
+            try:
+                # Read Excel and aggregate monthly
+                df = pd.read_excel(excel_path, engine='openpyxl')
+                
+                # Try to infer column names
+                date_col = next((c for c in df.columns if 'tanggal' in c.lower() or 'date' in c.lower()), None)
+                qty_col = next((c for c in df.columns if 'jumlah' in c.lower() or 'qty' in c.lower() or 'quantity' in c.lower()), None)
+                prod_col = next((c for c in df.columns if 'produk' in c.lower() or 'product' in c.lower()), None)
+                
+                if date_col and qty_col and prod_col:
+                    df_hist = df[[date_col, qty_col, prod_col]].copy()
+                    df_hist.columns = ['date', 'sales', 'product_name']
+                    df_hist['date'] = pd.to_datetime(df_hist['date'], errors='coerce')
+                    df_hist = df_hist.dropna(subset=['date'])
+                    
+                    # Normalize product names (simple normalization)
+                    def normalize_name(name):
+                        if pd.isna(name):
+                            return ""
+                        s = str(name).lower().strip()
+                        s = s.replace("-", " ").replace("_", " ")
+                        s = " ".join(s.split())
+                        return s
+                    
+                    df_hist['product_name'] = df_hist['product_name'].apply(normalize_name)
+                    
+                    # Aggregate monthly
+                    df_hist['month'] = df_hist['date'].dt.to_period('M').dt.to_timestamp()
+                    monthly_hist = df_hist.groupby(['product_name', 'month'])['sales'].sum().reset_index()
+                    monthly_hist.columns = ['product_name', 'date', 'actual']
+                    
+                    # Prepare SES forecast data
+                    ses_df = ses_df.copy()
+                    ses_df['date'] = pd.to_datetime(ses_df['date'], errors='coerce')
+                    ses_df = ses_df.dropna(subset=['date'])
+                    
+                    # Merge historical and forecast data for common products and dates
+                    merged = pd.merge(
+                        monthly_hist,
+                        ses_df[['date', 'product_name', 'forecast']],
+                        on=['date', 'product_name'],
+                        how='inner'
+                    )
+                    
+                    if len(merged) > 0:
+                        actual_vals = merged['actual'].values
+                        pred_vals = merged['forecast'].values
+                        
+                        # Calculate metrics
+                        metrics["mae"] = calculate_mae(actual_vals, pred_vals)
+                        metrics["mse"] = calculate_mse(actual_vals, pred_vals)
+                        metrics["rmse"] = calculate_rmse(actual_vals, pred_vals)
+                        metrics["mape"] = calculate_mape(actual_vals, pred_vals)
+                        metrics["source"] = "calculated_from_historical"
+            except Exception:
+                pass
+        
+    except Exception as e:
+        st.warning(f"Error calculating SES metrics: {e}")
+    
+    return metrics
+
 # Paths
 lstm_ft = Path(FORECAST_TOTAL)
 lstm_topn = Path(TOPN_PER_MONTH)
@@ -126,30 +236,31 @@ with TAB_LSTM:
         st.stop()
     diag_path = Path(FORECAST_DIAGNOSTICS)
     # T1, T2, T3, T4 = st.tabs(["Total Forecast", "Top Products", "Product Details", "Diagnostics"])
-    T1, T2, T3 = st.tabs(["Total Forecast", "Top Products", "Evaluation Metrics"])
-    with T1:
-        st.subheader("Total Sales Forecast (24 Months)")
-        total_df = pd.read_csv(lstm_ft)
-        show_ci = st.checkbox("Tampilkan Confidence Interval", value=False)
-        fig = generate_total_forecast_chart(total_df, show_ci=show_ci)
-        st.plotly_chart(fig, use_container_width=True)
-        col1, col2, col3, col4 = st.columns(4)
-        num_cols = total_df.select_dtypes(include="number").columns
-        ssum = float(total_df[num_cols].sum(numeric_only=True).sum()) if len(num_cols) else 0.0
-        avg = ssum / max(1, len(total_df))
-        with col1:
-            st.metric("Total Forecast Sum", f"{ssum:,.0f}")
-        with col2:
-            st.metric("Average Monthly Forecast", f"{avg:,.0f}")
-        ycol = num_cols[0] if len(num_cols) else None
-        if ycol:
-            idx_max = int(total_df[ycol].idxmax())
-            idx_min = int(total_df[ycol].idxmin())
-            with col3:
-                st.metric("Peak Month", str(total_df.iloc[idx_max, 0]))
-            with col4:
-                st.metric("Lowest Month", str(total_df.iloc[idx_min, 0]))
-        st.download_button("Download CSV", data=total_df.to_csv(index=False).encode("utf-8"), file_name=lstm_ft.name)
+    # T1, T2, T3 = st.tabs(["Total Forecast", "Top Products", "Evaluation Metrics"])
+    T2, T3 = st.tabs(["Top Products", "Evaluation Metrics"])
+    # with T1:
+    #     st.subheader("Total Sales Forecast (24 Months)")
+    #     total_df = pd.read_csv(lstm_ft)
+    #     show_ci = st.checkbox("Tampilkan Confidence Interval", value=False)
+    #     fig = generate_total_forecast_chart(total_df, show_ci=show_ci)
+    #     st.plotly_chart(fig, use_container_width=True)
+    #     col1, col2, col3, col4 = st.columns(4)
+    #     num_cols = total_df.select_dtypes(include="number").columns
+    #     ssum = float(total_df[num_cols].sum(numeric_only=True).sum()) if len(num_cols) else 0.0
+    #     avg = ssum / max(1, len(total_df))
+    #     with col1:
+    #         st.metric("Total Forecast Sum", f"{ssum:,.0f}")
+    #     with col2:
+    #         st.metric("Average Monthly Forecast", f"{avg:,.0f}")
+    #     ycol = num_cols[0] if len(num_cols) else None
+    #     if ycol:
+    #         idx_max = int(total_df[ycol].idxmax())
+    #         idx_min = int(total_df[ycol].idxmin())
+    #         with col3:
+    #             st.metric("Peak Month", str(total_df.iloc[idx_max, 0]))
+    #         with col4:
+    #             st.metric("Lowest Month", str(total_df.iloc[idx_min, 0]))
+    #     st.download_button("Download CSV", data=total_df.to_csv(index=False).encode("utf-8"), file_name=lstm_ft.name)
     with T2:
         st.subheader("Top Performing Products by Month")
         if not lstm_topn.exists():
@@ -158,7 +269,8 @@ with TAB_LSTM:
             topn_df = pd.read_csv(lstm_topn)
             months = [str(m) for m in sorted(topn_df[topn_df.columns[0]].unique())]
             sel = st.selectbox("Pilih Bulan", options=["All Months"] + months)
-            view = st.radio("Tampilan", ["Bar Chart", "Grouped Chart", "Table View"], index=0, horizontal=True)
+            # view = st.radio("Tampilan", ["Bar Chart", "Grouped Chart", "Table View"], index=0, horizontal=True)
+            view = st.radio("Tampilan", ["Grouped Chart", "Table View"], index=0, horizontal=True)
             if view == "Bar Chart" and sel != "All Months":
                 fig = generate_top_products_chart(topn_df, month=sel, grouped=False)
                 st.plotly_chart(fig, use_container_width=True)
@@ -410,46 +522,136 @@ with TAB_CMP:
     st.subheader("Perbandingan LSTM vs SES")
     ses_ft = Path(SES_FORECAST_TOTAL)
     ses_per = Path(SES_FORECAST_PER_PRODUCT)
+    
+    # Paths for grouped chart images
+    lstm_grouped_png = ROOT_DIR / "forecast_plots" / "bulan" / "top5_grouped_24m.png"
+    ses_grouped_png = Path(SES_GROUPED_TOP5_PNG)
+    
     if not (lstm_ft.exists() and ses_ft.exists()):
         st.error("❌ Hasil LSTM atau SES tidak lengkap untuk perbandingan.")
     else:
-        # Product selector with intersection
-        if lstm_per.exists() and ses_per.exists():
-            l_df = pd.read_csv(lstm_per)
-            s_df = pd.read_csv(ses_per)
-            lp = next((c for c in l_df.columns if 'product' in c.lower()), l_df.columns[0])
-            sp = next((c for c in s_df.columns if 'product' in c.lower()), s_df.columns[0])
-            common = sorted(set(l_df[lp]).intersection(set(s_df[sp])))
-            sel_products = st.multiselect("Pilih Produk untuk dibandingkan", options=common, default=common[:1])
-            # Overlay for each product
-            for prod in sel_products:
-                lpf = l_df[l_df[lp] == prod]
-                spf = s_df[s_df[sp] == prod]
-                dcol_l = next((c for c in lpf.columns if 'date' in c.lower()), lpf.columns[1])
-                dcol_s = next((c for c in spf.columns if 'date' in c.lower()), spf.columns[1])
-                ycol_l = next((c for c in lpf.columns if c not in (dcol_l, lp)), lpf.columns[-1])
-                ycol_s = next((c for c in spf.columns if c not in (dcol_s, sp)), spf.columns[-1])
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(x=pd.to_datetime(lpf[dcol_l]), y=lpf[ycol_l], mode='lines+markers', name='LSTM', line=dict(color='blue')))
-                fig.add_trace(go.Scatter(x=pd.to_datetime(spf[dcol_s]), y=spf[ycol_s], mode='lines+markers', name='SES', line=dict(color='orange')))
-                fig.update_layout(title=f"Perbandingan Forecast: {prod}")
-                st.plotly_chart(fig, use_container_width=True)
+        # Display grouped chart images side by side
+        if lstm_grouped_png.exists() or ses_grouped_png.exists():
+            st.subheader("Top-5 Produk per Bulan (Grouped Charts)")
+            col_img1, col_img2 = st.columns(2)
+            with col_img1:
+                if lstm_grouped_png.exists():
+                    st.image(str(lstm_grouped_png), use_container_width=True, caption="LSTM Forecast")
+                else:
+                    st.info("Gambar LSTM grouped chart belum tersedia.")
+            with col_img2:
+                if ses_grouped_png.exists():
+                    st.image(str(ses_grouped_png), use_container_width=True, caption="SES Forecast")
+                else:
+                    st.info("Gambar SES grouped chart belum tersedia.")
+        
+        # # Perbandingan Metrik Evaluasi
+        # st.subheader("Perbandingan Metrik Evaluasi")
+        #
+        # # Get LSTM metrics
+        # lstm_metrics = get_evaluation_metrics_from_training_diagnostics()
+        # lstm_mae = lstm_metrics.get("mae", 0.0) if lstm_metrics.get("mae") is not None else 0.0
+        # lstm_rmse = lstm_metrics.get("rmse", 0.0) if lstm_metrics.get("rmse") is not None else 0.0
+        # lstm_mape = lstm_metrics.get("mape", 0.0) if lstm_metrics.get("mape") is not None else 0.0
+        #
+        # # Get SES metrics
+        # ses_metrics = get_ses_evaluation_metrics()
+        # ses_mae = ses_metrics.get("mae", 0.0) if ses_metrics.get("mae") is not None else 0.0
+        # ses_rmse = ses_metrics.get("rmse", 0.0) if ses_metrics.get("rmse") is not None else 0.0
+        # ses_mape = ses_metrics.get("mape", 0.0) if ses_metrics.get("mape") is not None else 0.0
+        #
+        # # Prepare data for bar chart
+        # metrics = ['MAE', 'RMSE', 'MAPE']
+        # lstm_values = [lstm_mae, lstm_rmse, lstm_mape]
+        # ses_values = [ses_mae, ses_rmse, ses_mape]
+        #
+        # # Filter out zero values for display (only show if at least one method has metrics)
+        # if any(v > 0 for v in lstm_values) or any(v > 0 for v in ses_values):
+        #     fig_metrics = go.Figure(data=[
+        #         go.Bar(name='LSTM', x=metrics, y=lstm_values, marker_color='#1f77b4'),
+        #         go.Bar(name='SES', x=metrics, y=ses_values, marker_color='#ff7f0e')
+        #     ])
+        #
+        #     fig_metrics.update_layout(
+        #         title='Perbandingan Metrik LSTM vs SES',
+        #         xaxis_title='Metrik Evaluasi',
+        #         yaxis_title='Nilai',
+        #         barmode='group',
+        #         height=400,
+        #         showlegend=True,
+        #         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        #         template="plotly_white"
+        #     )
+        #
+        #     st.plotly_chart(fig_metrics, use_container_width=True)
+        #
+        #     # Display comparison table
+        #     def format_metric_value(val, metric_name):
+        #         if val <= 0:
+        #             return "N/A"
+        #         if metric_name == "MAPE":
+        #             return f"{val:.2f}%"
+        #         return f"{val:,.4f}"
+        #
+        #     comparison_df = pd.DataFrame({
+        #         'Metrik': metrics,
+        #         'LSTM': [format_metric_value(v, m) for v, m in zip(lstm_values, metrics)],
+        #         'SES': [format_metric_value(v, m) for v, m in zip(ses_values, metrics)],
+        #         'Selisih': [
+        #             format_metric_value(abs(l - s), m) if l > 0 and s > 0 else "N/A"
+        #             for l, s, m in zip(lstm_values, ses_values, metrics)
+        #         ]
+        #     })
+        #
+        #     st.dataframe(comparison_df, use_container_width=True, hide_index=True)
+        #
+        #     # Show note if metrics are not fully available
+        #     if lstm_mae == 0.0 and lstm_rmse == 0.0:
+        #         st.info("ℹ️ Metrik LSTM tidak tersedia dari training diagnostics. Pastikan model sudah ditraining.")
+        #     if ses_mae == 0.0 and ses_rmse == 0.0:
+        #         st.info("ℹ️ Metrik SES belum tersedia. Metrik SES dihitung dari data forecast vs aktual. Pastikan file Excel data historis tersedia.")
+        # else:
+        #     st.warning("⚠️ Metrik evaluasi tidak tersedia untuk kedua metode. Pastikan model sudah ditraining dan data metrik tersedia.")
+        #
+        st.divider()
+        # # Product selector with intersection
+        # if lstm_per.exists() and ses_per.exists():
+        #     l_df = pd.read_csv(lstm_per)
+        #     s_df = pd.read_csv(ses_per)
+        #     lp = next((c for c in l_df.columns if 'product' in c.lower()), l_df.columns[0])
+        #     sp = next((c for c in s_df.columns if 'product' in c.lower()), s_df.columns[0])
+        #     common = sorted(set(l_df[lp]).intersection(set(s_df[sp])))
+        #     sel_products = st.multiselect("Pilih Produk untuk dibandingkan", options=common, default=common[:1])
+        #     # Overlay for each product
+        #     for prod in sel_products:
+        #         lpf = l_df[l_df[lp] == prod]
+        #         spf = s_df[s_df[sp] == prod]
+        #         dcol_l = next((c for c in lpf.columns if 'date' in c.lower()), lpf.columns[1])
+        #         dcol_s = next((c for c in spf.columns if 'date' in c.lower()), spf.columns[1])
+        #         ycol_l = next((c for c in lpf.columns if c not in (dcol_l, lp)), lpf.columns[-1])
+        #         ycol_s = next((c for c in spf.columns if c not in (dcol_s, sp)), spf.columns[-1])
+        #         fig = go.Figure()
+        #         fig.add_trace(go.Scatter(x=pd.to_datetime(lpf[dcol_l]), y=lpf[ycol_l], mode='lines+markers', name='LSTM', line=dict(color='blue')))
+        #         fig.add_trace(go.Scatter(x=pd.to_datetime(spf[dcol_s]), y=spf[ycol_s], mode='lines+markers', name='SES', line=dict(color='orange')))
+        #         fig.update_layout(title=f"Perbandingan Forecast: {prod}")
+        #         st.plotly_chart(fig, use_container_width=True)
         # Aggregate comparison
-        lt = pd.read_csv(lstm_ft)
-        st_df = pd.read_csv(ses_ft)
-        dcol_l = lt.columns[0]
-        dcol_s = st_df.columns[0]
-        ycol_l = next((c for c in lt.columns if c != dcol_l), lt.columns[-1])
-        ycol_s = next((c for c in st_df.columns if c != dcol_s), st_df.columns[-1])
-        fig2 = go.Figure()
-        fig2.add_trace(go.Scatter(x=pd.to_datetime(lt[dcol_l]), y=lt[ycol_l], mode='lines', name='Total LSTM', line=dict(color='blue')))
-        fig2.add_trace(go.Scatter(x=pd.to_datetime(st_df[dcol_s]), y=st_df[ycol_s], mode='lines', name='Total SES', line=dict(color='orange')))
-        st.plotly_chart(fig2, use_container_width=True)
-        # Simple insight
-        mean_l = lt[ycol_l].mean()
-        mean_s = st_df[ycol_s].mean()
-        diff_pct = (mean_s - mean_l) / mean_l * 100 if mean_l else 0.0
-        if diff_pct < 0:
-            st.info(f"Metode SES cenderung lebih konservatif dengan rata-rata {abs(diff_pct):.1f}% lebih rendah dari LSTM.")
-        else:
-            st.info(f"Metode SES cenderung lebih tinggi dengan rata-rata {abs(diff_pct):.1f}% di atas LSTM.")
+        # lt = pd.read_csv(lstm_ft)
+        # st_df = pd.read_csv(ses_ft)
+        # dcol_l = lt.columns[0]
+        # dcol_s = st_df.columns[0]
+        # ycol_l = next((c for c in lt.columns if c != dcol_l), lt.columns[-1])
+        # ycol_s = next((c for c in st_df.columns if c != dcol_s), st_df.columns[-1])
+        # fig2 = go.Figure()
+        # fig2.add_trace(go.Scatter(x=pd.to_datetime(lt[dcol_l]), y=lt[ycol_l], mode='lines', name='Total LSTM', line=dict(color='blue')))
+        # fig2.add_trace(go.Scatter(x=pd.to_datetime(st_df[dcol_s]), y=st_df[ycol_s], mode='lines', name='Total SES', line=dict(color='orange')))
+        # st.plotly_chart(fig2, use_container_width=True)
+        # # Simple insight
+        # mean_l = lt[ycol_l].mean()
+        # mean_s = st_df[ycol_s].mean()
+        # diff_pct = (mean_s - mean_l) / mean_l * 100 if mean_l else 0.0
+        # if diff_pct < 0:
+        #     st.info(f"Metode SES cenderung lebih konservatif dengan rata-rata {abs(diff_pct):.1f}% lebih rendah dari LSTM.")
+        # else:
+        #     st.info(f"Metode SES cenderung lebih tinggi dengan rata-rata {abs(diff_pct):.1f}% di atas LSTM.")
+ 

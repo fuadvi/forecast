@@ -237,3 +237,7 @@ if __name__ == "__main__":
     result = diagnostic_train_all(DEFAULT_EXCEL)
     print("\nResult:", result)
 
+
+
+
+

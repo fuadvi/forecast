@@ -235,7 +235,7 @@ def read_and_preprocess(excel_path: str) -> pd.DataFrame:
             df = df.rename(columns={possible_category_cols[0]: "category"})
             print(f"  Menggunakan kolom '{possible_category_cols[0]}' sebagai 'category'")
     
-    # Validate required columns (same as test2.py)
+    # Validate required columns
     if "product_name" not in df.columns:
         raise ValueError("Kolom 'Nama Produk' tidak ditemukan di file sumber.")
     

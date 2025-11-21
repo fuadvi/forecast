@@ -4,7 +4,7 @@ SES Monthly Product Forecast 24 Months
 Deskripsi:
 - Pipeline peramalan alternatif menggunakan Simple Exponential Smoothing (SES)
 - Menghasilkan forecast per produk per bulan 24 bulan ke depan
-- Menyediakan 3 file CSV output utama + 1 log skip + 1 gambar chart grouped Top-5
+- Menyediakan 4 file CSV output utama + 1 log skip + 1 evaluasi metrik + 1 gambar chart grouped Top-5
 
 Keluaran:
 1) forecast_per_product_ses_24m.csv
@@ -15,7 +15,9 @@ Keluaran:
    Kolom: date, product_name, forecast, rank
 4) ses_skipped_products.csv
    Kolom: product_name, reason
-5) forecast_plots/bulan/top5_grouped_24m_ses.png
+5) ses_evaluation_metrics.csv
+   Kolom: product_name, mae, rmse, mape, n_validation_points, n_train_points, method_used
+6) forecast_plots/bulan/top5_grouped_24m_ses.png
 
 Catatan & Ketangguhan:
 - Minimal titik data per produk: MIN_DATA_POINTS (default 6). Jika kurang, skip & log.
@@ -75,6 +77,7 @@ CSV_TOTAL = "forecast_total_ses_24m.csv"
 CSV_TOPN = "topN_per_month_ses_24m.csv"
 CSV_SKIPPED = "ses_skipped_products.csv"
 CSV_MODEL_PARAMS = "ses_model_params.csv"  # opsional
+CSV_EVALUATION_METRICS = "ses_evaluation_metrics.csv"  # evaluasi metrik
 
 COLUMN_MAPPING = {
     "Tanggal Transaksi": "date",
@@ -189,7 +192,113 @@ def aggregate_monthly_per_product(df: pd.DataFrame, freq: str = FREQ,
 
 
 # ==========================
-# 3) HW/SES Fit & Forecast
+# 3) Evaluation Metrics
+# ==========================
+
+def calculate_mae(actual: np.ndarray, predicted: np.ndarray) -> float:
+    """Calculate Mean Absolute Error"""
+    if len(actual) == 0 or len(predicted) == 0:
+        return 0.0
+    return float(np.mean(np.abs(actual - predicted)))
+
+
+def calculate_rmse(actual: np.ndarray, predicted: np.ndarray) -> float:
+    """Calculate Root Mean Squared Error"""
+    if len(actual) == 0 or len(predicted) == 0:
+        return 0.0
+    return float(np.sqrt(np.mean((actual - predicted) ** 2)))
+
+
+def calculate_mape(actual: np.ndarray, predicted: np.ndarray) -> float:
+    """Calculate Mean Absolute Percentage Error"""
+    if len(actual) == 0 or len(predicted) == 0:
+        return 0.0
+    # Avoid division by zero
+    mask = actual != 0
+    if not np.any(mask):
+        return 0.0
+    return float(np.mean(np.abs((actual[mask] - predicted[mask]) / actual[mask]) * 100))
+
+
+def calculate_evaluation_metrics(monthly_df: pd.DataFrame, validation_split: float = 0.2,
+                                 min_points: int = MIN_DATA_POINTS) -> pd.DataFrame:
+    """
+    Calculate evaluation metrics (MAE, RMSE, MAPE) using time-series validation split.
+    
+    Args:
+        monthly_df: DataFrame dengan kolom date, product_name, sales
+        validation_split: Proporsi data untuk validation (default 0.2 = 20%)
+        min_points: Minimal titik data per produk untuk evaluasi
+    
+    Returns:
+        DataFrame dengan kolom: product_name, mae, rmse, mape, n_validation_points
+    """
+    metrics_rows: List[Dict] = []
+    
+    for prod, sub in monthly_df.groupby("product_name"):
+        sub = sub.sort_values("date").reset_index(drop=True)
+        s = pd.to_numeric(sub["sales"], errors="coerce").fillna(0.0)
+        
+        # Validasi minimal data
+        non_na_points = int(s.notna().sum())
+        if non_na_points < min_points:
+            continue
+        
+        # Time-series split: gunakan data terakhir sebagai validation
+        n_total = len(sub)
+        n_train = max(min_points, int(n_total * (1 - validation_split)))
+        
+        if n_train >= n_total:
+            # Tidak cukup data untuk split, skip evaluasi
+            continue
+        
+        # Split data
+        train_data = sub.iloc[:n_train]
+        val_data = sub.iloc[n_train:]
+        
+        if len(val_data) == 0:
+            continue
+        
+        # Fit model pada training data
+        train_series = pd.to_numeric(train_data["sales"], errors="coerce").fillna(0.0)
+        val_actual = pd.to_numeric(val_data["sales"], errors="coerce").fillna(0.0).values
+        
+        # Forecast untuk validation period
+        val_horizon = len(val_data)
+        try:
+            fc, params, err = fit_hw_or_ses_forecast(train_series, steps=val_horizon)
+            if fc is None or len(fc) != val_horizon:
+                continue
+            
+            # Clip non-negative
+            val_predicted = np.clip(np.asarray(fc, dtype=float), 0.0, None)
+            
+            # Hitung metrik
+            mae = calculate_mae(val_actual, val_predicted)
+            rmse = calculate_rmse(val_actual, val_predicted)
+            mape = calculate_mape(val_actual, val_predicted)
+            
+            metrics_rows.append({
+                "product_name": prod,
+                "mae": mae,
+                "rmse": rmse,
+                "mape": mape,
+                "n_validation_points": len(val_data),
+                "n_train_points": len(train_data),
+                "method_used": params.get("method_used", "SES")
+            })
+        except Exception:
+            # Skip jika error
+            continue
+    
+    if metrics_rows:
+        return pd.DataFrame(metrics_rows)
+    else:
+        return pd.DataFrame(columns=["product_name", "mae", "rmse", "mape", "n_validation_points", "n_train_points", "method_used"])
+
+
+# ==========================
+# 4) HW/SES Fit & Forecast
 # ==========================
 
 def fit_ses_and_forecast(series: pd.Series, steps: int, alpha: Optional[float] = None,
@@ -278,7 +387,7 @@ def fit_hw_or_ses_forecast(series: pd.Series, steps: int) -> Tuple[np.ndarray, D
 
 
 # ==========================
-# 4) Build outputs
+# 5) Build outputs
 # ==========================
 
 def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONTHS,
@@ -365,7 +474,7 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
 
 
 # ==========================
-# 5) Plot Grouped Top-5
+# 6) Plot Grouped Top-5
 # ==========================
 
 def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
@@ -465,7 +574,7 @@ def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
 
 
 # ==========================
-# 6) Orkestrasi
+# 7) Orkestrasi
 # ==========================
 
 def main(file_path: str = FILE_PATH,
@@ -491,6 +600,14 @@ def main(file_path: str = FILE_PATH,
         monthly_df, horizon=forecast_months, min_points=min_points
     )
 
+    # Calculate evaluation metrics
+    print("Menghitung evaluasi metrik...")
+    evaluation_metrics_df = calculate_evaluation_metrics(
+        monthly_df, 
+        validation_split=0.2, 
+        min_points=min_points
+    )
+
     # Simpan CSV ke out_dir
     ensure_dir(out_dir)
     per_product_path = os.path.join(out_dir, CSV_PER_PRODUCT)
@@ -498,11 +615,28 @@ def main(file_path: str = FILE_PATH,
     topN_path = os.path.join(out_dir, CSV_TOPN)
     skipped_path = os.path.join(out_dir, CSV_SKIPPED)
     params_path = os.path.join(out_dir, CSV_MODEL_PARAMS)
+    metrics_path = os.path.join(out_dir, CSV_EVALUATION_METRICS)
 
     per_product_df.to_csv(per_product_path, index=False)
     total_df.to_csv(total_path, index=False)
     topN_df.to_csv(topN_path, index=False)
     skipped_df.to_csv(skipped_path, index=False)
+    
+    # Simpan evaluasi metrik
+    if not evaluation_metrics_df.empty:
+        evaluation_metrics_df.to_csv(metrics_path, index=False)
+        print(f"Evaluasi metrik disimpan: {metrics_path}")
+        # Print summary
+        if len(evaluation_metrics_df) > 0:
+            avg_mae = evaluation_metrics_df["mae"].mean()
+            avg_rmse = evaluation_metrics_df["rmse"].mean()
+            avg_mape = evaluation_metrics_df["mape"].mean()
+            print(f"Rata-rata metrik evaluasi:")
+            print(f"  MAE: {avg_mae:.4f}")
+            print(f"  RMSE: {avg_rmse:.4f}")
+            print(f"  MAPE: {avg_mape:.2f}%")
+    else:
+        print("Tidak ada metrik evaluasi yang dapat dihitung (data tidak cukup untuk validasi).")
 
     # Simpan alpha jika tersedia
     try:
@@ -526,6 +660,8 @@ def main(file_path: str = FILE_PATH,
     print(f" - {total_path}")
     print(f" - {topN_path}")
     print(f" - {skipped_path}")
+    if not evaluation_metrics_df.empty:
+        print(f" - {metrics_path}")
     print(f" - {PLOT_PATH}")
 
 
