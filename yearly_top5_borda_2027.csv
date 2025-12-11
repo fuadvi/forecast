@@ -1,0 +1,6 @@
+product,category,total_score,total_forecast,rank,Q1_score,Q2_score,Q3_score,Q4_score,Q1_rank,Q2_rank,Q3_rank,Q4_rank
+kursi auditorium ll 516 tb tg,Auditorium Series,10,4078.6748891870375,1,5,5,0,0,1,1,0,0
+kursi auditorium ll 526 tb,Auditorium Series,8,2049.585371450773,2,4,4,0,0,2,2,0,0
+kursi auditorium ll 184,Auditorium Series,6,1848.7260050485968,3,3,3,0,0,3,3,0,0
+kursi kerja dp 301 tb,Stacking Series,4,1740.8021488563527,4,2,2,0,0,4,4,0,0
+kursi auditorium ll 516 tb,Auditorium Series,2,1461.085726240781,5,1,1,0,0,5,5,0,0

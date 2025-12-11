@@ -130,8 +130,8 @@ with col1:
     st.metric("Produk berhasil diforecast", f"{sumry.get('n_products') or 0}")
 with col2:
     st.metric("Produk diskip", f"{sumry.get('n_skipped') or 0}")
-with col3:
-    st.metric("Menggunakan Holt-Winters", f"{sumry.get('n_hw') or 0}")
+# with col3:
+#     st.metric("Menggunakan Holt-Winters", f"{sumry.get('n_hw') or 0}")
 with col4:
     st.metric("Menggunakan SES", f"{sumry.get('n_ses') or 0}")
 with col5:

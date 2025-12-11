@@ -21,7 +21,7 @@ from config.settings import (
     TRAINING_DIAGNOSTICS,
     ROOT_DIR,
     DEFAULT_EXCEL,
-    # New LSTM combined visualizations
+    # LSTM combined visualizations
     LSTM_TOP5_YEARLY_PNG,
     LSTM_TOP5_QUARTERLY_PNG,
     LSTM_BORDA_COUNT_PNG,
@@ -30,6 +30,14 @@ from config.settings import (
     LSTM_QUARTERLY_TOP5_2026,
     LSTM_YEARLY_TOP5_2025,
     LSTM_YEARLY_TOP5_2026,
+    # SES combined visualizations
+    SES_TOP5_YEARLY_PNG,
+    SES_TOP5_QUARTERLY_PNG,
+    SES_BORDA_COUNT_PNG,
+    SES_QUARTERLY_TOP5_2025,
+    SES_QUARTERLY_TOP5_2026,
+    SES_YEARLY_TOP5_2025,
+    SES_YEARLY_TOP5_2026,
 )
 from utils.chart_generator import (
     generate_total_forecast_chart,
@@ -596,11 +604,13 @@ with TAB_SES:
     ses_ft = Path(SES_FORECAST_TOTAL)
     ses_topn = Path(SES_TOPN_PER_MONTH)
     ses_per = Path(SES_FORECAST_PER_PRODUCT)
+    
     if not ses_ft.exists():
         st.warning("⚠️ Hasil SES belum tersedia. Jalankan terlebih dahulu di halaman SES Forecast.")
         if st.button("➡️ Ke Halaman SES Forecast"):
             st.switch_page("pages/5_SES_Forecast.py")
     else:
+        # Summary metrics
         col1, col2, col3, col4 = st.columns(4)
         total_df = pd.read_csv(ses_ft)
         num_cols = total_df.select_dtypes(include="number").columns
@@ -619,27 +629,122 @@ with TAB_SES:
             else:
                 st.metric("Produk tertinggi", "-")
         with col4:
-            # naive: show availability of HW vs SES via params file if available
-            st.metric("Metode dominan", "Lihat params" if Path(SES_MODEL_PARAMS).exists() else "-" )
-        # product selector
-        # st.subheader("Visualisasi Interaktif")
-        # if ses_per.exists():
-        #     per_df = pd.read_csv(ses_per)
-        #     pcol = next((c for c in per_df.columns if 'product' in c.lower()), per_df.columns[0])
-        #     products = ["All Products"] + sorted(per_df[pcol].unique())
-        #     prod = st.selectbox("Pilih Produk", options=products)
-        #     if prod == "All Products":
-        #         st.line_chart(total_df.set_index(total_df.columns[0]).select_dtypes(include='number'))
-        #     else:
-        #         p_df = per_df[per_df[pcol] == prod]
-        #         fig = generate_product_detail_chart(None, p_df, prod)
-        #         st.plotly_chart(fig, use_container_width=True)
-        if ses_topn.exists():
-            st.subheader("Top-5 Produk per Bulan (Gambar)")
+            st.metric("Metode dominan", "Lihat params" if Path(SES_MODEL_PARAMS).exists() else "-")
+        
+        # Tabs for SES analysis
+        SES_T_YEARLY, SES_T_QUARTERLY, SES_T_MONTHLY = st.tabs([
+            "📊 Analisis Tahunan", 
+            "📈 Analisis Kuartal", 
+            "📅 Per Bulan"
+        ])
+        
+        # =============== TAB: SES Analisis Tahunan ===============
+        with SES_T_YEARLY:
+            st.subheader("🏆 Top 5 Produk Tahunan (Borda Count Voting) - SES")
+            st.caption("Perbandingan peringkat produk terbaik menggunakan metode SES + Borda Count")
+            
+            if Path(SES_TOP5_YEARLY_PNG).exists():
+                st.image(str(SES_TOP5_YEARLY_PNG), width="stretch")
+            else:
+                st.warning("⚠️ Visualisasi Top 5 Tahunan SES belum tersedia.")
+            
+            st.divider()
+            st.subheader("📊 Analisis Borda Count (Kontribusi Skor Per Kuartal) - SES")
+            
+            if Path(SES_BORDA_COUNT_PNG).exists():
+                st.image(str(SES_BORDA_COUNT_PNG), width="stretch")
+            else:
+                st.info("ℹ️ Visualisasi Borda Count Process SES belum tersedia.")
+            
+            # Data tables
+            st.divider()
+            col_ses_2025, col_ses_2026 = st.columns(2)
+            
+            with col_ses_2025:
+                st.subheader("📋 Data Borda Count 2025 (SES)")
+                if Path(SES_YEARLY_TOP5_2025).exists():
+                    df_ses_2025 = pd.read_csv(SES_YEARLY_TOP5_2025)
+                    st.dataframe(df_ses_2025, use_container_width=True, hide_index=True)
+                else:
+                    st.info("Data 2025 belum tersedia.")
+            
+            with col_ses_2026:
+                st.subheader("📋 Data Borda Count 2026 (SES)")
+                if Path(SES_YEARLY_TOP5_2026).exists():
+                    df_ses_2026 = pd.read_csv(SES_YEARLY_TOP5_2026)
+                    st.dataframe(df_ses_2026, use_container_width=True, hide_index=True)
+                else:
+                    st.info("Data 2026 belum tersedia.")
+        
+        # =============== TAB: SES Analisis Kuartal ===============
+        with SES_T_QUARTERLY:
+            st.subheader("📈 Top 5 Produk Per Kuartal - SES")
+            st.caption("Perbandingan produk terbaik di setiap kuartal menggunakan metode SES")
+            
+            if Path(SES_TOP5_QUARTERLY_PNG).exists():
+                st.image(str(SES_TOP5_QUARTERLY_PNG), width="stretch")
+            else:
+                st.warning("⚠️ Visualisasi Top 5 Kuartal SES belum tersedia.")
+            
+            # Quarterly data tables
+            st.divider()
+            col_sq2025, col_sq2026 = st.columns(2)
+            
+            with col_sq2025:
+                st.subheader("📋 Data Kuartal 2025 (SES)")
+                if Path(SES_QUARTERLY_TOP5_2025).exists():
+                    df_sq2025 = pd.read_csv(SES_QUARTERLY_TOP5_2025)
+                    quarters = df_sq2025['quarter'].unique().tolist() if 'quarter' in df_sq2025.columns else []
+                    sel_q = st.selectbox("Filter Kuartal 2025", options=["Semua"] + quarters, key="ses_q2025_filter")
+                    if sel_q != "Semua" and 'quarter' in df_sq2025.columns:
+                        view_df = df_sq2025[df_sq2025['quarter'] == sel_q]
+                    else:
+                        view_df = df_sq2025
+                    st.dataframe(view_df, use_container_width=True, hide_index=True)
+                else:
+                    st.info("Data kuartal 2025 belum tersedia.")
+            
+            with col_sq2026:
+                st.subheader("📋 Data Kuartal 2026 (SES)")
+                if Path(SES_QUARTERLY_TOP5_2026).exists():
+                    df_sq2026 = pd.read_csv(SES_QUARTERLY_TOP5_2026)
+                    quarters = df_sq2026['quarter'].unique().tolist() if 'quarter' in df_sq2026.columns else []
+                    sel_q = st.selectbox("Filter Kuartal 2026", options=["Semua"] + quarters, key="ses_q2026_filter")
+                    if sel_q != "Semua" and 'quarter' in df_sq2026.columns:
+                        view_df = df_sq2026[df_sq2026['quarter'] == sel_q]
+                    else:
+                        view_df = df_sq2026
+                    st.dataframe(view_df, use_container_width=True, hide_index=True)
+                else:
+                    st.info("Data kuartal 2026 belum tersedia.")
+        
+        # =============== TAB: SES Per Bulan ===============
+        with SES_T_MONTHLY:
+            st.subheader("📅 Top 5 Produk per Bulan (24 Bulan) - SES")
+            st.caption("Grouped bar chart menampilkan Top-5 produk per bulan")
+            
             if Path(SES_GROUPED_TOP5_PNG).exists():
                 st.image(str(SES_GROUPED_TOP5_PNG), width="stretch")
             else:
-                st.info("Gambar grouped chart belum tersedia.")
+                st.warning("⚠️ Visualisasi Top 5 per Bulan SES belum tersedia.")
+            
+            # Data table
+            st.divider()
+            st.subheader("📋 Data Top-N per Bulan (SES)")
+            
+            if ses_topn.exists():
+                topn_df = pd.read_csv(ses_topn)
+                months = [str(m) for m in sorted(topn_df[topn_df.columns[0]].unique())]
+                sel = st.selectbox("Filter Bulan", options=["Semua Bulan"] + months, key="ses_month_filter")
+                
+                if sel != "Semua Bulan":
+                    view_df = topn_df[topn_df[topn_df.columns[0]].astype(str) == sel]
+                else:
+                    view_df = topn_df
+                
+                st.dataframe(view_df, use_container_width=True, hide_index=True)
+            else:
+                st.info("File topN SES tidak ditemukan.")
 
 # =============== COMPARISON TAB ===============
 with TAB_CMP:

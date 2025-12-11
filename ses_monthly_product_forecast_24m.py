@@ -69,7 +69,13 @@ SEED = 42
 
 # Lokasi plot sesuai spesifikasi
 PLOTS_DIR = os.path.join("forecast_plots", "bulan")
+PLOTS_DIR_QUARTERLY = os.path.join("forecast_plots")  # untuk quarterly/yearly plots
 PLOT_PATH = os.path.join(PLOTS_DIR, "top5_grouped_24m_ses.png")
+
+# Quarterly/Yearly plot paths
+PLOT_YEARLY_PATH = os.path.join(PLOTS_DIR_QUARTERLY, "top5_yearly_ses.png")
+PLOT_QUARTERLY_PATH = os.path.join(PLOTS_DIR_QUARTERLY, "top5_quarterly_ses.png")
+PLOT_BORDA_PATH = os.path.join(PLOTS_DIR_QUARTERLY, "borda_count_process_ses.png")
 
 # Nama file output
 CSV_PER_PRODUCT = "forecast_per_product_ses_24m.csv"
@@ -78,6 +84,10 @@ CSV_TOPN = "topN_per_month_ses_24m.csv"
 CSV_SKIPPED = "ses_skipped_products.csv"
 CSV_MODEL_PARAMS = "ses_model_params.csv"  # opsional
 CSV_EVALUATION_METRICS = "ses_evaluation_metrics.csv"  # evaluasi metrik
+
+# Quarterly/Yearly CSV outputs
+CSV_QUARTERLY_TOP5_TEMPLATE = "quarterly_top5_ses_{year}.csv"
+CSV_YEARLY_TOP5_TEMPLATE = "yearly_top5_borda_ses_{year}.csv"
 
 COLUMN_MAPPING = {
     "Tanggal Transaksi": "date",
@@ -574,7 +584,457 @@ def plot_grouped_top5(topN_df: pd.DataFrame, out_path: str = PLOT_PATH,
 
 
 # ==========================
-# 7) Orkestrasi
+# 7) Quarterly Aggregation & Borda Count
+# ==========================
+
+def get_quarter(month: int) -> str:
+    """Convert month number to quarter string."""
+    if month in [1, 2, 3]:
+        return "Q1"
+    elif month in [4, 5, 6]:
+        return "Q2"
+    elif month in [7, 8, 9]:
+        return "Q3"
+    else:
+        return "Q4"
+
+
+def aggregate_to_quarterly(
+    per_product_df: pd.DataFrame,
+    top_n: int = 5
+) -> Dict[int, Dict[str, pd.DataFrame]]:
+    """
+    Aggregate monthly forecast data into quarterly rankings.
+    
+    Args:
+        per_product_df: DataFrame with columns ['date', 'product_name', 'forecast']
+        top_n: Number of top products to return per quarter (default: 5)
+        
+    Returns:
+        Nested dictionary: {year: {quarter: DataFrame with top N products}}
+    """
+    print("\n=== Aggregating Monthly Data to Quarterly (SES) ===")
+    
+    df = per_product_df.copy()
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+    df = df.dropna(subset=['date'])
+    
+    # Extract year and quarter
+    df['year'] = df['date'].dt.year
+    df['month'] = df['date'].dt.month
+    df['quarter'] = df['month'].apply(get_quarter)
+    
+    years = sorted(df['year'].unique())
+    print(f"Years found: {years}")
+    
+    result: Dict[int, Dict[str, pd.DataFrame]] = {}
+    
+    for year in years:
+        year_data = df[df['year'] == year]
+        result[year] = {}
+        
+        quarters_available = sorted(year_data['quarter'].unique(), key=lambda q: int(q[1]))
+        print(f"\nYear {year} - Quarters available: {quarters_available}")
+        
+        for quarter in quarters_available:
+            quarter_data = year_data[year_data['quarter'] == quarter]
+            
+            # Aggregate by product
+            quarterly_agg = (
+                quarter_data
+                .groupby(['product_name'])
+                .agg(quarterly_sum=('forecast', 'sum'))
+                .reset_index()
+            )
+            
+            # Sort and get top N
+            quarterly_agg = quarterly_agg.sort_values('quarterly_sum', ascending=False)
+            top_products = quarterly_agg.head(top_n).copy()
+            top_products['rank'] = range(1, len(top_products) + 1)
+            
+            result[year][quarter] = top_products
+            print(f"  {quarter}: Top {top_n} products identified")
+    
+    return result
+
+
+def borda_count_ranking(
+    quarterly_rankings: Dict[str, pd.DataFrame],
+    year: int,
+    top_n: int = 5
+) -> pd.DataFrame:
+    """
+    Calculate Borda Count ranking from quarterly rankings.
+    
+    Borda Count: rank 1 gets N points, rank 2 gets N-1, etc.
+    """
+    print(f"\n=== Calculating Borda Count Ranking for {year} (SES) ===")
+    
+    quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+    all_products: Dict[str, Dict] = {}
+    
+    for quarter in quarters:
+        if quarter not in quarterly_rankings:
+            continue
+        
+        quarter_df = quarterly_rankings[quarter]
+        
+        for _, row in quarter_df.iterrows():
+            product = row['product_name']
+            rank = row['rank']
+            
+            # Borda score: top_n - rank + 1
+            borda_score = max(0, top_n - rank + 1)
+            
+            if product not in all_products:
+                all_products[product] = {
+                    'product': product,
+                    'Q1_score': 0, 'Q2_score': 0, 'Q3_score': 0, 'Q4_score': 0,
+                    'total_score': 0,
+                    'appearances': 0
+                }
+            
+            all_products[product][f'{quarter}_score'] = borda_score
+            all_products[product]['total_score'] += borda_score
+            all_products[product]['appearances'] += 1
+    
+    # Create DataFrame and sort
+    result_df = pd.DataFrame(list(all_products.values()))
+    
+    if result_df.empty:
+        return pd.DataFrame(columns=['rank', 'product', 'Q1_score', 'Q2_score', 'Q3_score', 'Q4_score', 'total_score', 'appearances'])
+    
+    result_df = result_df.sort_values(['total_score', 'appearances'], ascending=[False, False])
+    result_df['rank'] = range(1, len(result_df) + 1)
+    
+    # Reorder columns
+    cols = ['rank', 'product', 'Q1_score', 'Q2_score', 'Q3_score', 'Q4_score', 'total_score', 'appearances']
+    result_df = result_df[cols]
+    
+    print(f"\nBorda Count Results for {year}:")
+    for _, row in result_df.head(top_n).iterrows():
+        print(f"  #{int(row['rank'])}: {row['product'][:40]}... Score={int(row['total_score'])}")
+    
+    return result_df
+
+
+# ==========================
+# 8) Combined Visualizations (Quarterly/Yearly)
+# ==========================
+
+def plot_yearly_top5_combined_ses(
+    yearly_results: Dict[int, pd.DataFrame],
+    top_n: int = 5,
+    output_path: str = PLOT_YEARLY_PATH
+) -> str:
+    """Plot top 5 products yearly in side-by-side subplots."""
+    years = sorted(yearly_results.keys())[:2]
+    
+    if len(years) == 0:
+        print("  No data available for yearly visualization (SES)")
+        return ""
+    
+    years_str = '-'.join(map(str, years))
+    print(f"\n=== Creating Combined Yearly Top-{top_n} Plot ({years_str}) - SES ===")
+    
+    # Color palettes
+    color_palettes = [plt.cm.Greens, plt.cm.Purples, plt.cm.Blues, plt.cm.Oranges]
+    year_colors = {
+        year: color_palettes[i % len(color_palettes)](np.linspace(0.4, 0.85, top_n))[::-1]
+        for i, year in enumerate(years)
+    }
+    
+    fig, axes = plt.subplots(1, len(years), figsize=(16, 7), sharey=False)
+    if len(years) == 1:
+        axes = [axes]
+    
+    max_score = 0
+    for year in years:
+        if year in yearly_results and not yearly_results[year].empty:
+            max_score = max(max_score, yearly_results[year]['total_score'].max())
+    
+    badge_colors_list = ['#27ae60', '#8e44ad', '#2c3e50', '#c0392b']
+    title_colors_list = ['#196f3d', '#6c3483', '#1a5f7a', '#d35400']
+    
+    for idx, year in enumerate(years):
+        ax = axes[idx]
+        
+        if year not in yearly_results or yearly_results[year].empty:
+            ax.text(0.5, 0.5, f'{year}\nNo Data', ha='center', va='center', fontsize=14, transform=ax.transAxes)
+            continue
+        
+        top_products = yearly_results[year].head(top_n).copy()
+        products = top_products['product'].tolist()[::-1]
+        scores = top_products['total_score'].tolist()[::-1]
+        ranks = top_products['rank'].tolist()[::-1]
+        
+        colors = year_colors.get(year, plt.cm.Greys(np.linspace(0.4, 0.85, len(products)))[::-1])
+        
+        y_pos = np.arange(len(products))
+        bars = ax.barh(y_pos, scores, color=colors, alpha=0.9, edgecolor='white', linewidth=2, height=0.7)
+        
+        ax.set_yticks(y_pos)
+        product_labels = [p[:35] + '...' if len(p) > 35 else p for p in products]
+        ax.set_yticklabels(product_labels, fontsize=10, fontweight='medium')
+        
+        badge_color = badge_colors_list[idx % len(badge_colors_list)]
+        for i, (rank, product) in enumerate(zip(ranks, products)):
+            ax.text(-max_score*0.08, i, f"#{rank}", ha='center', va='center', fontweight='bold', fontsize=12,
+                   bbox=dict(boxstyle='circle,pad=0.3', facecolor=badge_color, edgecolor='white', linewidth=1.5),
+                   color='white')
+        
+        for bar, score in zip(bars, scores):
+            width = bar.get_width()
+            ax.text(width + max_score*0.02, bar.get_y() + bar.get_height()/2,
+                   f'{int(score)} pts', ha='left', va='center', fontsize=11, fontweight='bold', color='#2c3e50')
+        
+        ax.set_xlabel('Total Borda Score', fontsize=12, fontweight='bold')
+        title_color = title_colors_list[idx % len(title_colors_list)]
+        ax.set_title(f'Tahun {year}', fontsize=14, fontweight='bold', color=title_color, pad=15)
+        
+        ax.grid(axis='x', alpha=0.3, linestyle='--', color='#bdc3c7')
+        ax.set_axisbelow(True)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.set_xlim(0, max_score * 1.25)
+    
+    fig.suptitle(f'Top {top_n} Produk Berdasarkan Borda Count Voting ({years_str}) - SES', 
+                fontsize=16, fontweight='bold', y=0.98, color='#27ae60')
+    fig.text(0.5, 0.01, 'Metode: SES + Borda Count Voting dari Q1-Q4', 
+            ha='center', fontsize=10, style='italic', color='#7f8c8d')
+    
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    
+    ensure_dir(os.path.dirname(output_path))
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+    plt.close(fig)
+    
+    print(f"  Saved: {output_path}")
+    return output_path
+
+
+def plot_quarterly_top5_combined_ses(
+    quarterly_data: Dict[int, Dict[str, pd.DataFrame]],
+    top_n: int = 5,
+    output_path: str = PLOT_QUARTERLY_PATH
+) -> str:
+    """Plot top 5 products per quarter in 2xN grid."""
+    years = sorted(quarterly_data.keys())[:2]
+    quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+    
+    if len(years) == 0:
+        print("  No data available for quarterly visualization (SES)")
+        return ""
+    
+    years_str = '-'.join(map(str, years))
+    print(f"\n=== Creating Combined Quarterly Top-{top_n} Plot ({years_str}) - SES ===")
+    
+    n_rows = len(years)
+    fig, axes = plt.subplots(n_rows, 4, figsize=(22, 6 * n_rows))
+    if n_rows == 1:
+        axes = axes.reshape(1, -1)
+    
+    palette_list = [plt.cm.Greens, plt.cm.Purples, plt.cm.Blues, plt.cm.Oranges]
+    year_palettes = {year: palette_list[i % len(palette_list)] for i, year in enumerate(years)}
+    
+    # Find global max
+    global_max = 0
+    for year in years:
+        if year in quarterly_data:
+            for quarter in quarters:
+                if quarter in quarterly_data[year] and not quarterly_data[year][quarter].empty:
+                    max_val = quarterly_data[year][quarter]['quarterly_sum'].max()
+                    global_max = max(global_max, max_val)
+    
+    badge_colors = ['#27ae60', '#8e44ad', '#2980b9', '#d35400']
+    title_colors = ['#196f3d', '#6c3483', '#1a5f7a', '#c0392b']
+    
+    for row, year in enumerate(years):
+        palette = year_palettes.get(year, plt.cm.Greys)
+        
+        for col, quarter in enumerate(quarters):
+            ax = axes[row, col]
+            
+            if year not in quarterly_data or quarter not in quarterly_data[year]:
+                ax.text(0.5, 0.5, f'{quarter} {year}\nNo Data', ha='center', va='center', fontsize=12, transform=ax.transAxes)
+                for spine in ax.spines.values():
+                    spine.set_visible(False)
+                ax.set_xticks([])
+                ax.set_yticks([])
+                continue
+            
+            quarter_df = quarterly_data[year][quarter]
+            if quarter_df.empty:
+                ax.text(0.5, 0.5, f'{quarter} {year}\nNo Data', ha='center', va='center', fontsize=12, transform=ax.transAxes)
+                for spine in ax.spines.values():
+                    spine.set_visible(False)
+                ax.set_xticks([])
+                ax.set_yticks([])
+                continue
+            
+            top_data = quarter_df.head(top_n).copy()
+            products = top_data['product_name'].tolist()[::-1]
+            values = top_data['quarterly_sum'].tolist()[::-1]
+            ranks = top_data['rank'].tolist()[::-1]
+            
+            colors = palette(np.linspace(0.3, 0.85, len(products)))[::-1]
+            
+            y_pos = np.arange(len(products))
+            bars = ax.barh(y_pos, values, color=colors, alpha=0.9, edgecolor='white', linewidth=1.5, height=0.7)
+            
+            product_labels = [p[:25] + '...' if len(p) > 25 else p for p in products]
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(product_labels, fontsize=8, fontweight='medium')
+            
+            badge_color = badge_colors[row % len(badge_colors)]
+            for i, rank in enumerate(ranks):
+                ax.text(-global_max*0.05, i, f"#{rank}", ha='center', va='center', fontweight='bold', fontsize=9,
+                       bbox=dict(boxstyle='circle,pad=0.2', facecolor=badge_color, edgecolor='white', linewidth=1),
+                       color='white')
+            
+            for bar, val in zip(bars, values):
+                width = bar.get_width()
+                label = f'{val/1000:.1f}K' if val >= 1000 else f'{val:.0f}'
+                ax.text(width + global_max*0.02, bar.get_y() + bar.get_height()/2,
+                       label, ha='left', va='center', fontsize=8, fontweight='bold')
+            
+            title_color = title_colors[row % len(title_colors)]
+            ax.set_title(f'{quarter} {year}', fontsize=12, fontweight='bold', color=title_color, pad=10)
+            ax.grid(axis='x', alpha=0.3, linestyle='--', color='#bdc3c7')
+            ax.set_axisbelow(True)
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            ax.set_xlim(0, global_max * 1.2)
+            
+            if row == n_rows - 1:
+                ax.set_xlabel('Total Forecast', fontsize=9)
+    
+    fig.suptitle(f'Top {top_n} Produk Per Kuartal ({years_str}) - SES', fontsize=18, fontweight='bold', y=0.98, color='#27ae60')
+    
+    year_label_colors = ['#196f3d', '#6c3483', '#1a5f7a', '#c0392b']
+    for i, year in enumerate(years):
+        y_pos = 1 - (i + 0.5) / n_rows
+        fig.text(0.01, y_pos, str(year), fontsize=16, fontweight='bold', 
+                color=year_label_colors[i % len(year_label_colors)], rotation=90, va='center')
+    
+    plt.tight_layout(rect=[0.02, 0, 1, 0.95])
+    
+    ensure_dir(os.path.dirname(output_path))
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+    plt.close(fig)
+    
+    print(f"  Saved: {output_path}")
+    return output_path
+
+
+def plot_borda_count_process_ses(
+    yearly_results: Dict[int, pd.DataFrame],
+    top_n: int = 5,
+    output_path: str = PLOT_BORDA_PATH
+) -> str:
+    """Create stacked bar chart showing Borda score contributions by quarter."""
+    years = sorted(yearly_results.keys())[:2]
+    
+    if len(years) == 0:
+        print("  No data available for Borda Count visualization (SES)")
+        return ""
+    
+    years_str = '-'.join(map(str, years))
+    print(f"\n=== Creating Combined Borda Count Process Visualization ({years_str}) - SES ===")
+    
+    quarter_color_themes = [
+        ['#27ae60', '#2ecc71', '#1abc9c', '#16a085'],  # Greens theme
+        ['#8e44ad', '#9b59b6', '#e91e63', '#c0392b'],  # Purples/Reds theme
+    ]
+    quarter_colors = {year: quarter_color_themes[i % len(quarter_color_themes)] for i, year in enumerate(years)}
+    
+    fig, axes = plt.subplots(1, len(years), figsize=(9 * len(years), 8))
+    if len(years) == 1:
+        axes = [axes]
+    
+    global_max = 0
+    for year in years:
+        if year in yearly_results and not yearly_results[year].empty:
+            global_max = max(global_max, yearly_results[year]['total_score'].max())
+    
+    badge_colors_list = ['#27ae60', '#8e44ad', '#2c3e50', '#c0392b']
+    title_colors_list = ['#196f3d', '#6c3483', '#1a5f7a', '#d35400']
+    
+    for idx, year in enumerate(years):
+        ax = axes[idx]
+        
+        if year not in yearly_results or yearly_results[year].empty:
+            ax.text(0.5, 0.5, f'{year}\nNo Data', ha='center', va='center', fontsize=14, transform=ax.transAxes)
+            continue
+        
+        top_products = yearly_results[year].head(top_n).copy()
+        products = top_products['product'].tolist()[::-1]
+        q1_scores = top_products['Q1_score'].tolist()[::-1]
+        q2_scores = top_products['Q2_score'].tolist()[::-1]
+        q3_scores = top_products['Q3_score'].tolist()[::-1]
+        q4_scores = top_products['Q4_score'].tolist()[::-1]
+        total_scores = top_products['total_score'].tolist()[::-1]
+        ranks = top_products['rank'].tolist()[::-1]
+        
+        product_labels = [p[:35] + '...' if len(p) > 35 else p for p in products]
+        y_pos = np.arange(len(products))
+        colors = quarter_colors.get(year, ['#27ae60', '#2ecc71', '#1abc9c', '#16a085'])
+        
+        # Stacked bars
+        bars1 = ax.barh(y_pos, q1_scores, color=colors[0], alpha=0.9, label='Q1', edgecolor='white', linewidth=1, height=0.7)
+        bars2 = ax.barh(y_pos, q2_scores, left=q1_scores, color=colors[1], alpha=0.9, label='Q2', edgecolor='white', linewidth=1, height=0.7)
+        left_q3 = [q1 + q2 for q1, q2 in zip(q1_scores, q2_scores)]
+        bars3 = ax.barh(y_pos, q3_scores, left=left_q3, color=colors[2], alpha=0.9, label='Q3', edgecolor='white', linewidth=1, height=0.7)
+        left_q4 = [q1 + q2 + q3 for q1, q2, q3 in zip(q1_scores, q2_scores, q3_scores)]
+        bars4 = ax.barh(y_pos, q4_scores, left=left_q4, color=colors[3], alpha=0.9, label='Q4', edgecolor='white', linewidth=1, height=0.7)
+        
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(product_labels, fontsize=10, fontweight='medium')
+        
+        badge_color = badge_colors_list[idx % len(badge_colors_list)]
+        for i, rank in enumerate(ranks):
+            ax.text(-global_max*0.08, i, f"#{rank}", ha='center', va='center', fontweight='bold', fontsize=11,
+                   bbox=dict(boxstyle='circle,pad=0.3', facecolor=badge_color, edgecolor='white', linewidth=1.5),
+                   color='white')
+        
+        for i, total in enumerate(total_scores):
+            ax.text(total + global_max*0.02, i, f'{int(total)} pts', ha='left', va='center', fontsize=10, fontweight='bold', color='#2c3e50')
+        
+        # Score labels inside bars
+        all_quarter_data = [(q1_scores, [0]*len(products)), (q2_scores, q1_scores), (q3_scores, left_q3), (q4_scores, left_q4)]
+        for q_idx, (scores, lefts) in enumerate(all_quarter_data):
+            for i in range(len(products)):
+                score = scores[i]
+                left = lefts[i]
+                if score >= 1:
+                    center = left + score / 2
+                    ax.text(center, i, f'{int(score)}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+        
+        ax.set_xlabel('Total Borda Score', fontsize=12, fontweight='bold')
+        title_color = title_colors_list[idx % len(title_colors_list)]
+        ax.set_title(f'Tahun {year}', fontsize=14, fontweight='bold', color=title_color, pad=15)
+        ax.legend(loc='lower right', frameon=True, shadow=True, fontsize=10, fancybox=True, framealpha=0.9)
+        ax.grid(axis='x', alpha=0.3, linestyle='--', color='#bdc3c7')
+        ax.set_axisbelow(True)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.set_xlim(0, global_max * 1.25)
+    
+    fig.suptitle(f'Analisis Borda Count - Top {top_n} Produk ({years_str}) - SES\n(Kontribusi Skor Per Kuartal)', 
+                fontsize=16, fontweight='bold', y=0.98, color='#27ae60')
+    
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
+    
+    ensure_dir(os.path.dirname(output_path))
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+    plt.close(fig)
+    
+    print(f"  Saved: {output_path}")
+    return output_path
+
+
+# ==========================
+# 9) Orkestrasi
 # ==========================
 
 def main(file_path: str = FILE_PATH,
@@ -645,7 +1105,7 @@ def main(file_path: str = FILE_PATH,
     except Exception:
         pass
 
-    # Plot grouped top-5
+    # Plot grouped top-5 (monthly)
     plot_grouped_top5(topN_df, out_path=PLOT_PATH)
 
     # Validasi dasar
@@ -655,7 +1115,77 @@ def main(file_path: str = FILE_PATH,
         if counts != [forecast_months]:
             warnings.warn(f"Tidak semua produk memiliki {forecast_months} titik forecast. Counts unik: {counts}")
 
-    print("Selesai! File disimpan:")
+    # ------------------------
+    # Quarterly Aggregation and Borda Count Ranking
+    # ------------------------
+    print("\n" + "="*60)
+    print("QUARTERLY AGGREGATION & BORDA COUNT RANKING (SES)")
+    print("="*60)
+    
+    try:
+        if not per_product_df.empty:
+            # Aggregate to quarterly
+            quarterly_data = aggregate_to_quarterly(per_product_df, top_n=5)
+            
+            # Process each year
+            yearly_results = {}
+            for year in sorted(quarterly_data.keys()):
+                print(f"\n{'='*60}")
+                print(f"Processing Year: {year}")
+                print(f"{'='*60}")
+                
+                # Save quarterly rankings to CSV
+                quarterly_csv_path = os.path.join(out_dir, CSV_QUARTERLY_TOP5_TEMPLATE.format(year=year))
+                quarterly_combined = []
+                for quarter in ['Q1', 'Q2', 'Q3', 'Q4']:
+                    if quarter in quarterly_data[year]:
+                        quarter_df = quarterly_data[year][quarter].copy()
+                        quarter_df['year'] = year
+                        quarter_df['quarter'] = quarter
+                        quarterly_combined.append(quarter_df)
+                
+                if quarterly_combined:
+                    quarterly_df_full = pd.concat(quarterly_combined, ignore_index=True)
+                    quarterly_df_full = quarterly_df_full[['year', 'quarter', 'rank', 'product_name', 'quarterly_sum']]
+                    quarterly_df_full.to_csv(quarterly_csv_path, index=False)
+                    print(f"\nQuarterly rankings saved: {quarterly_csv_path}")
+                
+                # Calculate Borda Count ranking
+                borda_results = borda_count_ranking(quarterly_data[year], year=year, top_n=5)
+                yearly_results[year] = borda_results
+                
+                # Save Borda results to CSV
+                yearly_csv_path = os.path.join(out_dir, CSV_YEARLY_TOP5_TEMPLATE.format(year=year))
+                borda_results.to_csv(yearly_csv_path, index=False)
+                print(f"Yearly Borda rankings saved: {yearly_csv_path}")
+            
+            # Generate Combined Visualizations
+            print("\n" + "="*60)
+            print("GENERATING COMBINED VISUALIZATIONS (SES)")
+            print("="*60)
+            
+            # 1. Combined Yearly Top 5 Plot
+            plot_yearly_top5_combined_ses(yearly_results, top_n=5, output_path=PLOT_YEARLY_PATH)
+            
+            # 2. Combined Quarterly Top 5 Plot
+            plot_quarterly_top5_combined_ses(quarterly_data, top_n=5, output_path=PLOT_QUARTERLY_PATH)
+            
+            # 3. Combined Borda Count Process Visualization
+            plot_borda_count_process_ses(yearly_results, top_n=5, output_path=PLOT_BORDA_PATH)
+            
+            print("\n" + "="*60)
+            print("QUARTERLY AGGREGATION & VISUALIZATION COMPLETED (SES)")
+            print("="*60)
+        else:
+            print("Tidak ada data forecast untuk diproses ke quarterly.")
+            
+    except Exception as e:
+        print(f"\nError during quarterly aggregation (SES): {e}")
+        import traceback
+        traceback.print_exc()
+        print("Continuing with regular forecast output...")
+
+    print("\nSelesai! File disimpan:")
     print(f" - {per_product_path}")
     print(f" - {total_path}")
     print(f" - {topN_path}")
@@ -663,6 +1193,9 @@ def main(file_path: str = FILE_PATH,
     if not evaluation_metrics_df.empty:
         print(f" - {metrics_path}")
     print(f" - {PLOT_PATH}")
+    print(f" - {PLOT_YEARLY_PATH}")
+    print(f" - {PLOT_QUARTERLY_PATH}")
+    print(f" - {PLOT_BORDA_PATH}")
 
 
 if __name__ == "__main__":

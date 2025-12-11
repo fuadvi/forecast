@@ -46,6 +46,18 @@ SES_MODEL_PARAMS = ROOT_DIR / "ses_model_params.csv"
 SES_PLOTS_DIR = ROOT_DIR / "forecast_plots" / "bulan"
 SES_GROUPED_TOP5_PNG = SES_PLOTS_DIR / "top5_grouped_24m_ses.png"
 
+# SES Combined Visualization Plots (Quarterly/Yearly Analysis)
+SES_PLOTS_DIR_QUARTERLY = ROOT_DIR / "forecast_plots"
+SES_TOP5_YEARLY_PNG = SES_PLOTS_DIR_QUARTERLY / "top5_yearly_ses.png"
+SES_TOP5_QUARTERLY_PNG = SES_PLOTS_DIR_QUARTERLY / "top5_quarterly_ses.png"
+SES_BORDA_COUNT_PNG = SES_PLOTS_DIR_QUARTERLY / "borda_count_process_ses.png"
+
+# SES Quarterly/Yearly CSV outputs
+SES_QUARTERLY_TOP5_2025 = ROOT_DIR / "quarterly_top5_ses_2025.csv"
+SES_QUARTERLY_TOP5_2026 = ROOT_DIR / "quarterly_top5_ses_2026.csv"
+SES_YEARLY_TOP5_2025 = ROOT_DIR / "yearly_top5_borda_ses_2025.csv"
+SES_YEARLY_TOP5_2026 = ROOT_DIR / "yearly_top5_borda_ses_2026.csv"
+
 # SES default parameters
 SES_DEFAULTS = {
     "top_k": 5,
