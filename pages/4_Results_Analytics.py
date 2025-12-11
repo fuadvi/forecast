@@ -21,6 +21,15 @@ from config.settings import (
     TRAINING_DIAGNOSTICS,
     ROOT_DIR,
     DEFAULT_EXCEL,
+    # New LSTM combined visualizations
+    LSTM_TOP5_YEARLY_PNG,
+    LSTM_TOP5_QUARTERLY_PNG,
+    LSTM_BORDA_COUNT_PNG,
+    LSTM_GROUPED_TOP5_PNG,
+    LSTM_QUARTERLY_TOP5_2025,
+    LSTM_QUARTERLY_TOP5_2026,
+    LSTM_YEARLY_TOP5_2025,
+    LSTM_YEARLY_TOP5_2026,
 )
 from utils.chart_generator import (
     generate_total_forecast_chart,
@@ -235,57 +244,172 @@ with TAB_LSTM:
             st.switch_page("pages/3_Generate_Forecast.py")
         st.stop()
     diag_path = Path(FORECAST_DIAGNOSTICS)
-    # T1, T2, T3, T4 = st.tabs(["Total Forecast", "Top Products", "Product Details", "Diagnostics"])
-    # T1, T2, T3 = st.tabs(["Total Forecast", "Top Products", "Evaluation Metrics"])
-    T2, T3 = st.tabs(["Top Products", "Evaluation Metrics"])
-    # with T1:
-    #     st.subheader("Total Sales Forecast (24 Months)")
-    #     total_df = pd.read_csv(lstm_ft)
-    #     show_ci = st.checkbox("Tampilkan Confidence Interval", value=False)
-    #     fig = generate_total_forecast_chart(total_df, show_ci=show_ci)
-    #     st.plotly_chart(fig, use_container_width=True)
-    #     col1, col2, col3, col4 = st.columns(4)
-    #     num_cols = total_df.select_dtypes(include="number").columns
-    #     ssum = float(total_df[num_cols].sum(numeric_only=True).sum()) if len(num_cols) else 0.0
-    #     avg = ssum / max(1, len(total_df))
-    #     with col1:
-    #         st.metric("Total Forecast Sum", f"{ssum:,.0f}")
-    #     with col2:
-    #         st.metric("Average Monthly Forecast", f"{avg:,.0f}")
-    #     ycol = num_cols[0] if len(num_cols) else None
-    #     if ycol:
-    #         idx_max = int(total_df[ycol].idxmax())
-    #         idx_min = int(total_df[ycol].idxmin())
-    #         with col3:
-    #             st.metric("Peak Month", str(total_df.iloc[idx_max, 0]))
-    #         with col4:
-    #             st.metric("Lowest Month", str(total_df.iloc[idx_min, 0]))
-    #     st.download_button("Download CSV", data=total_df.to_csv(index=False).encode("utf-8"), file_name=lstm_ft.name)
-    with T2:
-        st.subheader("Top Performing Products by Month")
-        if not lstm_topn.exists():
-            st.info("File topN tidak ditemukan. Jalankan forecast untuk menghasilkan.")
+    
+    # Tabs: Analisis Tahunan, Analisis Kuartal, Per Bulan, Evaluation Metrics
+    T_YEARLY, T_QUARTERLY, T_MONTHLY, T_METRICS = st.tabs([
+        "📊 Analisis Tahunan", 
+        "📈 Analisis Kuartal", 
+        "📅 Per Bulan",
+        "📉 Evaluation Metrics"
+    ])
+    
+    # =============== TAB: Analisis Tahunan (Borda Count) ===============
+    with T_YEARLY:
+        st.subheader("🏆 Top 5 Produk Tahunan (Borda Count Voting)")
+        st.caption("Perbandingan peringkat produk terbaik tahun 2025 dan 2026 menggunakan metode Borda Count")
+        
+        # Display combined yearly chart
+        if Path(LSTM_TOP5_YEARLY_PNG).exists():
+            st.image(str(LSTM_TOP5_YEARLY_PNG), width="stretch")
         else:
+            st.warning("⚠️ Visualisasi Top 5 Tahunan belum tersedia. Jalankan forecast terlebih dahulu.")
+        
+        # Display Borda Count Process Chart
+        st.divider()
+        st.subheader("📊 Analisis Borda Count (Kontribusi Skor Per Kuartal)")
+        st.caption("Stacked bar chart menunjukkan kontribusi skor dari setiap kuartal")
+        
+        if Path(LSTM_BORDA_COUNT_PNG).exists():
+            st.image(str(LSTM_BORDA_COUNT_PNG), width="stretch")
+        else:
+            st.info("ℹ️ Visualisasi Borda Count Process belum tersedia.")
+        
+        # Show data tables
+        st.divider()
+        col_2025, col_2026 = st.columns(2)
+        
+        with col_2025:
+            st.subheader("📋 Data Borda Count 2025")
+            if Path(LSTM_YEARLY_TOP5_2025).exists():
+                df_2025 = pd.read_csv(LSTM_YEARLY_TOP5_2025)
+                st.dataframe(df_2025, use_container_width=True, hide_index=True)
+                st.download_button(
+                    "📥 Download CSV 2025", 
+                    data=df_2025.to_csv(index=False).encode("utf-8"), 
+                    file_name="yearly_top5_borda_2025.csv",
+                    key="dl_yearly_2025"
+                )
+            else:
+                st.info("Data 2025 belum tersedia.")
+        
+        with col_2026:
+            st.subheader("📋 Data Borda Count 2026")
+            if Path(LSTM_YEARLY_TOP5_2026).exists():
+                df_2026 = pd.read_csv(LSTM_YEARLY_TOP5_2026)
+                st.dataframe(df_2026, use_container_width=True, hide_index=True)
+                st.download_button(
+                    "📥 Download CSV 2026", 
+                    data=df_2026.to_csv(index=False).encode("utf-8"), 
+                    file_name="yearly_top5_borda_2026.csv",
+                    key="dl_yearly_2026"
+                )
+            else:
+                st.info("Data 2026 belum tersedia.")
+    
+    # =============== TAB: Analisis Kuartal ===============
+    with T_QUARTERLY:
+        st.subheader("📈 Top 5 Produk Per Kuartal (2025-2026)")
+        st.caption("Perbandingan produk terbaik di setiap kuartal untuk tahun 2025 dan 2026")
+        
+        # Display combined quarterly chart
+        if Path(LSTM_TOP5_QUARTERLY_PNG).exists():
+            st.image(str(LSTM_TOP5_QUARTERLY_PNG), width="stretch")
+        else:
+            st.warning("⚠️ Visualisasi Top 5 Kuartal belum tersedia. Jalankan forecast terlebih dahulu.")
+        
+        # Show quarterly data tables
+        st.divider()
+        col_q2025, col_q2026 = st.columns(2)
+        
+        with col_q2025:
+            st.subheader("📋 Data Kuartal 2025")
+            if Path(LSTM_QUARTERLY_TOP5_2025).exists():
+                df_q2025 = pd.read_csv(LSTM_QUARTERLY_TOP5_2025)
+                
+                # Quarter filter
+                quarters = df_q2025['quarter'].unique().tolist() if 'quarter' in df_q2025.columns else []
+                sel_q = st.selectbox("Filter Kuartal 2025", options=["Semua"] + quarters, key="q2025_filter")
+                
+                if sel_q != "Semua" and 'quarter' in df_q2025.columns:
+                    view_df = df_q2025[df_q2025['quarter'] == sel_q]
+                else:
+                    view_df = df_q2025
+                
+                st.dataframe(view_df, use_container_width=True, hide_index=True)
+                st.download_button(
+                    "📥 Download CSV Q 2025", 
+                    data=df_q2025.to_csv(index=False).encode("utf-8"), 
+                    file_name="quarterly_top5_2025.csv",
+                    key="dl_q2025"
+                )
+            else:
+                st.info("Data kuartal 2025 belum tersedia.")
+        
+        with col_q2026:
+            st.subheader("📋 Data Kuartal 2026")
+            if Path(LSTM_QUARTERLY_TOP5_2026).exists():
+                df_q2026 = pd.read_csv(LSTM_QUARTERLY_TOP5_2026)
+                
+                # Quarter filter
+                quarters = df_q2026['quarter'].unique().tolist() if 'quarter' in df_q2026.columns else []
+                sel_q = st.selectbox("Filter Kuartal 2026", options=["Semua"] + quarters, key="q2026_filter")
+                
+                if sel_q != "Semua" and 'quarter' in df_q2026.columns:
+                    view_df = df_q2026[df_q2026['quarter'] == sel_q]
+                else:
+                    view_df = df_q2026
+                
+                st.dataframe(view_df, use_container_width=True, hide_index=True)
+                st.download_button(
+                    "📥 Download CSV Q 2026", 
+                    data=df_q2026.to_csv(index=False).encode("utf-8"), 
+                    file_name="quarterly_top5_2026.csv",
+                    key="dl_q2026"
+                )
+            else:
+                st.info("Data kuartal 2026 belum tersedia.")
+    
+    # =============== TAB: Per Bulan ===============
+    with T_MONTHLY:
+        st.subheader("📅 Top 5 Produk per Bulan (24 Bulan)")
+        st.caption("Grouped bar chart menampilkan Top-5 produk per bulan dalam periode 24 bulan forecast")
+        
+        # Display grouped monthly chart
+        if Path(LSTM_GROUPED_TOP5_PNG).exists():
+            st.image(str(LSTM_GROUPED_TOP5_PNG), width="stretch")
+        else:
+            st.warning("⚠️ Visualisasi Top 5 per Bulan belum tersedia.")
+        
+        # Interactive data table
+        st.divider()
+        st.subheader("📋 Data Top-N per Bulan")
+        
+        if lstm_topn.exists():
             topn_df = pd.read_csv(lstm_topn)
             months = [str(m) for m in sorted(topn_df[topn_df.columns[0]].unique())]
-            sel = st.selectbox("Pilih Bulan", options=["All Months"] + months)
-            # view = st.radio("Tampilan", ["Bar Chart", "Grouped Chart", "Table View"], index=0, horizontal=True)
-            view = st.radio("Tampilan", ["Grouped Chart", "Table View"], index=0, horizontal=True)
-            if view == "Bar Chart" and sel != "All Months":
-                fig = generate_top_products_chart(topn_df, month=sel, grouped=False)
-                st.plotly_chart(fig, use_container_width=True)
-            elif view == "Grouped Chart":
-                fig = generate_top_products_chart(topn_df, month=None, grouped=True)
-                st.plotly_chart(fig, use_container_width=True)
+            sel = st.selectbox("Filter Bulan", options=["Semua Bulan"] + months, key="month_filter")
+            
+            if sel != "Semua Bulan":
+                view_df = topn_df[topn_df[topn_df.columns[0]].astype(str) == sel]
             else:
-                st.dataframe(topn_df, use_container_width=True)
+                view_df = topn_df
+            
+            st.dataframe(view_df, use_container_width=True, hide_index=True)
+            
             toexcel = io.BytesIO()
             with pd.ExcelWriter(toexcel, engine='openpyxl') as writer:
                 topn_df.to_excel(writer, index=False)
-            st.download_button("Export to Excel", data=toexcel.getvalue(), file_name="topN_per_month_24m.xlsx")
+            st.download_button(
+                "📥 Export to Excel", 
+                data=toexcel.getvalue(), 
+                file_name="topN_per_month_24m.xlsx",
+                key="dl_topn_excel"
+            )
+        else:
+            st.info("File topN tidak ditemukan. Jalankan forecast untuk menghasilkan.")
     
     # =============== Evaluation Metrics Tab ===============
-    with T3:
+    with T_METRICS:
         st.subheader("📊 Evaluation Metrics")
         st.caption("Metrik evaluasi model LSTM: MAE, MSE, RMSE, dan MAPE")
         
@@ -513,7 +637,7 @@ with TAB_SES:
         if ses_topn.exists():
             st.subheader("Top-5 Produk per Bulan (Gambar)")
             if Path(SES_GROUPED_TOP5_PNG).exists():
-                st.image(str(SES_GROUPED_TOP5_PNG), use_column_width=True)
+                st.image(str(SES_GROUPED_TOP5_PNG), width="stretch")
             else:
                 st.info("Gambar grouped chart belum tersedia.")
 
@@ -523,27 +647,56 @@ with TAB_CMP:
     ses_ft = Path(SES_FORECAST_TOTAL)
     ses_per = Path(SES_FORECAST_PER_PRODUCT)
     
-    # Paths for grouped chart images
-    lstm_grouped_png = ROOT_DIR / "forecast_plots" / "bulan" / "top5_grouped_24m.png"
+    # Use new paths from settings
+    lstm_grouped_png = Path(LSTM_GROUPED_TOP5_PNG)
     ses_grouped_png = Path(SES_GROUPED_TOP5_PNG)
     
     if not (lstm_ft.exists() and ses_ft.exists()):
         st.error("❌ Hasil LSTM atau SES tidak lengkap untuk perbandingan.")
     else:
-        # Display grouped chart images side by side
-        if lstm_grouped_png.exists() or ses_grouped_png.exists():
-            st.subheader("Top-5 Produk per Bulan (Grouped Charts)")
-            col_img1, col_img2 = st.columns(2)
-            with col_img1:
-                if lstm_grouped_png.exists():
-                    st.image(str(lstm_grouped_png), use_container_width=True, caption="LSTM Forecast")
-                else:
-                    st.info("Gambar LSTM grouped chart belum tersedia.")
-            with col_img2:
-                if ses_grouped_png.exists():
-                    st.image(str(ses_grouped_png), use_container_width=True, caption="SES Forecast")
-                else:
-                    st.info("Gambar SES grouped chart belum tersedia.")
+        # ==== LSTM Combined Visualizations Section ====
+        st.subheader("📊 LSTM: Analisis Top 5 Produk (2025-2026)")
+        
+        # Tab untuk visualisasi LSTM gabungan
+        lstm_tab1, lstm_tab2 = st.tabs(["📅 Analisis Tahunan", "📈 Analisis Kuartal"])
+        
+        with lstm_tab1:
+            if Path(LSTM_TOP5_YEARLY_PNG).exists():
+                st.image(str(LSTM_TOP5_YEARLY_PNG), width="stretch", 
+                        caption="LSTM: Top 5 Produk Tahunan (Borda Count Voting 2025-2026)")
+            else:
+                st.info("Visualisasi LSTM tahunan belum tersedia.")
+            
+            # Show Borda Count Process
+            if Path(LSTM_BORDA_COUNT_PNG).exists():
+                with st.expander("🔍 Lihat Detail Kontribusi Borda Count"):
+                    st.image(str(LSTM_BORDA_COUNT_PNG), width="stretch",
+                            caption="Kontribusi skor per kuartal untuk setiap produk")
+        
+        with lstm_tab2:
+            if Path(LSTM_TOP5_QUARTERLY_PNG).exists():
+                st.image(str(LSTM_TOP5_QUARTERLY_PNG), width="stretch",
+                        caption="LSTM: Top 5 Produk Per Kuartal (Q1-Q4 2025 & 2026)")
+            else:
+                st.info("Visualisasi LSTM kuartal belum tersedia.")
+        
+        st.divider()
+        
+        # ==== Monthly Comparison Section ====
+        st.subheader("📅 Perbandingan Top-5 Produk per Bulan")
+        col_img1, col_img2 = st.columns(2)
+        with col_img1:
+            st.markdown("**LSTM Forecast**")
+            if lstm_grouped_png.exists():
+                st.image(str(lstm_grouped_png), width="stretch")
+            else:
+                st.info("Gambar LSTM grouped chart belum tersedia.")
+        with col_img2:
+            st.markdown("**SES Forecast**")
+            if ses_grouped_png.exists():
+                st.image(str(ses_grouped_png), width="stretch")
+            else:
+                st.info("Gambar SES grouped chart belum tersedia.")
         
         # # Perbandingan Metrik Evaluasi
         # st.subheader("Perbandingan Metrik Evaluasi")

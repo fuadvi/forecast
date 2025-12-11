@@ -24,6 +24,19 @@ TRAINING_DIAGNOSTICS = MODELS_FOLDER / "training_diagnostics.csv"
 SKIPPED_PRODUCTS_LOG = MODELS_FOLDER / "skipped_products.log"
 MODELS_METADATA = MODELS_FOLDER / "models_metadata.json"
 
+# LSTM Combined Visualization Plots (Quarterly Analysis)
+LSTM_PLOTS_DIR = ROOT_DIR / "forecast_plots"
+LSTM_TOP5_YEARLY_PNG = LSTM_PLOTS_DIR / "top5_yearly.png"
+LSTM_TOP5_QUARTERLY_PNG = LSTM_PLOTS_DIR / "top5_quarterly.png"
+LSTM_BORDA_COUNT_PNG = LSTM_PLOTS_DIR / "borda_count_process.png"
+LSTM_GROUPED_TOP5_PNG = LSTM_PLOTS_DIR / "bulan" / "top5_grouped_24m.png"
+
+# LSTM Quarterly/Yearly CSV outputs
+LSTM_QUARTERLY_TOP5_2025 = ROOT_DIR / "quarterly_top5_2025.csv"
+LSTM_QUARTERLY_TOP5_2026 = ROOT_DIR / "quarterly_top5_2026.csv"
+LSTM_YEARLY_TOP5_2025 = ROOT_DIR / "yearly_top5_borda_2025.csv"
+LSTM_YEARLY_TOP5_2026 = ROOT_DIR / "yearly_top5_borda_2026.csv"
+
 # SES outputs and plots
 SES_FORECAST_PER_PRODUCT = ROOT_DIR / "forecast_per_product_ses_24m.csv"
 SES_FORECAST_TOTAL = ROOT_DIR / "forecast_total_ses_24m.csv"

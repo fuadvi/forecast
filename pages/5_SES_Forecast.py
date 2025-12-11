@@ -141,7 +141,7 @@ with col5:
 # Visualization
 if Path(SES_GROUPED_TOP5_PNG).exists():
     st.subheader("📊 Top-5 Produk per Bulan (Grouped)")
-    st.image(str(SES_GROUPED_TOP5_PNG), use_column_width=True, caption="Grouped bar chart Top-5 per bulan (SES)")
+    st.image(str(SES_GROUPED_TOP5_PNG), width="stretch", caption="Grouped bar chart Top-5 per bulan (SES)")
 
 # Preview Tabs
 T1, T2, T3, T4 = st.tabs([

@@ -12,28 +12,88 @@ from config.settings import (
     FORECAST_TOTAL,
     TOPN_PER_MONTH,
     FORECAST_DIAGNOSTICS,
+    ROOT_DIR,
 )
 
 _proc: Optional[subprocess.Popen] = None
+_log_file: Optional[Path] = None
+_log_handle = None
 
 
 def run_forecast() -> Tuple[bool, str]:
-    global _proc
+    """Run forecast.py as subprocess with proper working directory."""
+    global _proc, _log_file, _log_handle
+    
+    # Close previous log handle if exists
+    if _log_handle:
+        try:
+            _log_handle.close()
+        except Exception:
+            pass
+    
     if _proc and _proc.poll() is None:
         return False, "Forecast sedang berjalan"
+    
     py = sys.executable
-    cmd = [py, "-u", "forecast.py"]
-    _proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    return True, "Forecast dimulai"
+    forecast_script = ROOT_DIR / "forecast.py"
+    
+    # Log file untuk debug
+    _log_file = ROOT_DIR / "forecast_run.log"
+    
+    # Pastikan script ada
+    if not forecast_script.exists():
+        return False, f"Script tidak ditemukan: {forecast_script}"
+    
+    try:
+        # Buka log file untuk output
+        _log_handle = open(_log_file, 'w', encoding='utf-8', buffering=1)  # Line buffered
+        
+        cmd = [py, "-u", str(forecast_script)]
+        _proc = subprocess.Popen(
+            cmd, 
+            stdout=_log_handle,
+            stderr=subprocess.STDOUT, 
+            text=True,
+            cwd=str(ROOT_DIR),  # Set working directory ke project root
+            env={**os.environ, "PYTHONUNBUFFERED": "1"}  # Unbuffered output
+        )
+        return True, f"Forecast dimulai (PID: {_proc.pid})"
+    except Exception as e:
+        return False, f"Error starting forecast: {e}"
 
 
 def check_forecast_status() -> str:
+    """Check if forecast process is still running."""
+    global _log_handle
+    
     if _proc is None:
         return "idle"
     code = _proc.poll()
     if code is None:
         return "running"
+    
+    # Process finished, close log handle
+    if _log_handle:
+        try:
+            _log_handle.close()
+            _log_handle = None
+        except Exception:
+            pass
+    
     return "finished" if code == 0 else "failed"
+
+
+def get_forecast_log() -> str:
+    """Get the last N lines from the forecast log file."""
+    if _log_file and _log_file.exists():
+        try:
+            content = _log_file.read_text(encoding='utf-8')
+            # Return last 50 lines
+            lines = content.strip().split('\n')
+            return '\n'.join(lines[-50:])
+        except Exception:
+            return ""
+    return ""
 
 
 def load_forecast_results() -> Dict[str, Optional[pd.DataFrame]]:

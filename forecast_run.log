@@ -1,0 +1,169 @@
+2025-12-11 08:29:04.829303: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-12-11 08:29:43.920070: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+============================================================
+RUNNING LSTM FORECAST
+============================================================
+Columns found in Excel file: ['Nomor Invoice', 'Tanggal Transaksi', 'Nama Pelanggan', 'ID Pelanggan', 'Instansi', 'Jenis Pembelian', 'Kota', 'ID-Produk', 'Nama Produk', 'Kategori', 'Bahan', 'Warna', 'Jumlah', 'Harga Satuan', 'Total Harga', 'Metode Pembayaran', 'Tanggal Kirim', 'Status Pengiriman', 'Nama Sales', 'Unnamed: 19', 'Unnamed: 20', 'Unnamed: 21', 'Unnamed: 22']
+Using column mapping: {'date': 'Tanggal Transaksi', 'qty': 'Jumlah', 'product': 'Nama Produk', 'category': 'Kategori'}
+Most recent data date across all products: 2025-04-01
+Forecasting period: 2025-05-01 to 2027-04-01
+2025-12-11 08:30:07.413764: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Chart Top-5 grouped disimpan di: D:\tesis\forecast_plots\bulan\top5_grouped_24m.png
+
+============================================================
+QUARTERLY AGGREGATION & BORDA COUNT RANKING
+============================================================
+
+=== Aggregating Monthly Data to Quarterly ===
+Years found: [np.int32(2025), np.int32(2026), np.int32(2027)]
+
+Year 2025 - Quarters available: ['Q2', 'Q3', 'Q4']
+  Q2: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 2095.42
+    Rank 2: kursi auditorium ll 526 tb... = 1052.98
+    Rank 3: kursi auditorium ll 184... = 949.78
+    Rank 4: kursi kerja dp 301 tb... = 899.22
+    Rank 5: kursi siswa ll 507 tc... = 638.10
+  Q3: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 3106.95
+    Rank 2: kursi auditorium ll 526 tb... = 1561.28
+    Rank 3: kursi kerja dp 301 tb... = 1455.23
+    Rank 4: kursi auditorium ll 184... = 1408.28
+    Rank 5: kursi auditorium ll 516 tb... = 1245.85
+  Q4: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 3069.94
+    Rank 2: kursi auditorium ll 526 tb... = 1542.68
+    Rank 3: kursi kerja dp 301 tb... = 1451.77
+    Rank 4: kursi auditorium ll 184... = 1391.50
+    Rank 5: kursi auditorium ll 516 tb... = 1180.34
+
+Year 2026 - Quarters available: ['Q1', 'Q2', 'Q3', 'Q4']
+  Q1: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 3013.47
+    Rank 2: kursi auditorium ll 526 tb... = 1514.31
+    Rank 3: kursi auditorium ll 184... = 1365.91
+    Rank 4: kursi kerja dp 301 tb... = 1288.01
+    Rank 5: kursi auditorium ll 516 tb... = 1080.60
+  Q2: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 2884.04
+    Rank 2: kursi auditorium ll 526 tb... = 1449.27
+    Rank 3: kursi auditorium ll 184... = 1307.24
+    Rank 4: kursi kerja dp 301 tb... = 1172.43
+    Rank 5: kursi auditorium ll 516 tb... = 956.26
+  Q3: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 2594.45
+    Rank 2: kursi auditorium ll 526 tb... = 1303.74
+    Rank 3: kursi auditorium ll 184... = 1175.98
+    Rank 4: kursi kerja dp 301 tb... = 1094.05
+    Rank 5: kursi auditorium ll 516 tb... = 859.13
+  Q4: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 2673.55
+    Rank 2: kursi auditorium ll 526 tb... = 1343.49
+    Rank 3: kursi auditorium ll 184... = 1211.83
+    Rank 4: kursi kerja dp 301 tb... = 1178.19
+    Rank 5: kursi auditorium ll 516 tb... = 939.91
+
+Year 2027 - Quarters available: ['Q1', 'Q2']
+  Q1: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 3182.78
+    Rank 2: kursi auditorium ll 526 tb... = 1599.38
+    Rank 3: kursi auditorium ll 184... = 1442.64
+    Rank 4: kursi kerja dp 301 tb... = 1396.98
+    Rank 5: kursi auditorium ll 516 tb... = 1168.78
+  Q2: Top 5 products identified
+    Rank 1: kursi auditorium ll 516 tb tg... = 895.90
+    Rank 2: kursi auditorium ll 526 tb... = 450.20
+    Rank 3: kursi auditorium ll 184... = 406.08
+    Rank 4: kursi kerja dp 301 tb... = 343.82
+    Rank 5: kursi auditorium ll 516 tb... = 292.31
+
+============================================================
+Processing Year: 2025
+============================================================
+
+Quarterly rankings saved: D:\tesis\quarterly_top5_2025.csv
+
+=== Calculating Borda Count for Year 2025 ===
+  Q1: No data available
+
+Top 5 Products for 2025 (Borda Count):
+  Rank 1: kursi auditorium ll 516 tb tg...
+         Total Score: 15 (Q1:0 Q2:5 Q3:5 Q4:5)
+  Rank 2: kursi auditorium ll 526 tb...
+         Total Score: 12 (Q1:0 Q2:4 Q3:4 Q4:4)
+  Rank 3: kursi kerja dp 301 tb...
+         Total Score: 8 (Q1:0 Q2:2 Q3:3 Q4:3)
+  Rank 4: kursi auditorium ll 184...
+         Total Score: 7 (Q1:0 Q2:3 Q3:2 Q4:2)
+  Rank 5: kursi auditorium ll 516 tb...
+         Total Score: 2 (Q1:0 Q2:0 Q3:1 Q4:1)
+Yearly Borda rankings saved: D:\tesis\yearly_top5_borda_2025.csv
+
+============================================================
+Processing Year: 2026
+============================================================
+
+Quarterly rankings saved: D:\tesis\quarterly_top5_2026.csv
+
+=== Calculating Borda Count for Year 2026 ===
+
+Top 5 Products for 2026 (Borda Count):
+  Rank 1: kursi auditorium ll 516 tb tg...
+         Total Score: 20 (Q1:5 Q2:5 Q3:5 Q4:5)
+  Rank 2: kursi auditorium ll 526 tb...
+         Total Score: 16 (Q1:4 Q2:4 Q3:4 Q4:4)
+  Rank 3: kursi auditorium ll 184...
+         Total Score: 12 (Q1:3 Q2:3 Q3:3 Q4:3)
+  Rank 4: kursi kerja dp 301 tb...
+         Total Score: 8 (Q1:2 Q2:2 Q3:2 Q4:2)
+  Rank 5: kursi auditorium ll 516 tb...
+         Total Score: 4 (Q1:1 Q2:1 Q3:1 Q4:1)
+Yearly Borda rankings saved: D:\tesis\yearly_top5_borda_2026.csv
+
+============================================================
+Processing Year: 2027
+============================================================
+
+Quarterly rankings saved: D:\tesis\quarterly_top5_2027.csv
+
+=== Calculating Borda Count for Year 2027 ===
+  Q3: No data available
+  Q4: No data available
+
+Top 5 Products for 2027 (Borda Count):
+  Rank 1: kursi auditorium ll 516 tb tg...
+         Total Score: 10 (Q1:5 Q2:5 Q3:0 Q4:0)
+  Rank 2: kursi auditorium ll 526 tb...
+         Total Score: 8 (Q1:4 Q2:4 Q3:0 Q4:0)
+  Rank 3: kursi auditorium ll 184...
+         Total Score: 6 (Q1:3 Q2:3 Q3:0 Q4:0)
+  Rank 4: kursi kerja dp 301 tb...
+         Total Score: 4 (Q1:2 Q2:2 Q3:0 Q4:0)
+  Rank 5: kursi auditorium ll 516 tb...
+         Total Score: 2 (Q1:1 Q2:1 Q3:0 Q4:0)
+Yearly Borda rankings saved: D:\tesis\yearly_top5_borda_2027.csv
+
+============================================================
+GENERATING COMBINED VISUALIZATIONS (2025-2026)
+============================================================
+
+=== Creating Combined Yearly Top-5 Plot (2025-2026) ===
+  Saved: D:\tesis\forecast_plots\top5_yearly.png
+
+=== Creating Combined Quarterly Top-5 Plot (2025-2026) ===
+  Saved: D:\tesis\forecast_plots\top5_quarterly.png
+
+=== Creating Combined Borda Count Process Visualization (2025-2026) ===
+  Saved: D:\tesis\forecast_plots\borda_count_process.png
+
+============================================================
+QUARTERLY AGGREGATION & VISUALIZATION COMPLETED SUCCESSFULLY
+============================================================
+
+Output files generated:
+  - D:\tesis\forecast_plots\top5_yearly.png
+  - D:\tesis\forecast_plots\top5_quarterly.png
+  - D:\tesis\forecast_plots\borda_count_process.png
+
+Forecasting completed: {'per_product_csv': 'D:\\tesis\\forecast_per_product_24m.csv', 'total_csv': 'D:\\tesis\\forecast_total_24m.csv', 'topn_csv': 'D:\\tesis\\topN_per_month_24m.csv', 'diagnostics_csv': 'D:\\tesis\\forecast_diagnostics.csv', 'plots_dir': 'D:\\tesis\\forecast_plots\\bulan', 'quarterly_plots_dir': 'D:\\tesis\\forecast_plots'}
