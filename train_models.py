@@ -34,9 +34,10 @@ test2 = None
 # Configuration
 # ------------------------
 FORECAST_HORIZON_MONTHS = 24
-TIME_STEPS = 2  # Reduced from 3 to 2 to allow more products
-MIN_DATA_POINTS_MONTHS = 2  # Reduced to 2 months (Balanced approach per SKIP_DIAGNOSIS_SUMMARY.md)
+TIME_STEPS = 2  # Default, will be adjusted dynamically per product
+MIN_DATA_POINTS_MONTHS = 1  # AGGRESSIVE: Allow 1 month minimum for full LSTM coverage
 MIN_NONZERO_TRANSACTIONS = 1  # Reduced to 1 transaction
+USE_DYNAMIC_TIME_STEPS = True  # Use TIME_STEPS=1 for products with limited data
 OUTPUT_DIR = os.path.join(os.getcwd(), "trained_models")
 DIAG_CSV = os.path.join(OUTPUT_DIR, "training_diagnostics.csv")
 SKIPPED_LOG = os.path.join(OUTPUT_DIR, "skipped_products.log")
@@ -325,6 +326,18 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     dates = pd.to_datetime(g["month"])  # Month start
     sales = g["qty"].astype(float)
 
+    # Dynamic TIME_STEPS based on available data (AGGRESSIVE MODE FOR FULL LSTM)
+    n_months = len(sales)
+    if USE_DYNAMIC_TIME_STEPS:
+        if n_months >= 3:
+            time_steps_dynamic = 2  # Standard
+        elif n_months >= 2:
+            time_steps_dynamic = 1  # Minimal for 2 months
+        else:
+            time_steps_dynamic = 1  # Ultra minimal for 1 month
+    else:
+        time_steps_dynamic = TIME_STEPS
+
     # Time features
     time_feats = build_time_features(dates)
 
@@ -382,27 +395,41 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
         data_scaled = scaler.fit_transform(data_mat.values)
 
         target_idx = 0
-        X_seq, y_seq = _create_sequences(data_scaled, TIME_STEPS, target_idx)
-        if len(X_seq) < max(2, TIME_STEPS):  # Reduced from max(4, TIME_STEPS) per SKIP_DIAGNOSIS_SUMMARY.md
-            raise ValueError("insufficient sequences for LSTM training")
+        X_seq, y_seq = _create_sequences(data_scaled, time_steps_dynamic, target_idx)
+        # Ultra-aggressive: allow even 1 sequence for 1-month data
+        min_sequences_required = 1 if n_months == 1 else max(1, time_steps_dynamic)
+        if len(X_seq) < min_sequences_required:
+            raise ValueError(f"insufficient sequences for LSTM training (got {len(X_seq)}, need {min_sequences_required})")
 
         split_idx = max(1, int(len(X_seq) * 0.8))
         X_train, y_train = X_seq[:split_idx], y_seq[:split_idx]
         X_val, y_val = (X_seq[split_idx:], y_seq[split_idx:]) if split_idx < len(X_seq) else (X_seq[-1:], y_seq[-1:])
 
-        # Enhanced stacked LSTM with more capacity
-        model = Sequential([
-            LSTM(128, input_shape=(TIME_STEPS, data_mat.shape[1]), return_sequences=True, activation="tanh"),
-            Dropout(0.3),
-            LSTM(96, return_sequences=True, activation="tanh"),
-            Dropout(0.3),
-            LSTM(64, return_sequences=False, activation="tanh"),
-            Dropout(0.2),
-            Dense(64, activation="relu"),
-            Dense(32, activation="relu"),
-            Dense(16, activation="relu"),
-            Dense(1, activation="linear")
-        ])
+        # Enhanced stacked LSTM with more capacity (adaptive architecture)
+        # For products with limited data (TIME_STEPS=1), use simpler architecture
+        if time_steps_dynamic == 1:
+            # Simplified model for single time step
+            model = Sequential([
+                LSTM(64, input_shape=(time_steps_dynamic, data_mat.shape[1]), return_sequences=False, activation="tanh"),
+                Dropout(0.2),
+                Dense(32, activation="relu"),
+                Dense(16, activation="relu"),
+                Dense(1, activation="linear")
+            ])
+        else:
+            # Full stacked LSTM for products with sufficient data
+            model = Sequential([
+                LSTM(128, input_shape=(time_steps_dynamic, data_mat.shape[1]), return_sequences=True, activation="tanh"),
+                Dropout(0.3),
+                LSTM(96, return_sequences=True, activation="tanh"),
+                Dropout(0.3),
+                LSTM(64, return_sequences=False, activation="tanh"),
+                Dropout(0.2),
+                Dense(64, activation="relu"),
+                Dense(32, activation="relu"),
+                Dense(16, activation="relu"),
+                Dense(1, activation="linear")
+            ])
         model.compile(optimizer="adam", loss="mse")
         es = EarlyStopping(monitor="val_loss", patience=25, restore_best_weights=True, verbose=0)
         rlrop = ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8, min_lr=1e-6, verbose=0)
@@ -419,7 +446,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
         preds = []
         augmented = list(sales.values)
         for i, d in enumerate(future_dates):
-            pred_scaled = float(model.predict(last_window.reshape(1, TIME_STEPS, data_mat.shape[1]), verbose=0)[0][0])
+            pred_scaled = float(model.predict(last_window.reshape(1, time_steps_dynamic, data_mat.shape[1]), verbose=0)[0][0])
             if hasattr(scaler, "scale_") and scaler.scale_[0] != 0:
                 pred_val = (pred_scaled - scaler.min_[0]) / scaler.scale_[0]
             else:
@@ -489,7 +516,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
                 "selected_features": ["lag_1", "lag_2", "lag_3", "lag_6", "lag_12", "rolling_mean_3", "rolling_mean_6", "rolling_std_3", "rolling_std_6", "momentum_3", "momentum_6", "acceleration", "sales_vs_mean3", "sales_vs_mean6", "trend", "month_sin", "month_cos"],
                 "features_for_lstm": features_for_lstm,
                 "baseline_meta": {},
-                "time_steps": TIME_STEPS,
+                "time_steps": time_steps_dynamic,  # Store the actual time_steps used
                 "horizon": FORECAST_HORIZON_MONTHS,
                 "direct_mode": True,
             },
@@ -521,26 +548,38 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     data_scaled = scaler.fit_transform(data_mat.values.astype(float))
 
     target_idx = 0
-    X_seq, y_seq = _create_sequences(data_scaled, TIME_STEPS, target_idx)
-    if len(X_seq) < max(2, TIME_STEPS):  # Reduced from max(4, TIME_STEPS) per SKIP_DIAGNOSIS_SUMMARY.md
-        raise ValueError("insufficient sequences for LSTM training")
+    X_seq, y_seq = _create_sequences(data_scaled, time_steps_dynamic, target_idx)
+    # Ultra-aggressive: allow even 1 sequence for limited data
+    min_sequences_required = 1 if n_months <= 2 else max(1, time_steps_dynamic)
+    if len(X_seq) < min_sequences_required:
+        raise ValueError(f"insufficient sequences for LSTM training (got {len(X_seq)}, need {min_sequences_required})")
 
     split_idx = max(1, int(len(X_seq) * 0.8))
     X_train, y_train = X_seq[:split_idx], y_seq[:split_idx]
     X_val, y_val = (X_seq[split_idx:], y_seq[split_idx:]) if split_idx < len(X_seq) else (X_seq[-1:], y_seq[-1:])
 
-    model = Sequential([
-        LSTM(128, input_shape=(TIME_STEPS, data_mat.shape[1]), return_sequences=True, activation="tanh"),
-        Dropout(0.3),
-        LSTM(96, return_sequences=True, activation="tanh"),
-        Dropout(0.3),
-        LSTM(64, return_sequences=False, activation="tanh"),
-        Dropout(0.2),
-        Dense(64, activation="relu"),
-        Dense(32, activation="relu"),
-        Dense(16, activation="relu"),
-        Dense(1, activation="linear")
-    ])
+    # Adaptive model architecture based on time_steps_dynamic
+    if time_steps_dynamic == 1:
+        model = Sequential([
+            LSTM(64, input_shape=(time_steps_dynamic, data_mat.shape[1]), return_sequences=False, activation="tanh"),
+            Dropout(0.2),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="linear")
+        ])
+    else:
+        model = Sequential([
+            LSTM(128, input_shape=(time_steps_dynamic, data_mat.shape[1]), return_sequences=True, activation="tanh"),
+            Dropout(0.3),
+            LSTM(96, return_sequences=True, activation="tanh"),
+            Dropout(0.3),
+            LSTM(64, return_sequences=False, activation="tanh"),
+            Dropout(0.2),
+            Dense(64, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="linear")
+        ])
     model.compile(optimizer="adam", loss="mse")
     es = EarlyStopping(monitor="val_loss", patience=25, restore_best_weights=True, verbose=0)
     rlrop = ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8, min_lr=1e-6, verbose=0)
@@ -556,7 +595,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     last_window = X_seq[-1]
     residual_forecast = []
     for i, d in enumerate(future_dates):
-        pred_resid_scaled = float(model.predict(last_window.reshape(1, TIME_STEPS, data_mat.shape[1]), verbose=0)[0][0])
+        pred_resid_scaled = float(model.predict(last_window.reshape(1, time_steps_dynamic, data_mat.shape[1]), verbose=0)[0][0])
         if hasattr(scaler, "scale_") and scaler.scale_[0] != 0:
             pred_resid = (pred_resid_scaled - scaler.min_[0]) / scaler.scale_[0]
         else:
@@ -586,7 +625,7 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
             "selected_features": kept,
             "features_for_lstm": features_for_lstm,
             "baseline_meta": baseline_meta,
-            "time_steps": TIME_STEPS,
+            "time_steps": time_steps_dynamic,  # Store the actual time_steps used
             "horizon": FORECAST_HORIZON_MONTHS,
             "direct_mode": False,
         },

@@ -37,8 +37,8 @@ OUT_YEARLY_TOP5_TEMPLATE = os.path.join(os.getcwd(), "yearly_top5_borda_{year}.c
 
 # Experimental/diagnostic flags (Priority-1 fixes)
 # Set to True to disable the respective post-processing; helps avoid over-constraining forecasts
-DISABLE_STABILIZATION = True   # bypass stabilize_series during testing
-DISABLE_CLAMPING = True        # bypass clamp_with_historical_quantiles during testing
+DISABLE_STABILIZATION = False  # ENABLED: apply stabilization for consistency with SES
+DISABLE_CLAMPING = False       # ENABLED: apply clamping for consistency with SES
 NOISE_INJECTION = True         # add small noise to residual forward loop to break perfect cycles
 
 # ------------------------
@@ -136,13 +136,20 @@ def read_excel_latest(excel_path: str) -> pd.DataFrame:
     
     df["product_norm"] = df["product_name"].apply(normalize_product_name)
 
-    # simple clipping per product to avoid pathological spikes
+    # IQR-based clipping per product (consistent with SES method)
     def _clip_group(g: pd.DataFrame) -> pd.DataFrame:
-        if len(g) < 3:
+        if len(g) < 4:
             return g
-        upper = g["sales"].quantile(0.99)
-        g["sales"] = g["sales"].clip(lower=0)
-        g["sales"] = np.minimum(g["sales"], upper)
+        # Use IQR method (same as SES)
+        q1 = g["sales"].quantile(0.25)
+        q3 = g["sales"].quantile(0.75)
+        iqr = q3 - q1
+        if iqr > 0:
+            lower = max(0.0, q1 - 1.5 * iqr)
+            upper = q3 + 1.5 * iqr
+            g["sales"] = g["sales"].clip(lower=lower, upper=upper)
+        else:
+            g["sales"] = g["sales"].clip(lower=0)
         return g
 
     df.sort_values(["product_norm", "date"], inplace=True)
@@ -238,15 +245,15 @@ def forecast_baseline_forward(last_hist_date: pd.Timestamp,
     rng = np.random.RandomState(42)  # Fixed seed for reproducibility
     
     for i, d in enumerate(idx):
-        # Enhanced baseline with stronger trend and more random variation
-        trend_component = recent_trend * (i + 1) * 0.5  # Much stronger trend
-        random_component = rng.normal(0, last_value * 0.15)  # 15% random variation
+        # Conservative baseline with moderate trend (consistent with SES)
+        trend_component = recent_trend * (i + 1) * 0.3  # Moderate trend (reduced from 0.5)
+        random_component = rng.normal(0, last_value * 0.05)  # 5% random variation (reduced from 15%)
         
         # Add monthly variation component
-        month_variation = 1.0 + 0.1 * np.sin(2 * np.pi * d.month / 12)
+        month_variation = 1.0 + 0.05 * np.sin(2 * np.pi * d.month / 12)  # Reduced from 0.1
         
-        # Add additional random walk component
-        walk_component = rng.normal(0, last_value * 0.05)
+        # Add additional random walk component (minimal)
+        walk_component = rng.normal(0, last_value * 0.02)  # Reduced from 0.05
         
         val = (last_value + trend_component + random_component + walk_component) * month_variation
         vals.append(max(0.1, float(val)))  # Ensure positive
@@ -287,9 +294,9 @@ def enforce_quantile_order(p10, p50, p90):
 
 
 def stabilize_series(mean_forecast: np.ndarray, hist_values: np.ndarray) -> np.ndarray:
-    """Apply very generous MoM change limits to preserve forecast dynamics.
-    - Much more generous bounds to avoid killing natural variation
-    - Only apply minimal constraints for extreme outliers
+    """Apply moderate MoM change limits to preserve forecast dynamics while ensuring stability.
+    - Balanced bounds to avoid extreme spikes but allow reasonable variation
+    - More conservative than previous version for consistency with SES
     """
     if len(hist_values) == 0:
         return np.maximum(mean_forecast, 0.0)
@@ -297,15 +304,15 @@ def stabilize_series(mean_forecast: np.ndarray, hist_values: np.ndarray) -> np.n
     last = float(hist_values[-1])
     cv = float(np.std(hist_values) / (np.mean(hist_values) + 1e-6)) if len(hist_values) > 1 else 0.5
     
-    # Much more generous bounds: allow 200-500% monthly change based on CV
-    k = 5.0  # Increased significantly from 2.5
-    max_monthly_change = max(2.0, min(5.0, k * cv))  # Between 200% and 500%
+    # More conservative bounds: allow 50-150% monthly change based on CV
+    k = 2.0  # Reduced from 5.0 for more stability
+    max_monthly_change = max(0.5, min(1.5, k * cv))  # Between 50% and 150%
     
     out = []
     prev = last
     for m in mean_forecast:
         upper = prev * (1 + max_monthly_change)
-        lower = prev * max(0.01, (1 - max_monthly_change))  # Allow down to 1% of previous
+        lower = prev * max(0.1, (1 - max_monthly_change))  # Allow down to 10% of previous (more conservative)
         val = float(np.clip(m, lower, upper))
         out.append(val)
         prev = val
@@ -314,20 +321,26 @@ def stabilize_series(mean_forecast: np.ndarray, hist_values: np.ndarray) -> np.n
 
 
 def clamp_with_historical_quantiles(arr: np.ndarray, hist_values: np.ndarray) -> np.ndarray:
-    """Apply extremely generous bounds based on historical data.
-    Very wide bounds to avoid killing natural variation: q001–q999 and 0.01x–100x.
+    """Apply moderate bounds based on historical data for consistency with SES.
+    Reasonable bounds using IQR-based approach similar to SES outlier capping.
     """
     if len(hist_values) == 0:
         return np.maximum(arr, 0.0)
     
-    # Use extremely wide bounds
-    lo = np.quantile(hist_values, 0.001)
-    hi = np.quantile(hist_values, 0.999)
+    # Use IQR-based bounds (similar to SES method)
+    q1 = np.quantile(hist_values, 0.25)
+    q3 = np.quantile(hist_values, 0.75)
+    iqr = q3 - q1
     mean_hist = np.mean(hist_values)
     
-    # Allow forecasts to be 0.01x to 100x of historical central tendency/range
-    lower_bound = max(0.0, lo * 0.01, mean_hist * 0.01)
-    upper_bound = max(hi * 100.0, mean_hist * 100.0)
+    # Allow forecasts within reasonable bounds: Q1-1.5*IQR to Q3+3*IQR (generous upper bound for growth)
+    if iqr > 0:
+        lower_bound = max(0.0, q1 - 1.5 * iqr)
+        upper_bound = max(q3 + 3.0 * iqr, mean_hist * 3.0)  # Allow up to 3x historical mean
+    else:
+        # Fallback if no variance
+        lower_bound = 0.0
+        upper_bound = mean_hist * 3.0
     
     return np.clip(arr, lower_bound, upper_bound)
 
@@ -398,9 +411,9 @@ def forecast_for_product(prod: str,
             except Exception:
                 pred_val = pred_scaled
             
-            # Add significant noise to break perfect cycles
+            # Add small noise to break perfect cycles (reduced for consistency with SES)
             if NOISE_INJECTION:
-                noise_factor = rng.normal(0, 0.15)  # 15% noise
+                noise_factor = rng.normal(0, 0.05)  # 5% noise (reduced from 15%)
                 pred_val = pred_val * (1 + noise_factor)
             
             preds.append(max(0.1, pred_val))
@@ -472,8 +485,8 @@ def forecast_for_product(prod: str,
             except Exception:
                 pred_resid = pred_scaled
             if NOISE_INJECTION and resid_std > 0:
-                # Much stronger noise to break perfect cycles
-                pred_resid = float(pred_resid + rng.normal(0.0, resid_std * 0.5))
+                # Small noise to break perfect cycles (reduced for consistency)
+                pred_resid = float(pred_resid + rng.normal(0.0, resid_std * 0.15))
             residual_forecast.append(pred_resid)
             new_row = {"residual": pred_resid, "month_sin": np.sin(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
                        "month_cos": np.cos(2 * np.pi * d.month / 12) if len(hist_feat) >= 12 else 0.0,
@@ -533,6 +546,10 @@ def forecast_for_product(prod: str,
 
 
 def fallback_forecast(prod: str, hist_g: pd.DataFrame, category: str, global_stats: dict, cat_stats: dict, forecast_start_date: pd.Timestamp = None):
+    """
+    Simple LSTM-style fallback forecast WITHOUT SES smoothing.
+    Uses last historical value or historical mean with minimal variation.
+    """
     hist_g = hist_g.sort_values("month").copy()
     
     # Use provided forecast_start_date or calculate from data
@@ -543,42 +560,59 @@ def fallback_forecast(prod: str, hist_g: pd.DataFrame, category: str, global_sta
     
     future_index = pd.date_range(start=forecast_start_date, periods=FORECAST_HORIZON_MONTHS, freq="MS")
     
-    # Use historical mean if available, otherwise category median
-    if len(hist_g) > 0 and hist_g["qty"].mean() > 0:
+    # STRATEGY: Use historical data directly, no SES smoothing
+    if len(hist_g) > 0:
+        # Use historical mean as base (more stable than last value)
         base = float(hist_g["qty"].mean())
+        # Get last value for reference
+        last_value = float(hist_g["qty"].iloc[-1])
+        
+        # If last value is significantly different, blend it
+        if abs(last_value - base) / (base + 1e-6) > 0.5:
+            base = 0.7 * base + 0.3 * last_value  # Blend: 70% mean, 30% last
     else:
-        base = cat_stats.get(category, {}).get("median", global_stats.get("global_median", 1.0))
+        # Fallback to global median (conservative, not category median which is too high)
+        base = global_stats.get("global_median", 8.0)
     
-    # Add realistic variation based on month and trend
+    # Simple forward projection with minimal noise (LSTM-style, not SES)
     mean = []
     rng = np.random.RandomState(42)
-    base_trend = 0.02 if len(hist_g) > 6 else 0  # 2% monthly growth trend
     
+    # NO TREND for fallback (conservative approach)
+    # NO SEASONALITY for fallback (too complex without model)
+    # Just slight random walk
+    
+    current_value = base
     for i, d in enumerate(future_index):
-        # Add trend component
-        trend_factor = 1 + base_trend * i
+        # Add small random walk (simulating LSTM uncertainty)
+        noise = rng.normal(0, 0.02 * current_value)  # 2% noise per step
         
-        # Add small random variation (no strong seasonality)
-        random_factor = rng.normal(1.0, 0.1)  # 10% random variation
+        # Slight mean reversion (drift back to base)
+        mean_reversion = 0.05 * (base - current_value)
         
-        # Add very mild month-based variation (not perfect seasonal)
-        month_variation = 1.0 + 0.05 * np.sin(2 * np.pi * (d.month - 1) / 12)
+        current_value = current_value + noise + mean_reversion
+        current_value = max(0.1, current_value)  # Ensure positive
         
-        val = base * trend_factor * random_factor * month_variation
-        mean.append(max(0.1, float(val)))
+        mean.append(float(current_value))
     
     mean = np.array(mean)
     
-    # Uncertainty based on category or global stats
-    qspread = max(0.2 * base, cat_stats.get(category, {}).get("std", global_stats.get("global_std", 0.2 * base)))
+    # Uncertainty bands based on historical volatility
+    if len(hist_g) > 1:
+        hist_std = float(np.std(hist_g["qty"]))
+        qspread = max(0.2 * base, hist_std * 0.5)
+    else:
+        qspread = 0.2 * base
     
     p10 = np.maximum(mean - 0.8 * qspread, 0.1)  # Minimum 0.1 to avoid zeros
     p50 = mean.copy()
     p90 = mean + 0.8 * qspread
+    
     diag = {
         "hist_n": int(len(hist_g)),
         "hist_cv": float(np.std(hist_g["qty"]) / (np.mean(hist_g["qty"]) + 1e-6)) if len(hist_g) > 1 else 0.0,
         "used_model": False,
+        "fallback_mode": "simple_random_walk",
     }
     return future_index, mean, p10, p50, p90, diag
 
