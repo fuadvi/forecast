@@ -1,11 +1,11 @@
-year,quarter,rank,product_name,quarterly_sum
-2027,Q1,1,kursi kerja dp 301 tb,552.4708485328863
-2027,Q1,2,kursi kerja br 205 ha,465.0
-2027,Q1,3,kursi kerja dp 308,312.0031190405224
-2027,Q1,4,kursi auditorium ll 516 tb,281.96269461375675
-2027,Q1,5,kursi br 211 ca mesh,243.0
-2027,Q2,1,kursi kerja dp 301 tb,184.15694951096208
-2027,Q2,2,kursi kerja br 205 ha,155.0
-2027,Q2,3,kursi auditorium ll 516 tb,147.001451961719
-2027,Q2,4,kursi kerja dp 308,104.00103968017413
-2027,Q2,5,kursi br 211 ca mesh,81.0
+year,quarter,rank,product_name,category,quarterly_sum
+2027,Q1,1,kursi kerja dp 301 tb,Stacking Series,552.4708485328863
+2027,Q1,2,kursi kerja br 205 ha,Secretary Series,465.0
+2027,Q1,3,kursi kerja dp 308,Stacking Series,312.0031190405224
+2027,Q1,4,kursi auditorium ll 516 tb,Auditorium Series,281.96269461375675
+2027,Q1,5,kursi br 211 ca mesh,Secretary Series,243.0
+2027,Q2,1,kursi kerja dp 301 tb,Stacking Series,184.15694951096208
+2027,Q2,2,kursi kerja br 205 ha,Secretary Series,155.0
+2027,Q2,3,kursi auditorium ll 516 tb,Auditorium Series,147.001451961719
+2027,Q2,4,kursi kerja dp 308,Stacking Series,104.00103968017413
+2027,Q2,5,kursi br 211 ca mesh,Secretary Series,81.0

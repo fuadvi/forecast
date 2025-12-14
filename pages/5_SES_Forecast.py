@@ -24,6 +24,7 @@ from utils.ses_forecast_wrapper import (
     stream_ses_logs,
     load_ses_results,
     get_ses_summary,
+    SES_LOG_FILE,
 )
 
 st.set_page_config(page_title="SES Forecast - 24 Bulan", page_icon="📈", layout="wide")
@@ -83,6 +84,13 @@ if stop_clicked:
     st.warning("Fitur stop proses belum diimplementasikan penuh (subprocess terminate tidak diekspos). Tutup tab untuk menghentikan.")
 
 if start_btn:
+    # Clear old log file display
+    if Path("ses_forecast_run.log").exists():
+        try:
+            Path("ses_forecast_run.log").unlink()
+        except Exception:
+            pass
+    
     ok, msg = run_ses_forecast(
         file_path=str(data_path) if data_path.exists() else None,
         top_k=top_k,
@@ -91,21 +99,61 @@ if start_btn:
         outlier_capping=cap_out,
     )
     if not ok:
-        st.error(msg)
+        st.error(f"❌ {msg}")
+        st.error("Check log file: `ses_forecast_run.log` untuk detail error")
+        
+        # Try to show log if available
+        if Path("ses_forecast_run.log").exists():
+            with st.expander("📋 Error Log", expanded=True):
+                log_content = Path("ses_forecast_run.log").read_text(encoding='utf-8', errors='ignore')
+                st.code(log_content, language="text")
     else:
         status_area.update(label="Sedang berjalan...", state="running")
         # naive estimate: 0.2s per product unknown here; we'll show indeterminate style
         progress.progress(5, text="Memulai...")
         logs = []
-        for i, line in enumerate(stream_ses_logs() or []):
-            logs.append(line)
-            # Try parse product progress from logs if pattern present
-            if "Processing" in line or "Memproses" in line:
-                progress.progress(min(95, (i % 90) + 5), text=line[:100])
-            if i % 5 == 0:
-                log_area.code("\n".join(logs[-200:]))
-        # finalize
-        st.toast("Proses selesai", icon="✅")
+        error_detected = False
+        
+        try:
+            for i, line in enumerate(stream_ses_logs() or []):
+                logs.append(line)
+                
+                # Detect errors
+                if "ERROR" in line.upper() or "TRACEBACK" in line.upper() or "EXCEPTION" in line.upper():
+                    error_detected = True
+                
+                # Try parse product progress from logs if pattern present
+                if "Processing" in line or "Memproses" in line or "Product" in line:
+                    progress.progress(min(95, (i % 90) + 5), text=line[:100])
+                if i % 5 == 0:
+                    log_area.code("\n".join(logs[-200:]))
+            
+            # Check final status
+            final_status = check_ses_status()
+            
+            if final_status == "failed" or error_detected:
+                st.error("❌ Proses SES gagal!")
+                st.error("Check log file: `ses_forecast_run.log` untuk detail")
+            else:
+                st.toast("Proses selesai", icon="✅")
+                
+        except Exception as e:
+            st.error(f"❌ Error during streaming: {e}")
+            st.error("Check log file: `ses_forecast_run.log`")
+        
+        # Always show final log link
+        if Path("ses_forecast_run.log").exists():
+            with st.expander("📋 Full Process Log"):
+                st.info(f"Log file location: `{Path('ses_forecast_run.log').absolute()}`")
+                log_content = Path("ses_forecast_run.log").read_text(encoding='utf-8', errors='ignore')
+                st.code(log_content, language="text")
+                st.download_button(
+                    "Download Log",
+                    data=log_content,
+                    file_name=f"ses_forecast_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                    mime="text/plain"
+                )
+        
         st.rerun()
 
 st.subheader("📦 Output Files")

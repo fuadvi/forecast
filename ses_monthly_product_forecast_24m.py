@@ -47,7 +47,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Suppress all warnings from statsmodels (ValueWarning, FutureWarning, etc)
 warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", module="statsmodels")
 
 try:
     from statsmodels.tsa.holtwinters import SimpleExpSmoothing, ExponentialSmoothing
@@ -92,6 +95,13 @@ CSV_YEARLY_TOP5_TEMPLATE = "yearly_top5_borda_ses_{year}.csv"
 COLUMN_MAPPING = {
     "Tanggal Transaksi": "date",
     "Nama Produk": "product_name",
+    # Berbagai variasi nama kolom kategori
+    "Kategori Barang": "category",
+    "Product Category": "category",
+    "Category": "category",
+    "Kategori": "category",
+    "kategori_barang": "category",
+    "product_category": "category",
     # Izinkan dua kemungkinan nama kolom kuantitas
     "Jumlah": "sales",
     "Jumlah Unit Terjual": "sales",
@@ -124,6 +134,10 @@ def load_and_prepare_data(file_path: str = FILE_PATH) -> pd.DataFrame:
         raise FileNotFoundError(f"File Excel tidak ditemukan: {file_path}")
 
     df = pd.read_excel(file_path)
+    
+    # Debug: Print kolom yang ada di Excel
+    print(f"[INFO] Kolom di Excel: {df.columns.tolist()}")
+    
     # rename mapping jika ada
     existing = {k: v for k, v in COLUMN_MAPPING.items() if k in df.columns}
     df = df.rename(columns=existing)
@@ -141,6 +155,27 @@ def load_and_prepare_data(file_path: str = FILE_PATH) -> pd.DataFrame:
     else:
         # jika kolom sales tidak ditemukan, buat sales=1 (fallback di beberapa dataset)
         df["sales"] = 1.0
+    
+    # IMPROVED: Fuzzy matching untuk kolom category (seperti LSTM)
+    if "category" not in df.columns:
+        # Cari kolom yang mirip dengan 'kategori' atau 'category'
+        possible_category_cols = [
+            col for col in df.columns 
+            if 'kategori' in str(col).lower() or 'category' in str(col).lower()
+        ]
+        
+        if possible_category_cols:
+            # Gunakan kolom pertama yang ditemukan
+            category_col = possible_category_cols[0]
+            print(f"[OK] Kolom kategori ditemukan: '{category_col}' -> digunakan sebagai 'category'")
+            df["category"] = df[category_col].fillna("Unknown").astype(str)
+        else:
+            print(f"[WARNING] Kolom kategori TIDAK ditemukan. Menggunakan default 'Unknown'")
+            df["category"] = "Unknown"
+    else:
+        # Category column sudah ada dari mapping
+        print(f"[OK] Kolom 'category' sudah ada dari mapping")
+        df["category"] = df["category"].fillna("Unknown").astype(str)
 
     # Drop baris invalid
     df = df.dropna(subset=["date", "product_name"]).copy()
@@ -162,9 +197,11 @@ def load_and_prepare_data(file_path: str = FILE_PATH) -> pd.DataFrame:
 
 def aggregate_monthly_per_product(df: pd.DataFrame, freq: str = FREQ,
                                   outlier_capping: bool = APPLY_OUTLIER_CAPPING) -> pd.DataFrame:
-    # Agregasi ke level bulanan (sum per product_name, month)
+    # Agregasi ke level bulanan (sum per product_name, category, month)
+    # Ambil category dari first row per produk (karena category seharusnya konsisten per produk)
     monthly = (df.groupby(["product_name", pd.Grouper(key="date", freq=freq)])
-                 ["sales"].sum().reset_index())
+                 .agg({"sales": "sum", "category": "first"})
+                 .reset_index())
 
     # Lengkapi seri per produk dengan bulan hilang -> 0
     completed: List[pd.DataFrame] = []
@@ -172,11 +209,14 @@ def aggregate_monthly_per_product(df: pd.DataFrame, freq: str = FREQ,
         sub = sub.sort_values("date").reset_index(drop=True)
         if sub.empty:
             continue
+        # Get category untuk produk ini
+        category = sub["category"].iloc[0] if "category" in sub.columns else "Unknown"
         start = sub["date"].min().to_period("M").to_timestamp()
         end = sub["date"].max().to_period("M").to_timestamp()
         idx = pd.date_range(start=start, end=end, freq=freq)
         sub2 = sub.set_index("date").reindex(idx).rename_axis("date").reset_index()
         sub2["product_name"] = prod
+        sub2["category"] = category
         sub2["sales"] = pd.to_numeric(sub2["sales"], errors="coerce").fillna(0.0)
 
         # Outlier capping ringan per produk
@@ -189,7 +229,7 @@ def aggregate_monthly_per_product(df: pd.DataFrame, freq: str = FREQ,
                 low = max(0.0, q1 - 1.5 * iqr)
                 high = q3 + 1.5 * iqr
                 sub2["sales"] = s.clip(lower=low, upper=high)
-        completed.append(sub2[["date", "product_name", "sales"]])
+        completed.append(sub2[["date", "product_name", "category", "sales"]])
 
     if completed:
         res = pd.concat(completed, ignore_index=True)
@@ -322,6 +362,13 @@ def fit_ses_and_forecast(series: pd.Series, steps: int, alpha: Optional[float] =
         last = float(s.iloc[-1]) if len(s) > 0 else 0.0
         return np.full(steps, last if np.isfinite(last) else 0.0, dtype=float), {"alpha": None}, (
             "empty_series" if len(s) < 1 else "statsmodels_not_available")
+    
+    # FIX: Create proper datetime index to suppress statsmodels warnings
+    # Use monthly period index starting from a reference date
+    if not isinstance(s.index, pd.DatetimeIndex):
+        start_date = pd.Timestamp('2020-01-01')  # arbitrary start date
+        s.index = pd.date_range(start=start_date, periods=len(s), freq='MS')
+    
     try:
         if alpha is None:
             model = SimpleExpSmoothing(s, initialization_method="heuristic").fit(optimized=True)
@@ -355,6 +402,11 @@ def fit_hw_or_ses_forecast(series: pd.Series, steps: int) -> Tuple[np.ndarray, D
     """
     s = pd.to_numeric(series, errors="coerce").fillna(0.0).astype(float).clip(lower=0.0)
     n = int(len(s))
+
+    # FIX: Create proper datetime index to suppress statsmodels warnings
+    if not isinstance(s.index, pd.DatetimeIndex):
+        start_date = pd.Timestamp('2020-01-01')  # arbitrary start date
+        s.index = pd.date_range(start=start_date, periods=len(s), freq='MS')
 
     # Default result container
     params: Dict[str, Optional[float]] = {"alpha": None, "beta": None, "gamma": None, "method_used": None}  # type: ignore
@@ -418,6 +470,8 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
 
     for prod, sub in monthly_df.groupby("product_name"):
         sub = sub.sort_values("date")
+        # Get category untuk produk ini
+        category = sub["category"].iloc[0] if "category" in sub.columns and len(sub) > 0 else "Unknown"
         s = pd.to_numeric(sub["sales"], errors="coerce").fillna(0.0)
         # valid minimal data
         non_na_points = int(s.notna().sum())
@@ -440,6 +494,7 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
         df_prod = pd.DataFrame({
             "date": future_dates,
             "product_name": prod,
+            "category": category,
             "forecast": fc,
             "method": ["SES"] * horizon,
         })
@@ -461,7 +516,7 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
     if per_product_rows:
         per_product_df = pd.concat(per_product_rows, ignore_index=True)
     else:
-        per_product_df = pd.DataFrame(columns=["date", "product_name", "forecast", "method"])  # empty
+        per_product_df = pd.DataFrame(columns=["date", "product_name", "category", "forecast", "method"])  # empty
 
     # Total agregat per bulan
     if not per_product_df.empty:
@@ -476,7 +531,7 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
         ranked["rank"] = ranked.groupby("date").cumcount() + 1
         topN_df = ranked[ranked["rank"] <= TOP_K].copy()
     else:
-        topN_df = pd.DataFrame(columns=["date", "product_name", "forecast", "rank"])  # empty
+        topN_df = pd.DataFrame(columns=["date", "product_name", "category", "forecast", "rank"])  # empty
 
     skipped_df = pd.DataFrame(skipped_rows, columns=["product_name", "reason"]) if skipped_rows else pd.DataFrame(
         columns=["product_name", "reason"])
@@ -606,14 +661,18 @@ def aggregate_to_quarterly(
     """
     Aggregate monthly forecast data into quarterly rankings.
     
+    OPSI A IMPLEMENTED: Aggregasi per product + category (konsisten dengan LSTM)
+    
     Args:
-        per_product_df: DataFrame with columns ['date', 'product_name', 'forecast']
+        per_product_df: DataFrame with columns ['date', 'product_name', 'category', 'forecast']
         top_n: Number of top products to return per quarter (default: 5)
         
     Returns:
         Nested dictionary: {year: {quarter: DataFrame with top N products}}
+        Each DataFrame has columns: ['product_name', 'category', 'quarterly_sum', 'rank']
     """
     print("\n=== Aggregating Monthly Data to Quarterly (SES) ===")
+    print("Strategy: Group by Product + Category (Opsi A - Detail per category)")
     
     df = per_product_df.copy()
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
@@ -639,10 +698,10 @@ def aggregate_to_quarterly(
         for quarter in quarters_available:
             quarter_data = year_data[year_data['quarter'] == quarter]
             
-            # Aggregate by product
+            # OPSI A: Aggregate by product + category (sama dengan LSTM)
             quarterly_agg = (
                 quarter_data
-                .groupby(['product_name'])
+                .groupby(['product_name', 'category'])
                 .agg(quarterly_sum=('forecast', 'sum'))
                 .reset_index()
             )
@@ -653,7 +712,12 @@ def aggregate_to_quarterly(
             top_products['rank'] = range(1, len(top_products) + 1)
             
             result[year][quarter] = top_products
+            
+            # Print detail untuk debugging (sama dengan LSTM)
             print(f"  {quarter}: Top {top_n} products identified")
+            for _, row in top_products.iterrows():
+                category_info = f" ({row['category']})" if 'category' in row else ""
+                print(f"    Rank {row['rank']}: {row['product_name'][:40]}{category_info}... = {row['quarterly_sum']:.2f}")
     
     return result
 
@@ -666,9 +730,16 @@ def borda_count_ranking(
     """
     Calculate Borda Count ranking from quarterly rankings.
     
+    OPSI A IMPLEMENTED: Tracks product + category combinations
+    
     Borda Count: rank 1 gets N points, rank 2 gets N-1, etc.
+    
+    Returns:
+        DataFrame with columns: ['rank', 'product', 'category', 'Q1_score', 'Q2_score', 
+                                 'Q3_score', 'Q4_score', 'total_score', 'appearances']
     """
     print(f"\n=== Calculating Borda Count Ranking for {year} (SES) ===")
+    print("Strategy: Tracking product + category combinations (Opsi A)")
     
     quarters = ['Q1', 'Q2', 'Q3', 'Q4']
     all_products: Dict[str, Dict] = {}
@@ -681,39 +752,46 @@ def borda_count_ranking(
         
         for _, row in quarter_df.iterrows():
             product = row['product_name']
+            category = row.get('category', 'Unknown')
             rank = row['rank']
             
             # Borda score: top_n - rank + 1
             borda_score = max(0, top_n - rank + 1)
             
-            if product not in all_products:
-                all_products[product] = {
+            # Use product+category as unique key (konsisten dengan LSTM)
+            key = f"{product}||{category}"
+            
+            if key not in all_products:
+                all_products[key] = {
                     'product': product,
+                    'category': category,
                     'Q1_score': 0, 'Q2_score': 0, 'Q3_score': 0, 'Q4_score': 0,
                     'total_score': 0,
                     'appearances': 0
                 }
             
-            all_products[product][f'{quarter}_score'] = borda_score
-            all_products[product]['total_score'] += borda_score
-            all_products[product]['appearances'] += 1
+            all_products[key][f'{quarter}_score'] = borda_score
+            all_products[key]['total_score'] += borda_score
+            all_products[key]['appearances'] += 1
     
     # Create DataFrame and sort
     result_df = pd.DataFrame(list(all_products.values()))
     
     if result_df.empty:
-        return pd.DataFrame(columns=['rank', 'product', 'Q1_score', 'Q2_score', 'Q3_score', 'Q4_score', 'total_score', 'appearances'])
+        return pd.DataFrame(columns=['rank', 'product', 'category', 'Q1_score', 'Q2_score', 
+                                     'Q3_score', 'Q4_score', 'total_score', 'appearances'])
     
     result_df = result_df.sort_values(['total_score', 'appearances'], ascending=[False, False])
     result_df['rank'] = range(1, len(result_df) + 1)
     
     # Reorder columns
-    cols = ['rank', 'product', 'Q1_score', 'Q2_score', 'Q3_score', 'Q4_score', 'total_score', 'appearances']
+    cols = ['rank', 'product', 'category', 'Q1_score', 'Q2_score', 'Q3_score', 'Q4_score', 
+            'total_score', 'appearances']
     result_df = result_df[cols]
     
     print(f"\nBorda Count Results for {year}:")
     for _, row in result_df.head(top_n).iterrows():
-        print(f"  #{int(row['rank'])}: {row['product'][:40]}... Score={int(row['total_score'])}")
+        print(f"  #{int(row['rank'])}: {row['product'][:40]} ({row.get('category', 'N/A')}) - Score={int(row['total_score'])}")
     
     return result_df
 
@@ -727,7 +805,7 @@ def plot_yearly_top5_combined_ses(
     top_n: int = 5,
     output_path: str = PLOT_YEARLY_PATH
 ) -> str:
-    """Plot top 5 products yearly in side-by-side subplots."""
+    """Plot top 5 products yearly in side-by-side subplots (with category info)."""
     years = sorted(yearly_results.keys())[:2]
     
     if len(years) == 0:
@@ -765,6 +843,7 @@ def plot_yearly_top5_combined_ses(
         
         top_products = yearly_results[year].head(top_n).copy()
         products = top_products['product'].tolist()[::-1]
+        categories = top_products.get('category', [''] * len(products)).tolist()[::-1] if 'category' in top_products.columns else [''] * len(products)
         scores = top_products['total_score'].tolist()[::-1]
         ranks = top_products['rank'].tolist()[::-1]
         
@@ -773,9 +852,15 @@ def plot_yearly_top5_combined_ses(
         y_pos = np.arange(len(products))
         bars = ax.barh(y_pos, scores, color=colors, alpha=0.9, edgecolor='white', linewidth=2, height=0.7)
         
+        # Customize y-axis (include category in label for Opsi A)
         ax.set_yticks(y_pos)
-        product_labels = [p[:35] + '...' if len(p) > 35 else p for p in products]
-        ax.set_yticklabels(product_labels, fontsize=10, fontweight='medium')
+        product_labels = []
+        for p, c in zip(products, categories):
+            label = p[:30] + '...' if len(p) > 30 else p
+            if c and c != 'Unknown':
+                label += f"\n({c[:15]})"
+            product_labels.append(label)
+        ax.set_yticklabels(product_labels, fontsize=9, fontweight='medium')
         
         badge_color = badge_colors_list[idx % len(badge_colors_list)]
         for i, (rank, product) in enumerate(zip(ranks, products)):
@@ -1146,7 +1231,9 @@ def main(file_path: str = FILE_PATH,
                 
                 if quarterly_combined:
                     quarterly_df_full = pd.concat(quarterly_combined, ignore_index=True)
-                    quarterly_df_full = quarterly_df_full[['year', 'quarter', 'rank', 'product_name', 'quarterly_sum']]
+                    # OPSI A: Include category dalam output (konsisten dengan LSTM)
+                    cols = ['year', 'quarter', 'rank', 'product_name', 'category', 'quarterly_sum']
+                    quarterly_df_full = quarterly_df_full[cols]
                     quarterly_df_full.to_csv(quarterly_csv_path, index=False)
                     print(f"\nQuarterly rankings saved: {quarterly_csv_path}")
                 

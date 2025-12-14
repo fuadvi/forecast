@@ -4,6 +4,7 @@ import sys
 import subprocess
 from pathlib import Path
 from typing import Dict, Generator, Optional, Tuple
+from datetime import datetime
 
 import pandas as pd
 
@@ -23,6 +24,9 @@ _proc: Optional[subprocess.Popen] = None
 _last_cmd: Optional[str] = None
 _last_cwd: Optional[str] = None
 
+# Log file path
+SES_LOG_FILE = Path(ROOT_DIR) / "ses_forecast_run.log"
+
 
 def run_ses_forecast(
     file_path: Optional[str | os.PathLike] = None,
@@ -34,23 +38,47 @@ def run_ses_forecast(
     """
     Jalankan SES forecasting script via subprocess.
     Returns (success, message).
+    Logs saved to: ses_forecast_run.log
     """
     global _proc
     if _proc and _proc.poll() is None:
         return False, "Proses SES sudah berjalan"
 
+    # Initialize log file
+    try:
+        with open(SES_LOG_FILE, 'w', encoding='utf-8') as f:
+            f.write(f"{'='*80}\n")
+            f.write(f"SES FORECAST LOG\n")
+            f.write(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"{'='*80}\n\n")
+    except Exception as e:
+        return False, f"Failed to initialize log file: {e}"
+
     py = sys.executable
     # Resolve absolute paths
     script = (Path(__file__).resolve().parents[1] / "ses_monthly_product_forecast_24m.py").resolve()
+    
+    # Log script path
+    _log_to_file(f"Python executable: {py}")
+    _log_to_file(f"Script path: {script}")
+    
     if not script.exists():
-        return False, f"Script SES tidak ditemukan: {script}"
+        msg = f"Script SES tidak ditemukan: {script}"
+        _log_to_file(f"ERROR: {msg}")
+        return False, msg
 
     data_path = Path(file_path) if file_path else Path(DEFAULT_EXCEL)
     data_path = data_path.resolve()
+    
+    _log_to_file(f"Data path: {data_path}")
+    
     if not data_path.exists():
-        return False, f"File data Excel tidak ditemukan: {data_path}"
+        msg = f"File data Excel tidak ditemukan: {data_path}"
+        _log_to_file(f"ERROR: {msg}")
+        return False, msg
 
     out_dir = Path(ROOT_DIR).resolve()
+    _log_to_file(f"Output directory: {out_dir}")
 
     # Build command to match argparse in SES script
     cmd = [
@@ -76,6 +104,12 @@ def run_ses_forecast(
     global _last_cmd, _last_cwd
     _last_cmd = " ".join(cmd)
     _last_cwd = str(out_dir)
+    
+    _log_to_file(f"\nCommand: {_last_cmd}")
+    _log_to_file(f"Working directory: {_last_cwd}\n")
+    _log_to_file(f"{'='*80}\n")
+    _log_to_file("PROCESS OUTPUT:\n")
+    _log_to_file(f"{'='*80}\n")
 
     try:
         _proc = subprocess.Popen(
@@ -86,10 +120,22 @@ def run_ses_forecast(
             bufsize=1,
             cwd=str(out_dir),
         )
+        _log_to_file(f"Process started with PID: {_proc.pid}\n")
         return True, "Proses SES dimulai"
     except Exception as e:
         _proc = None
-        return False, f"Gagal menjalankan SES: {e}"
+        msg = f"Gagal menjalankan SES: {e}"
+        _log_to_file(f"ERROR: {msg}")
+        return False, msg
+
+
+def _log_to_file(message: str):
+    """Helper function to append message to log file"""
+    try:
+        with open(SES_LOG_FILE, 'a', encoding='utf-8') as f:
+            f.write(f"{message}\n")
+    except Exception:
+        pass  # Silent fail untuk logging
 
 
 def check_ses_status() -> str:
@@ -115,19 +161,41 @@ def stream_ses_logs() -> Generator[str, None, None]:
         for line in _proc.stdout:
             if line is None:
                 break
-            yield line.rstrip("\n")
+            line = line.rstrip("\n")
+            # Log to file AND yield for streaming
+            _log_to_file(line)
+            yield line
         # After stream ends, emit simple completion summary
         code = _proc.poll()
         if code is not None:
-            yield f"[wrapper] Process exited with code {code}"
+            exit_msg = f"[wrapper] Process exited with code {code}"
+            _log_to_file(f"\n{'='*80}")
+            _log_to_file(exit_msg)
+            yield exit_msg
+            
             # quick existence checks
             ok_files = []
             for p in [SES_FORECAST_PER_PRODUCT, SES_FORECAST_TOTAL, SES_TOPN_PER_MONTH]:
-                ok_files.append(Path(p).exists())
+                exists = Path(p).exists()
+                ok_files.append(exists)
+                _log_to_file(f"File check: {Path(p).name} - {'EXISTS' if exists else 'MISSING'}")
+            
             if not all(ok_files):
-                yield "[wrapper] Warning: Not all expected output files were found after completion."
+                warn_msg = "[wrapper] Warning: Not all expected output files were found after completion."
+                _log_to_file(warn_msg)
+                yield warn_msg
+            else:
+                success_msg = "[wrapper] All output files generated successfully."
+                _log_to_file(success_msg)
+                yield success_msg
+            
+            _log_to_file(f"\nCompleted: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            _log_to_file(f"{'='*80}\n")
+            _log_to_file(f"Log saved to: {SES_LOG_FILE}\n")
     except Exception as e:
-        yield f"[wrapper] Log streaming error: {e}"
+        error_msg = f"[wrapper] Log streaming error: {e}"
+        _log_to_file(f"ERROR: {error_msg}")
+        yield error_msg
         return
 
 
