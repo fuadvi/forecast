@@ -346,11 +346,12 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
     direct_mode = not USE_BASELINE_DECOMP_FLAG
 
     if direct_mode:
-        # Build feature matrix using lags and rolling stats
+        # Build feature matrix - ADAPTIVE based on data availability
         df_feat = pd.DataFrame({
             "sales": sales.values,
             "trend": np.arange(1, len(sales) + 1, dtype=float),
         }, index=dates)
+        
         # Add month features but they will be mild; drop if history < 12
         if len(sales) >= 12:
             df_feat["month_sin"] = time_feats["month_sin"].values
@@ -358,37 +359,44 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
         else:
             df_feat["month_sin"] = 0.0
             df_feat["month_cos"] = 0.0
-        # Enhanced lags and momentum features
-        df_feat["lag_1"] = df_feat["sales"].shift(1)
-        df_feat["lag_2"] = df_feat["sales"].shift(2)
-        df_feat["lag_3"] = df_feat["sales"].shift(3)
-        df_feat["lag_6"] = df_feat["sales"].shift(6)
-        df_feat["lag_12"] = df_feat["sales"].shift(12)
         
-        # Rolling stats (shifted to avoid leakage)
-        df_feat["rolling_mean_3"] = df_feat["sales"].rolling(3, min_periods=1).mean().shift(1)
-        df_feat["rolling_mean_6"] = df_feat["sales"].rolling(6, min_periods=1).mean().shift(1)
-        df_feat["rolling_std_3"] = df_feat["sales"].rolling(3, min_periods=1).std(ddof=0).shift(1)
-        df_feat["rolling_std_6"] = df_feat["sales"].rolling(6, min_periods=1).std(ddof=0).shift(1)
-        
-        # Momentum features
-        df_feat["momentum_3"] = df_feat["sales"].diff(3).shift(1)  # 3-month momentum
-        df_feat["momentum_6"] = df_feat["sales"].diff(6).shift(1)  # 6-month momentum
-        df_feat["acceleration"] = df_feat["momentum_3"].diff(1).shift(1)  # Rate of change of momentum
-        
-        # Relative features
-        df_feat["sales_vs_mean3"] = df_feat["sales"] / (df_feat["rolling_mean_3"] + 1e-6)
-        df_feat["sales_vs_mean6"] = df_feat["sales"] / (df_feat["rolling_mean_6"] + 1e-6)
+        # CRITICAL FIX: Simplified features for products with limited data
+        if n_months <= 2:
+            # MINIMAL FEATURE SET for 1-2 months: only sales and trend (no lags!)
+            features_for_lstm = ["sales", "trend", "month_sin", "month_cos"]
+            print(f"  Using minimal feature set for {product} (n_months={n_months})")
+        else:
+            # FULL FEATURE SET for 3+ months
+            # Enhanced lags and momentum features
+            df_feat["lag_1"] = df_feat["sales"].shift(1)
+            df_feat["lag_2"] = df_feat["sales"].shift(2)
+            df_feat["lag_3"] = df_feat["sales"].shift(3)
+            df_feat["lag_6"] = df_feat["sales"].shift(6)
+            df_feat["lag_12"] = df_feat["sales"].shift(12)
+            
+            # Rolling stats (shifted to avoid leakage)
+            df_feat["rolling_mean_3"] = df_feat["sales"].rolling(3, min_periods=1).mean().shift(1)
+            df_feat["rolling_mean_6"] = df_feat["sales"].rolling(6, min_periods=1).mean().shift(1)
+            df_feat["rolling_std_3"] = df_feat["sales"].rolling(3, min_periods=1).std(ddof=0).shift(1)
+            df_feat["rolling_std_6"] = df_feat["sales"].rolling(6, min_periods=1).std(ddof=0).shift(1)
+            
+            # Momentum features
+            df_feat["momentum_3"] = df_feat["sales"].diff(3).shift(1)  # 3-month momentum
+            df_feat["momentum_6"] = df_feat["sales"].diff(6).shift(1)  # 6-month momentum
+            df_feat["acceleration"] = df_feat["momentum_3"].diff(1).shift(1)  # Rate of change of momentum
+            
+            # Relative features
+            df_feat["sales_vs_mean3"] = df_feat["sales"] / (df_feat["rolling_mean_3"] + 1e-6)
+            df_feat["sales_vs_mean6"] = df_feat["sales"] / (df_feat["rolling_mean_6"] + 1e-6)
+            
+            features_for_lstm = [
+                "sales", "lag_1", "lag_2", "lag_3", "lag_6", "lag_12",
+                "rolling_mean_3", "rolling_mean_6", "rolling_std_3", "rolling_std_6",
+                "momentum_3", "momentum_6", "acceleration",
+                "sales_vs_mean3", "sales_vs_mean6", "trend", "month_sin", "month_cos"
+            ]
         
         df_feat = df_feat.bfill().fillna(0.0)
-
-        # Define feature order (target first) - enhanced feature set
-        features_for_lstm = [
-            "sales", "lag_1", "lag_2", "lag_3", "lag_6", "lag_12",
-            "rolling_mean_3", "rolling_mean_6", "rolling_std_3", "rolling_std_6",
-            "momentum_3", "momentum_6", "acceleration",
-            "sales_vs_mean3", "sales_vs_mean6", "trend", "month_sin", "month_cos"
-        ]
         data_mat = df_feat[features_for_lstm].astype(float)
 
         scaler = MinMaxScaler(feature_range=(0.0, 1.0))
@@ -396,10 +404,15 @@ def train_per_product(product: str, g: pd.DataFrame) -> dict:
 
         target_idx = 0
         X_seq, y_seq = _create_sequences(data_scaled, time_steps_dynamic, target_idx)
+        
+        # Debug: print sequence info for very limited data
+        if n_months <= 2:
+            print(f"  Sequences created: {len(X_seq)} (time_steps={time_steps_dynamic}, n_features={data_mat.shape[1]})")
+        
         # Ultra-aggressive: allow even 1 sequence for 1-month data
-        min_sequences_required = 1 if n_months == 1 else max(1, time_steps_dynamic)
+        min_sequences_required = 1
         if len(X_seq) < min_sequences_required:
-            raise ValueError(f"insufficient sequences for LSTM training (got {len(X_seq)}, need {min_sequences_required})")
+            raise ValueError(f"insufficient sequences for LSTM training (got {len(X_seq)}, need {min_sequences_required}, n_months={n_months})")
 
         split_idx = max(1, int(len(X_seq) * 0.8))
         X_train, y_train = X_seq[:split_idx], y_seq[:split_idx]

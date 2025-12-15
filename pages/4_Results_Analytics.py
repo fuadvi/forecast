@@ -748,58 +748,58 @@ with TAB_SES:
 
 # =============== COMPARISON TAB ===============
 with TAB_CMP:
-    st.subheader("Perbandingan LSTM vs SES")
-    ses_ft = Path(SES_FORECAST_TOTAL)
-    ses_per = Path(SES_FORECAST_PER_PRODUCT)
-    
-    # Use new paths from settings
-    lstm_grouped_png = Path(LSTM_GROUPED_TOP5_PNG)
-    ses_grouped_png = Path(SES_GROUPED_TOP5_PNG)
-    
-    if not (lstm_ft.exists() and ses_ft.exists()):
-        st.error("❌ Hasil LSTM atau SES tidak lengkap untuk perbandingan.")
-    else:
-        # ==== LSTM Combined Visualizations Section ====
-        st.subheader("📊 LSTM: Analisis Top 5 Produk (2025-2026)")
-        
-        # Tab untuk visualisasi LSTM gabungan
-        lstm_tab1, lstm_tab2 = st.tabs(["📅 Analisis Tahunan", "📈 Analisis Kuartal"])
-        
-        with lstm_tab1:
-            if Path(LSTM_TOP5_YEARLY_PNG).exists():
-                st.image(str(LSTM_TOP5_YEARLY_PNG), width="stretch", 
-                        caption="LSTM: Top 5 Produk Tahunan (Borda Count Voting 2025-2026)")
-            else:
-                st.info("Visualisasi LSTM tahunan belum tersedia.")
-            
-            # Show Borda Count Process
-            if Path(LSTM_BORDA_COUNT_PNG).exists():
-                with st.expander("🔍 Lihat Detail Kontribusi Borda Count"):
-                    st.image(str(LSTM_BORDA_COUNT_PNG), width="stretch",
-                            caption="Kontribusi skor per kuartal untuk setiap produk")
-        
-        with lstm_tab2:
-            if Path(LSTM_TOP5_QUARTERLY_PNG).exists():
-                st.image(str(LSTM_TOP5_QUARTERLY_PNG), width="stretch",
-                        caption="LSTM: Top 5 Produk Per Kuartal (Q1-Q4 2025 & 2026)")
-            else:
-                st.info("Visualisasi LSTM kuartal belum tersedia.")
-        
-        st.divider()
+    # st.subheader("Perbandingan LSTM vs SES")
+    # ses_ft = Path(SES_FORECAST_TOTAL)
+    # ses_per = Path(SES_FORECAST_PER_PRODUCT)
+    #
+    # # Use new paths from settings
+    # lstm_grouped_png = Path(LSTM_GROUPED_TOP5_PNG)
+    # ses_grouped_png = Path(SES_GROUPED_TOP5_PNG)
+    #
+    # if not (lstm_ft.exists() and ses_ft.exists()):
+    #     st.error("❌ Hasil LSTM atau SES tidak lengkap untuk perbandingan.")
+    # else:
+    #     # ==== LSTM Combined Visualizations Section ====
+    #     st.subheader("📊 LSTM: Analisis Top 5 Produk (2025-2026)")
+    #
+    #     # Tab untuk visualisasi LSTM gabungan
+    #     lstm_tab1, lstm_tab2 = st.tabs(["📅 Analisis Tahunan", "📈 Analisis Kuartal"])
+    #
+    #     with lstm_tab1:
+    #         if Path(LSTM_TOP5_YEARLY_PNG).exists():
+    #             st.image(str(LSTM_TOP5_YEARLY_PNG), width="stretch",
+    #                     caption="LSTM: Top 5 Produk Tahunan (Borda Count Voting 2025-2026)")
+    #         else:
+    #             st.info("Visualisasi LSTM tahunan belum tersedia.")
+    #
+    #         # Show Borda Count Process
+    #         if Path(LSTM_BORDA_COUNT_PNG).exists():
+    #             with st.expander("🔍 Lihat Detail Kontribusi Borda Count"):
+    #                 st.image(str(LSTM_BORDA_COUNT_PNG), width="stretch",
+    #                         caption="Kontribusi skor per kuartal untuk setiap produk")
+    #
+    #     with lstm_tab2:
+    #         if Path(LSTM_TOP5_QUARTERLY_PNG).exists():
+    #             st.image(str(LSTM_TOP5_QUARTERLY_PNG), width="stretch",
+    #                     caption="LSTM: Top 5 Produk Per Kuartal (Q1-Q4 2025 & 2026)")
+    #         else:
+    #             st.info("Visualisasi LSTM kuartal belum tersedia.")
+    #
+    #     st.divider()
         
         # ==== Monthly Comparison Section ====
         st.subheader("📅 Perbandingan Top-5 Produk per Bulan")
         col_img1, col_img2 = st.columns(2)
         with col_img1:
             st.markdown("**LSTM Forecast**")
-            if lstm_grouped_png.exists():
-                st.image(str(lstm_grouped_png), width="stretch")
+            if Path(LSTM_TOP5_YEARLY_PNG).exists():
+                st.image(str(LSTM_TOP5_YEARLY_PNG), width="stretch")
             else:
                 st.info("Gambar LSTM grouped chart belum tersedia.")
         with col_img2:
             st.markdown("**SES Forecast**")
-            if ses_grouped_png.exists():
-                st.image(str(ses_grouped_png), width="stretch")
+            if Path(SES_TOP5_YEARLY_PNG).exists():
+                st.image(str(SES_TOP5_YEARLY_PNG), width="stretch")
             else:
                 st.info("Gambar SES grouped chart belum tersedia.")
         
