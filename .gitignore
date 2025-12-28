@@ -6,3 +6,21 @@ FIX_APPLIED_SUMMARY.md
 FORECAST_IMPROVEMENTS_DOCUMENTATION.md
 SKIP_ANALYSIS_SUMMARY.md
 .idea/*
+# macOS
+.DS_Store
+
+# virtual env
+.venv/
+venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# outputs (forecast results & logs)
+forecast_*.csv
+topN_*.csv
+quarterly_top5_*.csv
+yearly_top5_borda_*.csv
+*.log
+uploads/
