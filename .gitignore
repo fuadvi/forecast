@@ -24,3 +24,7 @@ quarterly_top5_*.csv
 yearly_top5_borda_*.csv
 *.log
 uploads/
+
+# SES outputs
+ses_evaluation_metrics.csv
+ses_model_params.csv
