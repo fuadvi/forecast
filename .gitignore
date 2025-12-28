@@ -28,3 +28,27 @@ uploads/
 # SES outputs
 ses_evaluation_metrics.csv
 ses_model_params.csv
+
+# outputs
+ses_evaluation_metrics.csv
+ses_model_params.csv
+
+# macOS
+.DS_Store
+
+# python cache
+__pycache__/
+*.pyc
+
+# venv
+.venv/
+venv/
+
+# generated outputs
+forecast_*.csv
+topN_*.csv
+quarterly_top5_*.csv
+yearly_top5_borda_*.csv
+ses_*.csv
+*.log
+uploads/
