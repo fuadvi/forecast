@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 import time
+import os
 
 import pandas as pd
 import streamlit as st
@@ -36,22 +37,34 @@ if not Path(MODELS_METADATA).exists():
 else:
     st.success("✅ Models siap digunakan.")
 
-# Model info
+
+  # Model info
 try:
     import json
     meta = json.loads(Path(MODELS_METADATA).read_text(encoding="utf-8"))
+
+    # ✅ Hitung model dari filesystem (paling valid)
+    models_dir = Path(MODELS_METADATA).parent  # karena metadata ada di folder models
+    n_models = len(list(models_dir.glob("*_model.pkl")))
+
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.metric("Total Trained Models", len(meta.get("products", [])) if isinstance(meta.get("products"), list) else meta.get("n_models", 0))
+        st.metric("Total Trained Models", n_models)
+
     with c2:
         dt = meta.get("generated_at") or meta.get("created_at")
         st.metric("Model Generated Date", dt or "-")
+
     with c3:
         st.metric("Forecast Horizon", meta.get("forecast_horizon", 24))
+
     with c4:
         st.metric("Time Steps", meta.get("time_steps", 6))
-except Exception:
+
+except Exception as e:
     st.info("Tidak dapat membaca metadata model secara lengkap.")
+    st.caption(f"Debug: {e}")
+
 
 st.subheader("⚙️ Konfigurasi Forecast")
 N = st.slider("Top N Products untuk Ranking", 5, 20, 10, help="Menentukan berapa produk teratas per bulan untuk ditampilkan pada ranking.")

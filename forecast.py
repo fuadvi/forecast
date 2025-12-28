@@ -1,5 +1,6 @@
 import os
 import json
+import joblib
 import pickle
 from datetime import datetime
 from typing import Dict, List, Tuple
@@ -7,7 +8,11 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import re
 from tensorflow.keras.models import model_from_json
+from tensorflow.keras import mixed_precision
+mixed_precision.set_global_policy("float32")
+
 
 # Optional reuse from in-repo utilities
 # try:
@@ -44,6 +49,7 @@ NOISE_INJECTION = True         # add small noise to residual forward loop to bre
 # ------------------------
 # Helpers
 # ------------------------
+
 
 def normalize_product_name(name: str) -> str:
     if test2 and hasattr(test2, "normalize_product_name"):
@@ -202,6 +208,29 @@ def load_global_category_stats(models_dir: str) -> Tuple[dict, dict]:
         c = json.load(f)
     return g, c
 
+def patch_keras_json(json_str: str) -> str:
+    data = json.loads(json_str)
+
+    def walk(o):
+        if isinstance(o, dict):
+            # rename batch_shape -> batch_input_shape
+            if "batch_shape" in o and "batch_input_shape" not in o:
+                o["batch_input_shape"] = o.pop("batch_shape")
+
+            # HAPUS dtype agar tidak kena mixed_precision policy issue
+            o.pop("dtype", None)
+            o.pop("dtype_policy", None)
+
+            for v in o.values():
+                walk(v)
+
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    walk(data)
+    return json.dumps(data)
+
 
 def load_product_artifacts(models_dir: str, product_norm: str):
     safe = product_norm.replace("/", "-").replace("\\", "-").replace(" ", "_")
@@ -210,14 +239,22 @@ def load_product_artifacts(models_dir: str, product_norm: str):
     features_path = os.path.join(models_dir, f"product_{safe}_features.json")
     if not (os.path.exists(model_path) and os.path.exists(scaler_path) and os.path.exists(features_path)):
         return None, None, None
+    
     with open(model_path, "rb") as f:
         blob = pickle.load(f)
-    model = model_from_json(blob["model_json"])  # type: ignore
-    model.set_weights(blob["weights"])  # type: ignore
+
+        
+        model_json = blob["model_json"]
+        model_json = patch_keras_json(model_json)
+        model = model_from_json(model_json)
+        model.set_weights(blob["weights"]) # type: ignore
+    
     with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
+        
     with open(features_path, "r", encoding="utf-8") as f:
         feats = json.load(f)
+        
     return model, scaler, feats
 
 
@@ -1856,11 +1893,35 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
             yearly_results[year] = borda_results
             
             # Save Borda results to CSV
+<<<<<<< Updated upstream
             yearly_csv_path = OUT_YEARLY_TOP5_TEMPLATE.format(year=year)
             # Format total_forecast untuk konsistensi dengan frontend (2 desimal)
             borda_results['total_forecast'] = borda_results['total_forecast'].round(2)
+=======
+            # pastikan numeric dulu
+            borda_results["quarterly_sum"] = pd.to_numeric(borda_results["quarterly_sum"], errors="coerce")
+
+            # bulatkan jadi integer (unit)
+            borda_results["quarterly_sum"] = borda_results["quarterly_sum"].round().astype("Int64")
+
+            
+            # 1) pastikan kolom numerik
+            if "total_forecast" in borda_results.columns:
+            borda_results["total_forecast"] = pd.to_numeric(borda_results["total_forecast"], errors="coerce")
+            
+            # 2) pembulatan unit (hasil akhir)
+            borda_results["total_forecast"] = borda_results["total_forecast"].round().astype("Int64")
+
+            # (opsional) kalau file Anda juga menyimpan quarterly_sum dan itu juga ingin dibulatkan
+            if "quarterly_sum" in borda_results.columns:
+            borda_results["quarterly_sum"] = pd.to_numeric(borda_results["quarterly_sum"], errors="coerce")
+            borda_results["quarterly_sum"] = borda_results["quarterly_sum"].round().astype("Int64")
+
+            yearly_csv_path = os.path.join(out_dir, CSV_YEARLY_TOP5_TEMPLATE.format(year=year))
+>>>>>>> Stashed changes
             borda_results.to_csv(yearly_csv_path, index=False)
             print(f"Yearly Borda rankings saved: {yearly_csv_path}")
+
         
         # ------------------------
         # Generate COMBINED Visualizations (2025 & 2026 in single plots)
