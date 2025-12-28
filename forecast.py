@@ -1846,6 +1846,8 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
             if quarterly_combined:
                 quarterly_df_full = pd.concat(quarterly_combined, ignore_index=True)
                 quarterly_df_full = quarterly_df_full[['year', 'quarter', 'rank', 'product', 'category', 'quarterly_sum']]
+                # Format quarterly_sum untuk konsistensi dengan frontend (2 desimal)
+                quarterly_df_full['quarterly_sum'] = quarterly_df_full['quarterly_sum'].round(2)
                 quarterly_df_full.to_csv(quarterly_csv_path, index=False)
                 print(f"\nQuarterly rankings saved: {quarterly_csv_path}")
             
@@ -1855,6 +1857,8 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
             
             # Save Borda results to CSV
             yearly_csv_path = OUT_YEARLY_TOP5_TEMPLATE.format(year=year)
+            # Format total_forecast untuk konsistensi dengan frontend (2 desimal)
+            borda_results['total_forecast'] = borda_results['total_forecast'].round(2)
             borda_results.to_csv(yearly_csv_path, index=False)
             print(f"Yearly Borda rankings saved: {yearly_csv_path}")
         

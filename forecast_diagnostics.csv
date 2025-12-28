@@ -4,9 +4,9 @@ credenza crd 01,Credenza Series,1,0.0,False,simple_random_walk,,,,,,,
 credenza crd 01 1200,Credenza ,1,0.0,False,simple_random_walk,,,,,,,
 credenza crd 01 1500,Credenza ,1,0.0,False,simple_random_walk,,,,,,,
 credenza crd 06,Credenza Series,1,0.0,False,simple_random_walk,,,,,,,
-credenza crd 07 1000,Credenza ,2,0.199999920000032,True,,0.5,False,False,True,True,18.0,1.0
+credenza crd 07 1000,Credenza ,2,0.199999920000032,True,,0.5,False,False,True,True,4.0,1.0
 credenza crd 07 1600,Credenza ,1,0.0,False,simple_random_walk,,,,,,,
-credenza crd 09 a,Credenza Series,2,0.0,True,,0.0,False,False,True,True,18.0,1.0
+credenza crd 09 a,Credenza Series,2,0.0,True,,0.0,False,False,True,True,4.0,1.0
 credenza crd 10,Credenza Series,1,0.0,False,simple_random_walk,,,,,,,
 credenza crd 11,Credenza Series,1,0.0,False,simple_random_walk,,,,,,,
 dry box kamera 01,Lemari Besi,1,0.0,False,simple_random_walk,,,,,,,
@@ -16,39 +16,39 @@ kursi auditorium ll 509,Auditorium Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi auditorium ll 516,Auditorium Series,11,1.2584258420221281,True,,56.428960038190816,False,False,True,True,18.0,2.0
 kursi auditorium ll 516 tb,Auditorium Series,17,1.1556951804043392,True,,307.924784664016,False,False,True,True,18.0,2.0
 kursi auditorium ll 516 tb tg,Auditorium Series,1,0.0,False,simple_random_walk,,,,,,,
-kursi auditorium ll 516 tg,Auditorium Series,2,0.4876033017553446,True,,59.0,False,False,True,True,18.0,1.0
-kursi auditorium ll 517 tb,Auditorium Series,2,0.9753086178936144,True,,39.5,False,False,True,True,18.0,1.0
+kursi auditorium ll 516 tg,Auditorium Series,2,0.4876033017553446,True,,59.0,False,False,True,True,4.0,1.0
+kursi auditorium ll 517 tb,Auditorium Series,2,0.9753086178936144,True,,39.5,False,False,True,True,4.0,1.0
 kursi auditorium ll 520,Auditorium Series,7,0.7263876319639558,True,,110.41092078490891,False,False,True,True,18.0,2.0
 kursi auditorium ll 520 tb,Auditorium Series,18,0.7735019607532586,True,,79.84259205569944,False,False,True,True,18.0,2.0
-kursi auditorium ll 521,Auditorium Series,2,0.9799999804000005,True,,49.0,False,False,True,True,18.0,1.0
-kursi auditorium ll 521 tb,Auditorium Series,3,1.033635497749795,True,,89.58174417195107,False,False,True,True,18.0,1.0
+kursi auditorium ll 521,Auditorium Series,2,0.9799999804000005,True,,49.0,False,False,True,True,4.0,1.0
+kursi auditorium ll 521 tb,Auditorium Series,3,1.033635497749795,True,,89.58174417195107,False,False,True,True,4.0,1.0
 kursi auditorium ll 523 pp,Auditorium Series,1,0.0,False,simple_random_walk,,,,,,,
-kursi auditorium ll 523 tb pp,Auditorium Series,2,0.0,True,,0.0,False,False,True,True,18.0,1.0
+kursi auditorium ll 523 tb pp,Auditorium Series,2,0.0,True,,0.0,False,False,True,True,4.0,1.0
 kursi auditorium ll 526 tb,Auditorium Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi auditorium ll 536 wp,Auditorium Series,6,1.4375484064073414,True,,11.260797287739248,False,False,True,True,18.0,2.0
-kursi bar stool bs 510 pc,Kursi Bar,3,0.6904034659584916,False,simple_random_walk,,,,,,,
+kursi bar stool bs 510 pc,Kursi Bar,3,0.6904034659584916,True,,87.68124086713189,False,False,True,True,18.0,2.0
 kursi bar stool bs 512 pc,Kursi Bar,1,0.0,False,simple_random_walk,,,,,,,
-kursi br 211 ca mesh,Secretary Series,3,0.3102778002185003,True,,44.78342947514801,False,False,True,True,18.0,1.0
+kursi br 211 ca mesh,Secretary Series,3,0.3102778002185003,True,,44.78342947514801,False,False,True,True,4.0,1.0
 kursi br 211 ccha mesh,Secretary Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi br 211 har,Secretary Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi br 211 har mesh,Secretary Series,2,0.448275831153391,False,simple_random_walk,,,,,,,
 kursi br 211 mhar mesh,Secretary Series,10,0.8875680468065701,True,,38.78672453301516,False,False,True,True,18.0,2.0
 kursi br 213 har mesh,Secretary Series,7,1.1365957338809722,True,,154.5364282396265,False,False,True,True,18.0,2.0
-kursi executive x 616 har,Executive Series,2,0.9354838106139477,True,,14.5,False,False,True,True,18.0,1.0
+kursi executive x 616 har,Executive Series,2,0.9354838106139477,True,,14.5,False,False,True,True,4.0,1.0
 kursi fs 607 mhar,Fashion Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi fs 812 m,Fashion Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi fs 813 har,Fashion Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi fs 911 har mesh,Fashion Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi fs 913 har,Fashion Series,1,0.0,False,simple_random_walk,,,,,,,
-kursi gaming gc 202,Kursi Gaming,1,0.0,True,,0.0,False,False,True,True,18.0,1.0
+kursi gaming gc 202,Kursi Gaming,1,0.0,True,,0.0,False,False,True,True,4.0,1.0
 kursi hadap x 615 cch,Executive Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi hbot,Kursi HBOT,5,0.6117359638828079,True,,18.596773913773326,False,False,True,True,18.0,2.0
 kursi kabag x 814 mhar cpt,Executive Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi kabag x 816 har,Executive Series,4,0.2583058334226572,True,,6.982329818012037,False,False,True,True,18.0,2.0
 kursi kerja ar 601,Manager Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi kerja ar 605 ccha,Manager Series,1,0.0,False,simple_random_walk,,,,,,,
-kursi kerja ar 701 ha,Manager Series,2,0.2799999776000018,True,,3.5,False,False,True,True,18.0,1.0
-kursi kerja ar 701 har,Manager Series,2,0.3333331111112593,True,,0.5,False,False,True,True,18.0,1.0
+kursi kerja ar 701 ha,Manager Series,2,0.2799999776000018,True,,3.5,False,False,True,True,4.0,1.0
+kursi kerja ar 701 har,Manager Series,2,0.3333331111112593,True,,0.5,False,False,True,True,4.0,1.0
 kursi kerja ar 702 ca,Manager Series,1,0.0,False,simple_random_walk,,,,,,,
 kursi kerja ar 702 ha,Manager Series,13,0.8416252712592945,True,,5.049752469181039,False,False,True,True,18.0,2.0
 kursi kerja ar 702 har,Manager Series,1,0.0,False,simple_random_walk,,,,,,,
