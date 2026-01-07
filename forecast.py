@@ -3,7 +3,7 @@ import json
 import joblib
 import pickle
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 import numpy as np
 import pandas as pd
@@ -27,6 +27,9 @@ test2 = None
 FORECAST_HORIZON_MONTHS = 24
 MODELS_DIR = os.path.join(os.getcwd(), "trained_models")
 DEFAULT_EXCEL = os.path.join(os.getcwd(), "Data_Penjualan_Dengan_ID_Pelanggan.xlsx")
+# Filter data training: hanya gunakan data sampai tanggal ini untuk training
+# Default: akhir Desember 2024 untuk memastikan forecast dimulai Januari 2025
+MAX_TRAINING_DATE = pd.Timestamp("2024-12-31")
 
 # Outputs
 OUT_FORECAST_PER_PRODUCT = os.path.join(os.getcwd(), "forecast_per_product_24m.csv")
@@ -163,7 +166,21 @@ def read_excel_latest(excel_path: str) -> pd.DataFrame:
     return df
 
 
-def monthly_aggregate(df: pd.DataFrame) -> pd.DataFrame:
+def monthly_aggregate(df: pd.DataFrame, max_training_date: Optional[pd.Timestamp] = None) -> pd.DataFrame:
+    """
+    Agregasi data ke level bulanan per produk.
+    
+    Args:
+        df: DataFrame dengan kolom date, product_norm/product_name, category, sales
+        max_training_date: Filter data hanya sampai tanggal ini (untuk training)
+                          Jika None, gunakan semua data
+    """
+    # Filter data sampai max_training_date jika diberikan
+    if max_training_date is not None:
+        df = df[df["date"] <= max_training_date].copy()
+        print(f"[INFO LSTM] Data difilter sampai: {max_training_date.strftime('%Y-%m-%d')}")
+        print(f"[INFO LSTM] Data setelah filter: {len(df)} rows")
+    
     # Ensure product_norm column exists
     if 'product_norm' not in df.columns:
         if 'product_name' in df.columns:
@@ -1656,14 +1673,15 @@ def plot_borda_count_process_combined(
     return output_path
 
 
-def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, top_n: int = 10):
+def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, top_n: int = 10,
+                 max_training_date: Optional[pd.Timestamp] = MAX_TRAINING_DATE):
     ensure_dirs()
 
     models_meta = load_models_metadata(models_dir)
     global_stats, cat_stats = load_global_category_stats(models_dir)
 
     df = read_excel_latest(excel_path)
-    monthly = monthly_aggregate(df)
+    monthly = monthly_aggregate(df, max_training_date=max_training_date)
 
     # Find the global most recent date across all products
     global_last_date = pd.to_datetime(monthly["month"]).max()
@@ -1947,40 +1965,42 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
                 quarterly_df_full = quarterly_df_full[['year', 'quarter', 'rank', 'product', 'category', 'quarterly_sum']]
                 # Format quarterly_sum untuk konsistensi dengan frontend (2 desimal)
                 quarterly_df_full['quarterly_sum'] = quarterly_df_full['quarterly_sum'].round(2)
+                
+                # DEBUG: Verifikasi Q1 ada sebelum save
+                q1_rows = quarterly_df_full[quarterly_df_full['quarter'] == 'Q1']
+                print(f"[DEBUG SAVE] Q1 rows sebelum save: {len(q1_rows)}")
+                if len(q1_rows) > 0:
+                    print(f"[DEBUG SAVE] Q1 sample data:")
+                    print(q1_rows.head(3).to_string())
+                else:
+                    print("[WARNING SAVE] Q1 tidak ditemukan di quarterly_df_full!")
+                    print(f"[WARNING SAVE] Quarters yang ada: {sorted(quarterly_df_full['quarter'].unique())}")
+                
                 quarterly_df_full.to_csv(quarterly_csv_path, index=False)
                 print(f"\nQuarterly rankings saved: {quarterly_csv_path}")
+                
+                # DEBUG: Verifikasi setelah save
+                try:
+                    saved_df = pd.read_csv(quarterly_csv_path)
+                    q1_saved = saved_df[saved_df['quarter'] == 'Q1']
+                    print(f"[DEBUG VERIFY] Q1 rows setelah save: {len(q1_saved)}")
+                    if len(q1_saved) == 0:
+                        print("[ERROR VERIFY] Q1 tidak ditemukan di file CSV yang disimpan!")
+                except Exception as e:
+                    print(f"[ERROR VERIFY] Gagal membaca file CSV: {e}")
             
             # Calculate Borda Count ranking
             borda_results = borda_count_ranking(quarterly_data[year], year=year, top_n=5)
             yearly_results[year] = borda_results
             
             # Save Borda results to CSV
-<<<<<<< Updated upstream
-            yearly_csv_path = OUT_YEARLY_TOP5_TEMPLATE.format(year=year)
-            # Format total_forecast untuk konsistensi dengan frontend (2 desimal)
-            borda_results['total_forecast'] = borda_results['total_forecast'].round(2)
-=======
-            # pastikan numeric dulu
-            borda_results["quarterly_sum"] = pd.to_numeric(borda_results["quarterly_sum"], errors="coerce")
-
-            # bulatkan jadi integer (unit)
-            borda_results["quarterly_sum"] = borda_results["quarterly_sum"].round().astype("Int64")
-
-            
-            # 1) pastikan kolom numerik
+            # Pastikan kolom numerik dan format
             if "total_forecast" in borda_results.columns:
-            borda_results["total_forecast"] = pd.to_numeric(borda_results["total_forecast"], errors="coerce")
-            
-            # 2) pembulatan unit (hasil akhir)
-            borda_results["total_forecast"] = borda_results["total_forecast"].round().astype("Int64")
+                borda_results["total_forecast"] = pd.to_numeric(borda_results["total_forecast"], errors="coerce")
+                # Format untuk konsistensi dengan frontend (2 desimal)
+                borda_results["total_forecast"] = borda_results["total_forecast"].round(2)
 
-            # (opsional) kalau file Anda juga menyimpan quarterly_sum dan itu juga ingin dibulatkan
-            if "quarterly_sum" in borda_results.columns:
-            borda_results["quarterly_sum"] = pd.to_numeric(borda_results["quarterly_sum"], errors="coerce")
-            borda_results["quarterly_sum"] = borda_results["quarterly_sum"].round().astype("Int64")
-
-            yearly_csv_path = os.path.join(out_dir, CSV_YEARLY_TOP5_TEMPLATE.format(year=year))
->>>>>>> Stashed changes
+            yearly_csv_path = OUT_YEARLY_TOP5_TEMPLATE.format(year=year)
             borda_results.to_csv(yearly_csv_path, index=False)
             print(f"Yearly Borda rankings saved: {yearly_csv_path}")
 

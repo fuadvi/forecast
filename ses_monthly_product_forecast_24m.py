@@ -1339,10 +1339,11 @@ def main(file_path: str = FILE_PATH,
                
                 # 1) pastikan kolom numerik
                 if "total_forecast" in borda_results.columns:
-                borda_results["total_forecast"] = pd.to_numeric(borda_results["total_forecast"], errors="coerce")
+                    borda_results["total_forecast"] = pd.to_numeric(borda_results["total_forecast"], errors="coerce")
                 
                 # 2) pembulatan unit (hasil akhir)
-                borda_results["total_forecast"] = borda_results["total_forecast"].round().astype("Int64")
+                if "total_forecast" in borda_results.columns:
+                    borda_results["total_forecast"] = borda_results["total_forecast"].round().astype("Int64")
 
                 yearly_csv_path = os.path.join(out_dir, CSV_YEARLY_TOP5_TEMPLATE.format(year=year))
                 borda_results.to_csv(yearly_csv_path, index=False)

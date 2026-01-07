@@ -1,6 +1,6 @@
 ================================================================================
 SES FORECAST LOG
-Started: 2026-01-07 09:26:08
+Started: 2026-01-07 19:52:23
 ================================================================================
 
 Python executable: C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe
@@ -17,7 +17,7 @@ PROCESS OUTPUT:
 
 ================================================================================
 
-Process started with PID: 18148
+Process started with PID: 15244
 
 [INFO] Kolom di Excel: ['Nomor Invoice', 'Tanggal Transaksi', 'Nama Pelanggan', 'ID Pelanggan', 'Instansi', 'Jenis Pembelian', 'Kota', 'ID-Produk', 'Nama Produk', 'Kategori', 'Bahan', 'Warna', 'Jumlah', 'Harga Satuan', 'Total Harga', 'Metode Pembayaran', 'Tanggal Kirim', 'Status Pengiriman', 'Nama Sales', 'Unnamed: 19', 'Unnamed: 20', 'Unnamed: 21', 'Unnamed: 22']
 [OK] Kolom 'category' sudah ada dari mapping
