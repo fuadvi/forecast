@@ -677,10 +677,34 @@ def aggregate_to_quarterly(
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
     df = df.dropna(subset=['date'])
     
+    # DEBUG: Cek data yang masuk
+    print(f"\n[DEBUG AGGREGATE LSTM] Total rows in monthly_df: {len(monthly_df)}")
+    print(f"[DEBUG AGGREGATE LSTM] Total rows after date conversion: {len(df)}")
+    print(f"[DEBUG AGGREGATE LSTM] Date range: {df['date'].min()} to {df['date'].max()}")
+    
     # Extract year and quarter
     df['year'] = df['date'].dt.year
     df['month'] = df['date'].dt.month
     df['quarter'] = df['month'].apply(get_quarter)
+    
+    # DEBUG: Cek data per tahun dan quarter
+    print(f"\n[DEBUG AGGREGATE LSTM] Data per year:")
+    for year in sorted(df['year'].unique()):
+        year_data = df[df['year'] == year]
+        print(f"  Year {year}: {len(year_data)} rows")
+        print(f"    Months: {sorted(year_data['month'].unique())}")
+        print(f"    Quarters: {sorted(year_data['quarter'].unique())}")
+        # Cek khusus Q1 2025
+        if year == 2025:
+            q1_data = year_data[year_data['quarter'] == 'Q1']
+            print(f"    Q1 2025 rows: {len(q1_data)}")
+            if len(q1_data) > 0:
+                print(f"    Q1 2025 sample dates: {sorted(q1_data['date'].unique())[:5]}")
+                print(f"    Q1 2025 unique months: {sorted(q1_data['month'].unique())}")
+                # Cek kolom yang digunakan untuk agregasi (bisa 'mean' atau 'forecast')
+                value_col = 'mean' if 'mean' in q1_data.columns else 'forecast' if 'forecast' in q1_data.columns else None
+                if value_col:
+                    print(f"    Q1 2025 total {value_col} sum: {q1_data[value_col].sum():.2f}")
     
     # Get unique years
     years = sorted(df['year'].unique())
@@ -1606,12 +1630,27 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
 
     # Find the global most recent date across all products
     global_last_date = pd.to_datetime(monthly["month"]).max()
+    print(f"[DEBUG LSTM] Global last date: {global_last_date.strftime('%Y-%m-%d')}")
     print(f"Most recent data date across all products: {global_last_date.strftime('%Y-%m-%d')}")
     
     # Define a single forecast period starting from the next month after global_last_date
     forecast_start = global_last_date + pd.offsets.MonthBegin(1)
     forecast_index = pd.date_range(start=forecast_start, periods=FORECAST_HORIZON_MONTHS, freq="MS")
+    print(f"[DEBUG LSTM] Forecast start: {forecast_start.strftime('%Y-%m-%d')}")
     print(f"Forecasting period: {forecast_index[0].strftime('%Y-%m-%d')} to {forecast_index[-1].strftime('%Y-%m-%d')}")
+    
+    # DEBUG: Cek apakah Q1 2025 ada di forecast_index
+    q1_2025_dates = [d for d in forecast_index if d.year == 2025 and d.month in [1, 2, 3]]
+    print(f"[DEBUG LSTM] Q1 2025 dates in forecast_index: {[d.strftime('%Y-%m-%d') for d in q1_2025_dates]}")
+    print(f"[DEBUG LSTM] Total Q1 2025 months: {len(q1_2025_dates)}")
+    
+    if len(q1_2025_dates) == 0:
+        print("[WARNING LSTM] Q1 2025 tidak ditemukan di forecast_index!")
+        print(f"[WARNING LSTM] First 5 forecast_index: {[d.strftime('%Y-%m-%d') for d in forecast_index[:5]]}")
+        print(f"[WARNING LSTM] Last 5 forecast_index: {[d.strftime('%Y-%m-%d') for d in forecast_index[-5:]]}")
+        # Cek semua tahun dan bulan di forecast_index
+        print(f"[WARNING LSTM] All years in forecast_index: {sorted(set(d.year for d in forecast_index))}")
+        print(f"[WARNING LSTM] All months in 2025: {sorted(set(d.month for d in forecast_index if d.year == 2025))}")
 
     products = sorted(monthly["product_norm"].unique().tolist())
 
@@ -1652,6 +1691,29 @@ def run_forecast(excel_path: str = DEFAULT_EXCEL, models_dir: str = MODELS_DIR, 
     # Save per-product forecast
     fpp = pd.DataFrame(rows)
     fpp.sort_values(["product", "date"], inplace=True)
+    
+    # DEBUG: Verifikasi data Q1 2025 di fpp
+    if not fpp.empty:
+        fpp['date'] = pd.to_datetime(fpp['date'], errors='coerce')
+        q1_2025_data = fpp[
+            (fpp['date'].dt.year == 2025) & 
+            (fpp['date'].dt.month.isin([1, 2, 3]))
+        ]
+        print(f"\n[DEBUG BUILD_FRAMES LSTM] Total rows in fpp: {len(fpp)}")
+        print(f"[DEBUG BUILD_FRAMES LSTM] Q1 2025 rows in fpp: {len(q1_2025_data)}")
+        if len(q1_2025_data) > 0:
+            print(f"[DEBUG BUILD_FRAMES LSTM] Q1 2025 unique dates: {sorted(q1_2025_data['date'].dt.date.unique())}")
+            print(f"[DEBUG BUILD_FRAMES LSTM] Q1 2025 unique months: {sorted(q1_2025_data['date'].dt.month.unique())}")
+            print(f"[DEBUG BUILD_FRAMES LSTM] Q1 2025 total mean sum: {q1_2025_data['mean'].sum():.2f}")
+        else:
+            print("[WARNING BUILD_FRAMES LSTM] Q1 2025 tidak ditemukan di fpp!")
+            # Cek tahun dan bulan yang ada
+            years_in_df = sorted(fpp['date'].dt.year.unique())
+            print(f"[WARNING BUILD_FRAMES LSTM] Years in fpp: {years_in_df}")
+            if 2025 in years_in_df:
+                months_2025 = sorted(fpp[fpp['date'].dt.year == 2025]['date'].dt.month.unique())
+                print(f"[WARNING BUILD_FRAMES LSTM] Months in 2025: {months_2025}")
+    
     fpp.to_csv(OUT_FORECAST_PER_PRODUCT, index=False)
 
     # Total aggregate across all products

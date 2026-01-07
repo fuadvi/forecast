@@ -69,6 +69,9 @@ MIN_DATA_POINTS = 6
 APPLY_OUTLIER_CAPPING = True
 FREQ = "MS"  # awal bulan
 SEED = 42
+# Filter data training: hanya gunakan data sampai tanggal ini untuk training
+# Default: akhir Desember 2024 untuk memastikan forecast dimulai Januari 2025
+MAX_TRAINING_DATE = pd.Timestamp("2024-12-31")
 
 # Lokasi plot sesuai spesifikasi
 PLOTS_DIR = os.path.join("forecast_plots", "bulan")
@@ -196,7 +199,24 @@ def load_and_prepare_data(file_path: str = FILE_PATH) -> pd.DataFrame:
 # ==========================
 
 def aggregate_monthly_per_product(df: pd.DataFrame, freq: str = FREQ,
-                                  outlier_capping: bool = APPLY_OUTLIER_CAPPING) -> pd.DataFrame:
+                                  outlier_capping: bool = APPLY_OUTLIER_CAPPING,
+                                  max_training_date: Optional[pd.Timestamp] = None) -> pd.DataFrame:
+    """
+    Agregasi ke level bulanan per produk.
+    
+    Args:
+        df: DataFrame dengan kolom date, product_name, category, sales
+        freq: Frekuensi agregasi (default: "MS" = Month Start)
+        outlier_capping: Apakah akan melakukan outlier capping
+        max_training_date: Filter data hanya sampai tanggal ini (untuk training)
+                          Jika None, gunakan semua data
+    """
+    # Filter data sampai max_training_date jika diberikan
+    if max_training_date is not None:
+        df = df[df["date"] <= max_training_date].copy()
+        print(f"[INFO] Data difilter sampai: {max_training_date.strftime('%Y-%m-%d')}")
+        print(f"[INFO] Data setelah filter: {len(df)} rows")
+    
     # Agregasi ke level bulanan (sum per product_name, category, month)
     # Ambil category dari first row per produk (karena category seharusnya konsisten per produk)
     monthly = (df.groupby(["product_name", pd.Grouper(key="date", freq=freq)])
@@ -461,8 +481,37 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
         raise ValueError("Data bulanan kosong.")
 
     # Tanggal referensi global: gunakan tanggal maksimum dari seluruh dataset
+    # Normalisasi ke awal bulan untuk konsistensi dengan forecast.py
     global_last_date = monthly_df["date"].max()
-    future_dates = pd.date_range(start=global_last_date + pd.offsets.MonthBegin(1), periods=horizon, freq=FREQ)
+    # Pastikan global_last_date adalah awal bulan (normalisasi seperti forecast.py)
+    global_last_date = pd.to_datetime(global_last_date).to_period("M").to_timestamp()
+    
+    # Forecast mulai bulan berikutnya setelah data terakhir
+    # Gunakan MonthBegin(1) seperti forecast.py untuk konsistensi
+    forecast_start = global_last_date + pd.offsets.MonthBegin(1)
+    # Pastikan forecast_start adalah awal bulan (safety check)
+    if forecast_start.day != 1:
+        forecast_start = forecast_start.replace(day=1)
+    
+    future_dates = pd.date_range(start=forecast_start, periods=horizon, freq=FREQ)
+    
+    # Debug print untuk verifikasi (dapat dihapus setelah testing)
+    print(f"[DEBUG SES] Global last date: {global_last_date.strftime('%Y-%m-%d')}")
+    print(f"[DEBUG SES] Forecast start: {forecast_start.strftime('%Y-%m-%d')}")
+    print(f"[DEBUG SES] Forecast period: {future_dates[0].strftime('%Y-%m-%d')} to {future_dates[-1].strftime('%Y-%m-%d')}")
+    
+    # DEBUG: Cek apakah Q1 2025 ada di future_dates
+    q1_2025_dates = [d for d in future_dates if d.year == 2025 and d.month in [1, 2, 3]]
+    print(f"[DEBUG SES] Q1 2025 dates in future_dates: {[d.strftime('%Y-%m-%d') for d in q1_2025_dates]}")
+    print(f"[DEBUG SES] Total Q1 2025 months: {len(q1_2025_dates)}")
+    
+    if len(q1_2025_dates) == 0:
+        print("[WARNING] Q1 2025 tidak ditemukan di future_dates!")
+        print(f"[WARNING] First 5 future_dates: {[d.strftime('%Y-%m-%d') for d in future_dates[:5]]}")
+        print(f"[WARNING] Last 5 future_dates: {[d.strftime('%Y-%m-%d') for d in future_dates[-5:]]}")
+        # Cek semua tahun dan bulan di future_dates
+        print(f"[WARNING] All years in future_dates: {sorted(set(d.year for d in future_dates))}")
+        print(f"[WARNING] All months in 2025: {sorted(set(d.month for d in future_dates if d.year == 2025))}")
 
     per_product_rows: List[pd.DataFrame] = []
     skipped_rows: List[Dict[str, str]] = []
@@ -517,6 +566,28 @@ def build_forecast_frames(monthly_df: pd.DataFrame, horizon: int = FORECAST_MONT
         per_product_df = pd.concat(per_product_rows, ignore_index=True)
     else:
         per_product_df = pd.DataFrame(columns=["date", "product_name", "category", "forecast", "method"])  # empty
+
+    # DEBUG: Verifikasi data Q1 2025 di per_product_df
+    if not per_product_df.empty:
+        per_product_df['date'] = pd.to_datetime(per_product_df['date'], errors='coerce')
+        q1_2025_data = per_product_df[
+            (per_product_df['date'].dt.year == 2025) & 
+            (per_product_df['date'].dt.month.isin([1, 2, 3]))
+        ]
+        print(f"\n[DEBUG BUILD_FRAMES] Total rows in per_product_df: {len(per_product_df)}")
+        print(f"[DEBUG BUILD_FRAMES] Q1 2025 rows in per_product_df: {len(q1_2025_data)}")
+        if len(q1_2025_data) > 0:
+            print(f"[DEBUG BUILD_FRAMES] Q1 2025 unique dates: {sorted(q1_2025_data['date'].dt.date.unique())}")
+            print(f"[DEBUG BUILD_FRAMES] Q1 2025 unique months: {sorted(q1_2025_data['date'].dt.month.unique())}")
+            print(f"[DEBUG BUILD_FRAMES] Q1 2025 total forecast sum: {q1_2025_data['forecast'].sum():.2f}")
+        else:
+            print("[WARNING BUILD_FRAMES] Q1 2025 tidak ditemukan di per_product_df!")
+            # Cek tahun dan bulan yang ada
+            years_in_df = sorted(per_product_df['date'].dt.year.unique())
+            print(f"[WARNING BUILD_FRAMES] Years in per_product_df: {years_in_df}")
+            if 2025 in years_in_df:
+                months_2025 = sorted(per_product_df[per_product_df['date'].dt.year == 2025]['date'].dt.month.unique())
+                print(f"[WARNING BUILD_FRAMES] Months in 2025: {months_2025}")
 
     # Total agregat per bulan
     if not per_product_df.empty:
@@ -678,10 +749,31 @@ def aggregate_to_quarterly(
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
     df = df.dropna(subset=['date'])
     
+    # DEBUG: Cek data yang masuk
+    print(f"\n[DEBUG AGGREGATE] Total rows in per_product_df: {len(per_product_df)}")
+    print(f"[DEBUG AGGREGATE] Total rows after date conversion: {len(df)}")
+    print(f"[DEBUG AGGREGATE] Date range: {df['date'].min()} to {df['date'].max()}")
+    
     # Extract year and quarter
     df['year'] = df['date'].dt.year
     df['month'] = df['date'].dt.month
     df['quarter'] = df['month'].apply(get_quarter)
+    
+    # DEBUG: Cek data per tahun dan quarter
+    print(f"\n[DEBUG AGGREGATE] Data per year:")
+    for year in sorted(df['year'].unique()):
+        year_data = df[df['year'] == year]
+        print(f"  Year {year}: {len(year_data)} rows")
+        print(f"    Months: {sorted(year_data['month'].unique())}")
+        print(f"    Quarters: {sorted(year_data['quarter'].unique())}")
+        # Cek khusus Q1 2025
+        if year == 2025:
+            q1_data = year_data[year_data['quarter'] == 'Q1']
+            print(f"    Q1 2025 rows: {len(q1_data)}")
+            if len(q1_data) > 0:
+                print(f"    Q1 2025 sample dates: {sorted(q1_data['date'].unique())[:5]}")
+                print(f"    Q1 2025 unique months: {sorted(q1_data['month'].unique())}")
+                print(f"    Q1 2025 total forecast sum: {q1_data['forecast'].sum():.2f}")
     
     years = sorted(df['year'].unique())
     print(f"Years found: {years}")
@@ -1127,7 +1219,8 @@ def main(file_path: str = FILE_PATH,
          top_k: int = TOP_K,
          forecast_months: int = FORECAST_MONTHS,
          min_points: int = MIN_DATA_POINTS,
-         outlier_capping: bool = APPLY_OUTLIER_CAPPING) -> None:
+         outlier_capping: bool = APPLY_OUTLIER_CAPPING,
+         max_training_date: Optional[pd.Timestamp] = MAX_TRAINING_DATE) -> None:
     global TOP_K, FORECAST_MONTHS
     TOP_K = top_k
     FORECAST_MONTHS = forecast_months
@@ -1137,8 +1230,9 @@ def main(file_path: str = FILE_PATH,
     if df.empty:
         raise ValueError("Dataset kosong setelah pembersihan.")
 
-    # Aggregasi bulanan
-    monthly_df = aggregate_monthly_per_product(df, freq=FREQ, outlier_capping=outlier_capping)
+    # Aggregasi bulanan (dengan filter max_training_date jika diberikan)
+    monthly_df = aggregate_monthly_per_product(df, freq=FREQ, outlier_capping=outlier_capping, 
+                                               max_training_date=max_training_date)
 
     # Build forecasts
     per_product_df, total_df, topN_df, skipped_df, model_params = build_forecast_frames(
@@ -1296,8 +1390,22 @@ if __name__ == "__main__":
     parser.add_argument("--months", dest="forecast_months", type=int, default=FORECAST_MONTHS, help="Horizon bulan")
     parser.add_argument("--minpts", dest="min_points", type=int, default=MIN_DATA_POINTS, help="Minimal titik data per produk")
     parser.add_argument("--nocap", dest="no_capping", action="store_true", help="Matikan outlier capping per produk")
+    parser.add_argument("--max-training-date", dest="max_training_date", type=str, default=None,
+                       help="Filter data training sampai tanggal ini (format: YYYY-MM-DD). Default: 2024-12-31")
 
     args = parser.parse_args()
+    
+    # Parse max_training_date jika diberikan
+    max_training_date = None
+    if args.max_training_date:
+        try:
+            max_training_date = pd.Timestamp(args.max_training_date)
+        except Exception as e:
+            print(f"[WARNING] Invalid max_training_date format: {args.max_training_date}. Using default: {MAX_TRAINING_DATE}")
+            max_training_date = MAX_TRAINING_DATE
+    else:
+        max_training_date = MAX_TRAINING_DATE
+    
     main(
         file_path=args.file_path,
         out_dir=args.out_dir,
@@ -1305,4 +1413,5 @@ if __name__ == "__main__":
         forecast_months=args.forecast_months,
         min_points=args.min_points,
         outlier_capping=(not args.no_capping),
+        max_training_date=max_training_date,
     )
